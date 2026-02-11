@@ -1,2 +1,3 @@
 # Totis
-cosas del equipo y otras cosas 
+ 
+Crear un sitio web donde se vean temas de como 
