@@ -1,3 +1,3 @@
 # Totis
- 
-Crear un sitio web donde se vean temas de como 
+nombre del proyecto
+crear una aplicacion donde 
