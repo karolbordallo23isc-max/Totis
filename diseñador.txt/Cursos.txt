@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoopBook - Módulos Funcionales</title>
+    <style>
+        :root {
+            --sidebar-width: 200px;
+            --bar-bg: #e0e0e0;
+            --bar-fill: #81d4fa;
+            --btn-teal: #4db6ac;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #fff;
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+        }
+
+        .sidebar h2, .sidebar p { margin: 10px 0; cursor: pointer; }
+
+        .main { flex-grow: 1; display: flex; flex-direction: column; }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 30px;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .content { padding: 20px; text-align: center; }
+
+        .grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            max-width: 1000px;
+            margin: 20px auto;
+        }
+
+        .card {
+            background: #f1f1f1;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: left;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .card h3 { margin: 0 0 10px 0; font-size: 1.2rem; }
+        .desc { font-size: 0.85rem; color: #555; margin-bottom: 15px; min-height: 32px; }
+
+        .progress-box { margin-bottom: 15px; }
+        .progress-info { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 5px; }
+        
+        .progress-container {
+            background: var(--bar-bg);
+            height: 10px;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: var(--bar-fill);
+            height: 100%;
+            width: 0%; 
+            transition: width 1s ease-in-out;
+        }
+
+        .footer-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-iniciar {
+            background: var(--btn-teal);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <aside class="sidebar">
+        <h2 onclick="window.location.href='Cursos.html'">Inicio</h2>
+        <p>Resultados</p>
+    </aside>
+
+    <main class="main">
+        <header class="header">
+            <div>LoopBook</div>
+            <div>
+                <span style="cursor:pointer" onclick="window.location.href='Cursos.html'">🏠 inicio</span> 
+                &nbsp;&nbsp; 
+                <span style="cursor:pointer" onclick="window.location.href='iniciarSesion.html'">cerrar sesión</span>
+            </div>
+        </header>
+
+        <section class="content">
+            <div style="display:flex; justify-content: space-between; max-width: 1000px; margin: auto; font-weight: bold;">
+                <span>Inicio</span>
+                <span>Modulos</span>
+                <span></span>
+            </div>
+            <p style="color: #666; font-size: 0.9rem;">seleccione el modulo de su interés o reanuda tu progreso</p>
+
+            <div class="grid">
+                <div class="card" data-progreso="80">
+                    <h3>📙 Introducción a la programación</h3>
+                    <p class="desc">Conceptos básicos de programación</p>
+                    <div class="progress-box">
+                        <div class="progress-info"><span>Progreso</span><span class="pct">0%</span></div>
+                        <div class="progress-container"><div class="progress-fill"></div></div>
+                    </div>
+                    <div class="footer-card"><span>5 lecciones</span> <button class="btn-iniciar" onclick="window.location.href='Temas.html'">Iniciar</button></div>
+                </div>
+
+                <div class="card" data-progreso="25">
+                    <h3>🛢️ variables y tipos de datos</h3>
+                    <p class="desc">Aprenderás a almacenar y manipular información</p>
+                    <div class="progress-box">
+                        <div class="progress-info"><span>Progreso</span><span class="pct">0%</span></div>
+                        <div class="progress-container"><div class="progress-fill"></div></div>
+                    </div>
+                    <div class="footer-card"><span>4 lecciones</span> <button class="btn-iniciar" onclick="window.location.href='Temas.html'">Iniciar</button></div>
+                </div>
+
+                <div class="card" data-progreso="50">
+                    <h3>Lenguajes de programación</h3>
+                    <p class="desc">Aprende cuales son algunos de los lenguajes</p>
+                    <div class="progress-box">
+                        <div class="progress-info"><span>Progreso</span><span class="pct">0%</span></div>
+                        <div class="progress-container"><div class="progress-fill"></div></div>
+                    </div>
+                    <div class="footer-card"><span>5 lecciones</span> <button class="btn-iniciar" onclick="window.location.href='Temas.html'">Iniciar</button></div>
+                </div>
+
+                <div class="card" data-progreso="0">
+                    <h3>🕸️ Estructura de control</h3>
+                    <p class="desc">Condicionales, bucles y control de flujos</p>
+                    <div class="progress-box">
+                        <div class="progress-info"><span>Progreso</span><span class="pct">0%</span></div>
+                        <div class="progress-container"><div class="progress-fill"></div></div>
+                    </div>
+                    <div class="footer-card"><span>4 lecciones</span> <button class="btn-iniciar" onclick="window.location.href='Temas.html'">Iniciar</button></div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.querySelectorAll('.card').forEach(card => {
+            const porcentaje = card.getAttribute('data-progreso');
+            const barra = card.querySelector('.progress-fill');
+            const textoPct = card.querySelector('.pct');
+            setTimeout(() => {
+                barra.style.width = porcentaje + '%';
+                textoPct.innerText = porcentaje + '%';
+            }, 300);
+        });
+    </script>
+</body>
+</html>
