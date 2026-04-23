@@ -17,7 +17,7 @@ Alexis Alavarado Gomez - QA
 | Esperado            | Usuario se registra |
 | Obtenido            | Usuario guardado en la BD               |
 | Estado              | Correcto                        |
-
+##
 |---------------------|---------------------------------|
 | Caso                | Inicio de sesión          |
 | Entrada             | Correo y contraseña correctos   |
