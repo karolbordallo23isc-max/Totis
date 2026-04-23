@@ -9,7 +9,7 @@ LoopBook
 ## Responsable
 Alexis Alavarado Gomez - QA
 
-## Prubas
+## TC-001
 | Campo                | Detalle                         |
 |---------------------|---------------------------------|
 | Caso                | Registro de usuario     |
@@ -17,7 +17,9 @@ Alexis Alavarado Gomez - QA
 | Esperado            | Usuario se registra |
 | Obtenido            | Usuario guardado en la BD               |
 | Estado              | Correcto                        |
-
+## TC-002
+| Campo                | Detalle                         |
+|---------------------|---------------------------------|
 | Caso                | Inicio de sesión          |
 | Entrada             | Correo y contraseña correctos   |
 | Esperado            | Usuario inicia sesión  |
