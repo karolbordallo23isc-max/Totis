@@ -160,7 +160,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             <button type="submit" class="btn-primary">Iniciar sesión</button>
         </form>
 
-        <a href="recuperar_contrasena.php" class="forgot-password">¿Olvidaste tu contraseña?</a>
+        
 
         <div class="create-user-section">
             <span class="create-user-label">¿No tienes cuenta?</span>
