@@ -9,12 +9,11 @@ LoopBook
 ## Responsable
 Alexis Alavarado Gomez - QA
 
-## Prubas
+## Pruebas
 | Campo                | Detalle                         |
 |---------------------|---------------------------------|
-| Caso                | Registro de usuario válido      |
-| Entrada             | Correo y contraseña correctos   |
+| Caso                | Registro de usuario     |
+| Entrada             | Usuario, correo, contraseña, confimar contraeña   |
 | Esperado            | Usuario se registra correctamente |
-| Obtenido            | Usuario guardado                |
+| Obtenido            | Usuario guardado en la BD               |
 | Estado              | Correcto                        |
-| Evidencia           | screenshot_registro.png         |
