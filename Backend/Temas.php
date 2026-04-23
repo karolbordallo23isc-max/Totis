@@ -30,27 +30,26 @@ if (!$modulo) {
     exit();
 }
 
-// Obtener ejercicios del módulo
-$stmtEj = $pdo->prepare("SELECT * FROM ejercicios WHERE id_modulo = ? ORDER BY id_ejercicio");
+// Obtener ejercicios distintos del módulo
+$stmtEj = $pdo->prepare("SELECT DISTINCT id_ejercicio FROM ejercicios WHERE id_modulo = ?");
 $stmtEj->execute([$id_modulo_sel]);
-$ejercicios = $stmtEj->fetchAll(PDO::FETCH_ASSOC);
+$ejercicios = $stmtEj->fetchAll(PDO::FETCH_COLUMN);
+$total_ej = count($ejercicios);
 
-// Verificar cuáles ejercicios están completados por el usuario
-$completados_ids = [];
-if (!empty($ejercicios)) {
-    $ids = array_column($ejercicios, "id_ejercicio");
-    $ph  = implode(",", array_fill(0, count($ids), "?"));
-    $stmtC = $pdo->prepare("
-        SELECT id_ejercicio FROM progreso
-        WHERE id_usuario = ? AND id_ejercicio IN ($ph) AND completado = 1
+// Contar cuántos tienen respuesta en respuesta_abierta
+$total_comp = 0;
+if ($total_ej > 0) {
+    $ph = implode(",", array_fill(0, $total_ej, "?"));
+    $stmtComp = $pdo->prepare("
+        SELECT COUNT(DISTINCT id_ejercicio) FROM respuesta_abierta
+        WHERE id_usuario = ? AND id_ejercicio IN ($ph)
     ");
-    $stmtC->execute(array_merge([$id_usuario], $ids));
-    $completados_ids = $stmtC->fetchAll(PDO::FETCH_COLUMN);
+    $stmtComp->execute(array_merge([$id_usuario], $ejercicios));
+    $total_comp = (int) $stmtComp->fetchColumn();
 }
 
-// Calcular progreso del módulo
-$total_ej   = count($ejercicios);
-$total_comp = count($completados_ids);
+// Asegurarse que no supere el total
+$total_comp = min($total_comp, $total_ej);
 $pct_modulo = $total_ej > 0 ? round(($total_comp / $total_ej) * 100) : 0;
 ?>
 <!DOCTYPE html>
@@ -68,7 +67,7 @@ $pct_modulo = $total_ej > 0 ? round(($total_comp / $total_ej) * 100) : 0;
         .sidebar h2:hover, .sidebar p:hover { color: #4db6ac; }
         .main-content { flex-grow: 1; display: flex; flex-direction: column; overflow-y: auto; }
         .header { display: flex; justify-content: space-between; align-items: center; padding: 15px 40px; border-bottom: 1px solid #ddd; }
-        .logo { font-weight: bold; font-size: 1.5rem; }
+        .logo img { height: 60px; display: block; }
         .top-nav { display: flex; gap: 25px; align-items: center; }
         .top-nav span { font-weight: bold; font-size: 0.9rem; cursor: pointer; }
         .lessons-container { padding: 20px 60px; max-width: 900px; margin: 0 auto; width: 100%; box-sizing: border-box; text-align: center; }
@@ -116,7 +115,7 @@ $pct_modulo = $total_ej > 0 ? round(($total_comp / $total_ej) * 100) : 0;
 
 <main class="main-content">
     <header class="header">
-        <div class="logo"><img src="loopbook_logo.png" alt="LoopBook" style="height:60px;"></div>
+        <div class="logo"><img src="loopbook_logo.png" alt="LoopBook"></div>
         <nav class="top-nav">
             <span onclick="window.location.href='Cursos.php'">inicio</span>
             <form method="POST" action="cerrarSesion.php" style="margin:0;">
@@ -139,7 +138,7 @@ $pct_modulo = $total_ej > 0 ? round(($total_comp / $total_ej) * 100) : 0;
             </div>
         </div>
 
-        <?php if (empty($ejercicios)): ?>
+        <?php if ($total_ej === 0): ?>
             <p style="color:#999; font-style:italic;">No hay ejercicios disponibles para este módulo aún.</p>
         <?php else: ?>
             <a class="lesson-card <?= $pct_modulo >= 100 ? 'completada' : '' ?>"
