@@ -1,10 +1,25 @@
 ﻿<?php
 
-define('DB_HOST', 'localhost');
-define('DB_PORT', '3306');
-define('DB_NAME', 'loopbook');
-define('DB_USER', 'root');
-define('DB_PASS', '');
+/**
+ * Carga las variables de entorno desde el archivo .env ubicado en la raíz del proyecto.
+ * El archivo .env nunca se sube al repositorio (está en .gitignore).
+ * Para configurar el entorno local, copia .env.example como .env y ajusta los valores.
+ */
+$envFile = __DIR__ . '/../.env';
+if (file_exists($envFile)) {
+    $lines = file($envFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+    foreach ($lines as $line) {
+        if (str_starts_with(trim($line), '#')) continue;
+        [$key, $value] = explode('=', $line, 2);
+        $_ENV[trim($key)] = trim($value);
+    }
+}
+
+define('DB_HOST', $_ENV['DB_HOST'] ?? 'localhost');
+define('DB_PORT', $_ENV['DB_PORT'] ?? '3306');
+define('DB_NAME', $_ENV['DB_NAME'] ?? 'loopbook');
+define('DB_USER', $_ENV['DB_USER'] ?? 'root');
+define('DB_PASS', $_ENV['DB_PASS'] ?? '');
 
 /**
  * Devuelve la instancia PDO compartida (singleton).
