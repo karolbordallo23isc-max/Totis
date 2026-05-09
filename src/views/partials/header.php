@@ -7,21 +7,7 @@ $showHeader  = !in_array($currentPage, ['login', 'register', '']) && !empty($_SE
   <div class="header-inner">
 
     <a href="<?= base_url('index.php?page=dashboard') ?>" class="logo-link">
-      <svg class="logo-icon-svg" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-        <defs>
-          <linearGradient id="hg" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-            <stop offset="0%"   stop-color="#cc0000"/>
-            <stop offset="55%"  stop-color="#ff2800"/>
-            <stop offset="100%" stop-color="#ff6b00"/>
-          </linearGradient>
-        </defs>
-        <rect width="40" height="40" rx="11" fill="url(#hg)"/>
-        <rect width="40" height="40" rx="11" fill="none" stroke="rgba(255,255,255,.25)" stroke-width="1.2"/>
-        <text x="50%" y="56%" dominant-baseline="middle" text-anchor="middle"
-              font-family="monospace" font-size="13" font-weight="700" fill="white">&lt;/&gt;</text>
-        <path d="M28 7 Q36 7 36 15" stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity=".45"/>
-        <path d="M12 33 Q4 33 4 25"  stroke="white" stroke-width="1.5" stroke-linecap="round" fill="none" opacity=".45"/>
-      </svg>
+      <img src="/loopbook/public/img/loopbook_logo.png" class="logo-icon-img" alt="Loopbook logo">
       <div class="logo-wordmark">
         <span class="logo-wordmark__name">Loopbook</span>
       </div>

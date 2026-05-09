@@ -36,21 +36,7 @@
 
     <div class="auth-logo">
       <div class="auth-logo__icon-wrap">
-        <svg class="auth-logo__icon" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-          <defs><linearGradient id="ag" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#cc0000"/>
-            <stop offset="60%" stop-color="#ff2800"/>
-            <stop offset="100%" stop-color="#ff6b00"/>
-          </linearGradient></defs>
-          <rect width="48" height="48" rx="14" fill="url(#ag)"/>
-          <rect width="48" height="48" rx="14" fill="none" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
-          <text x="50%" y="57%" dominant-baseline="middle" text-anchor="middle"
-                font-family="monospace" font-size="16" font-weight="700" fill="white">&lt;/&gt;</text>
-          <path d="M34 8 Q44 8 44 18" stroke="white" stroke-width="2" stroke-linecap="round" fill="none" opacity=".5"/>
-          <path d="M14 40 Q4 40 4 30"  stroke="white" stroke-width="2" stroke-linecap="round" fill="none" opacity=".5"/>
-          <circle cx="38" cy="22" r="2" fill="white" opacity=".35"/>
-          <circle cx="10" cy="26" r="2" fill="white" opacity=".35"/>
-        </svg>
+        <img src="/loopbook/public/img/loopbook_logo.png" class="auth-logo__icon" alt="Loopbook logo" style="border-radius:14px;">
         <div class="auth-logo__ring"></div>
       </div>
       <span class="auth-logo__name" id="authLogoName"></span>
