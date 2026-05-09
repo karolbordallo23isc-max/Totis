@@ -1,0 +1,77 @@
+/* ============================================================
+   CELEBRACIÓN - Pantalla de completado
+   ============================================================ */
+
+.completion-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9000;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.completion-card {
+  background: #fff;
+  border-radius: 24px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  max-width: 380px;
+  width: 90%;
+  box-shadow: 0 24px 80px rgba(30,58,138,.3), 0 0 0 2px rgba(37,99,235,.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.completion-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb, #7c3aed, #2563eb, #1e3a8a);
+}
+
+.completion-icon {
+  font-size: 4rem;
+  display: block;
+  margin-bottom: .5rem;
+}
+
+.completion-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.6rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #1e3a8a, #2563eb, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: .3rem;
+}
+
+.completion-module {
+  font-size: .9rem;
+  color: #6b7280;
+  margin-bottom: .75rem;
+}
+
+.completion-stars {
+  font-size: 1.8rem;
+  letter-spacing: .3rem;
+  margin-bottom: .75rem;
+}
+
+.completion-msg {
+  font-size: .9rem;
+  color: #374151;
+  margin-bottom: 1.5rem;
+}
+
+.completion-btn {
+  font-size: 1rem;
+  padding: .7rem 2rem;
+  box-shadow: 0 6px 20px rgba(30,58,138,.35);
+}

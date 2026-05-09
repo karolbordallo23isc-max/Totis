@@ -1,0 +1,202 @@
+/* ============================================================
+   AUTH - Pantallas de autenticación
+   ============================================================ */
+
+.auth-body {
+  background: linear-gradient(135deg, var(--primary), var(--secondary), #a855f7);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-body--register {
+  background: linear-gradient(135deg, var(--secondary), var(--primary), #a855f7);
+}
+
+/* ── Fondo decorativo ─────────────────────────────────────── */
+.auth-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.auth-blob {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,.12);
+  filter: blur(60px);
+}
+
+.auth-blob--1 {
+  width: 320px;
+  height: 320px;
+  top: 5%;
+  left: 5%;
+}
+
+.auth-blob--2 {
+  width: 400px;
+  height: 400px;
+  bottom: 5%;
+  right: 5%;
+}
+
+.auth-blob--3 {
+  width: 320px;
+  height: 320px;
+  top: 5%;
+  right: 5%;
+}
+
+.auth-blob--4 {
+  width: 400px;
+  height: 400px;
+  bottom: 5%;
+  left: 5%;
+}
+
+/* ── Partículas (ocultas) ─────────────────────────────────── */
+.auth-particles {
+  display: none;
+}
+
+/* ── Wrapper ──────────────────────────────────────────────── */
+.auth-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+}
+
+/* ── Card de Auth ─────────────────────────────────────────── */
+.auth-card {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 20px 60px rgba(30,58,138,.15), 0 4px 20px rgba(0,0,0,.08);
+  position: relative;
+  overflow: hidden;
+  border: 1.5px solid transparent;
+  background-clip: padding-box;
+}
+
+/* Borde superior */
+.auth-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb, #7c3aed, #a855f7);
+  border-radius: 20px 20px 0 0;
+}
+
+/* Luz interna eliminada */
+.auth-card::after {
+  display: none;
+}
+
+/* Esquinas decorativas */
+.auth-corner {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 90px;
+  height: 90px;
+  background: linear-gradient(135deg, transparent 50%, rgba(30,58,138,.05) 50%);
+  border-radius: 0 0 20px 0;
+  pointer-events: none;
+}
+
+.auth-corner-tl {
+  position: absolute;
+  left: 0;
+  top: 3px;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(315deg, transparent 50%, rgba(124,58,237,.04) 50%);
+  border-radius: 20px 0 0 0;
+  pointer-events: none;
+}
+
+/* ── Logo de Auth ─────────────────────────────────────────── */
+.auth-logo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .6rem;
+  margin-bottom: 1.5rem;
+}
+
+.auth-logo__icon-wrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.auth-logo__icon {
+  position: relative;
+  z-index: 1;
+  width: 56px;
+  height: 56px;
+}
+
+/* Anillo eliminado */
+.auth-logo__ring {
+  display: none;
+}
+
+.auth-logo__icon-wrap::after {
+  display: none;
+}
+
+.auth-logo__name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.7rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 40%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  letter-spacing: -.5px;
+}
+
+.auth-title {
+  text-align: center;
+  font-size: 1.4rem;
+  font-weight: 800;
+}
+
+.auth-subtitle {
+  text-align: center;
+  color: var(--gray-600);
+  margin: .4rem 0 1.5rem;
+}
+
+.auth-switch {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: .9rem;
+  color: var(--gray-600);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.auth-submit-btn {
+  position: relative;
+}
+
+/* Shimmer eliminado */
+.auth-submit-btn::before {
+  display: none;
+}
