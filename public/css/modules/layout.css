@@ -1,0 +1,58 @@
+/* ============================================================
+   LAYOUT - Estructura de páginas
+   ============================================================ */
+
+.main-content {
+  padding: 2.5rem 1rem;
+}
+
+.page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.page-container--narrow {
+  max-width: 860px;
+}
+
+.page-title {
+  font-size: 2rem;
+  font-weight: 900;
+  margin-bottom: .4rem;
+}
+
+.page-subtitle {
+  color: var(--gray-600);
+  margin-bottom: 1.5rem;
+}
+
+/* ── Dashboard Header ─────────────────────────────────────── */
+.dashboard-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+/* ── Module Header ────────────────────────────────────────── */
+.module-header {
+  margin-bottom: 2rem;
+}
+
+/* ── Background del body ──────────────────────────────────── */
+body {
+  background-color: #f5f7ff;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 100% 0%,   rgba(30,58,138,.10)  0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 0%   0%,   rgba(124,58,237,.08) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 110%,  rgba(30,58,138,.07)  0%, transparent 60%),
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 38px,
+      rgba(30,58,138,.022) 38px,
+      rgba(30,58,138,.022) 40px
+    );
+}

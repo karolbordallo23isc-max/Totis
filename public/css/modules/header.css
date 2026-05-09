@@ -1,0 +1,131 @@
+/* ============================================================
+   HEADER - Navegación principal
+   ============================================================ */
+
+.header {
+  background: rgba(245, 247, 255, 0.82);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-bottom: 3px solid #1e3a8a;
+  box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 4px 20px rgba(30,58,138,.1);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.header-left,
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+}
+
+/* ── Logo ─────────────────────────────────────────────────── */
+.logo-link {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  text-decoration: none;
+}
+
+.logo-icon-img {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.logo-wordmark {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+}
+
+.logo-wordmark__name {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 900;
+  letter-spacing: -.5px;
+  background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 50%, #7c3aed 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.logo-wordmark__tag {
+  font-family: 'Courier New', monospace;
+  font-size: .6rem;
+  font-weight: 700;
+  letter-spacing: .5px;
+  color: #2563eb;
+  opacity: .55;
+}
+
+/* ── Navegación ───────────────────────────────────────────── */
+.header-nav {
+  display: flex;
+  align-items: center;
+  gap: .2rem;
+  background: #f5f7ff;
+  border: 1.5px solid rgba(30,58,138,.15);
+  border-radius: 999px;
+  padding: .3rem;
+}
+
+.header-nav__link {
+  display: flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .35rem .95rem;
+  border-radius: 999px;
+  font-size: .85rem;
+  font-weight: 600;
+  color: var(--gray-600);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.header-nav__link:hover {
+  background: #fff;
+  color: #1e3a8a;
+  text-decoration: none;
+  box-shadow: 0 2px 8px rgba(30,58,138,.12);
+}
+
+.header-nav__link--active {
+  background: linear-gradient(135deg, #1e3a8a, #7c3aed);
+  color: #fff;
+  box-shadow: 0 2px 10px rgba(30,58,138,.35);
+}
+
+.header-user {
+  background: #f5f7ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 999px;
+  padding: .3rem .85rem;
+  font-size: .85rem;
+  color: var(--gray-700);
+  text-decoration: none;
+}
+
+.header-user:hover {
+  border-color: #1e3a8a;
+  text-decoration: none;
+}
+
+/* ── Dark Mode Toggle ─────────────────────────────────────── */
+.dark-toggle {
+  font-size: 1rem;
+  padding: .3rem .6rem;
+}

@@ -1,0 +1,97 @@
+/* ============================================================
+   BOTONES - Sistema de botones
+   ============================================================ */
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  padding: .55rem 1.1rem;
+  border-radius: 8px;
+  font-size: .9rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  opacity: .88;
+  text-decoration: none;
+}
+
+.btn-sm {
+  padding: .35rem .8rem;
+  font-size: .82rem;
+}
+
+.btn-full {
+  width: 100%;
+  justify-content: center;
+}
+
+/* ── Variantes ────────────────────────────────────────────── */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(30,58,138,.35);
+}
+
+.btn-orange {
+  background: linear-gradient(135deg, var(--secondary), var(--primary));
+  color: #fff;
+}
+
+.btn-outline {
+  background: #fff;
+  color: var(--gray-700);
+  border: 1.5px solid var(--gray-200);
+}
+
+.btn-outline:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.btn-danger:hover {
+  border-color: var(--red);
+  color: var(--red);
+}
+
+.btn-back {
+  margin-bottom: 1.5rem;
+}
+
+/* ── Gradientes ───────────────────────────────────────────── */
+.btn-gradient {
+  color: #fff;
+}
+
+.btn-gradient--purple-pink {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+}
+
+.btn-gradient--red-orange {
+  background: linear-gradient(135deg, #1e3a8a, #2563eb);
+}
+
+.btn-gradient--blue-cyan {
+  background: linear-gradient(135deg, #3b82f6, #06b6d4);
+}
+
+.btn-gradient--orange-red {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+}
+
+.btn-gradient--green-emerald {
+  background: linear-gradient(135deg, #00c853, #00ff88);
+}
+
+.btn-gradient--violet-blue {
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+}
+
+.btn-gradient--amber-yellow {
+  background: linear-gradient(135deg, #7c3aed, #a855f7);
+}

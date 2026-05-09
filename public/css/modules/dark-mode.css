@@ -1,0 +1,230 @@
+/* ============================================================
+   MODO OSCURO - Tema oscuro completo
+   ============================================================ */
+
+html.dark body {
+  background-color: #080c1a;
+  background-image:
+    radial-gradient(ellipse 60% 50% at 100% 0%,   rgba(30,58,138,.18)  0%, transparent 65%),
+    radial-gradient(ellipse 50% 45% at 0%   0%,   rgba(124,58,237,.1) 0%, transparent 60%),
+    radial-gradient(ellipse 70% 40% at 50% 110%,  rgba(30,58,138,.12)  0%, transparent 60%),
+    repeating-linear-gradient(-45deg, transparent, transparent 38px, rgba(30,58,138,.04) 38px, rgba(30,58,138,.04) 40px);
+  color: var(--text);
+}
+
+/* Header */
+html.dark .header {
+  background: rgba(8,12,26,.88);
+  border-bottom-color: #2563eb;
+}
+
+/* Progress Badge */
+html.dark .progress-badge {
+  background: linear-gradient(145deg,
+    rgba(255,255,255,.06) 0%,
+    rgba(30,58,138,.18)    40%,
+    rgba(124,58,237,.12)  100%);
+  border-color: rgba(37,99,235,.35);
+  border-bottom-color: rgba(37,99,235,.5);
+  box-shadow:
+    0 2px 0   rgba(255,255,255,.08) inset,
+    0 -1px 0  rgba(37,99,235,.3)    inset,
+    0 8px 28px rgba(30,58,138,.3),
+    0 2px 6px  rgba(0,0,0,.4);
+}
+
+html.dark .progress-badge:hover {
+  box-shadow:
+    0 2px 0   rgba(255,255,255,.1) inset,
+    0 -1px 0  rgba(37,99,235,.4)   inset,
+    0 18px 44px rgba(30,58,138,.45),
+    0 4px 14px rgba(0,0,0,.5),
+    0 0 0 1px rgba(37,99,235,.3);
+}
+
+html.dark .progress-badge__label {
+  color: var(--text-muted);
+}
+
+/* Cards */
+html.dark .card,
+html.dark .module-card,
+html.dark .lesson-card,
+html.dark .auth-card {
+  background: var(--surface);
+  color: var(--text);
+  box-shadow: 0 4px 20px rgba(0,0,0,.4);
+}
+
+html.dark .card-body,
+html.dark .module-card__body {
+  color: var(--text);
+}
+
+html.dark .module-card__title {
+  color: #f3f4f6;
+}
+
+html.dark .module-card__desc,
+html.dark .module-card__lessons,
+html.dark .progress-row span,
+html.dark .lesson-card__excerpt,
+html.dark .page-subtitle,
+html.dark .text-gray {
+  color: #9ca3af;
+}
+
+html.dark .progress-row strong {
+  color: #f3f4f6;
+}
+
+/* Botones */
+html.dark .btn-outline {
+  background: transparent;
+  border-color: var(--border);
+  color: var(--text);
+}
+
+html.dark .btn-outline:hover {
+  border-color: #2563eb;
+  color: #93c5fd;
+}
+
+/* Opciones */
+html.dark .option-btn {
+  background: #0f1629;
+  border-color: #1e2d4a;
+  color: var(--text);
+}
+
+html.dark .option-btn:hover:not(:disabled) {
+  background: #1a2540;
+  border-color: #2563eb;
+}
+
+html.dark .option-btn.selected {
+  background: #1a2540;
+  border-color: #2563eb;
+}
+
+/* Ejercicios */
+html.dark .exercise {
+  background: #0a1020;
+}
+
+/* Navegación */
+html.dark .header-nav {
+  background: rgba(255,255,255,.05);
+  border-color: rgba(255,255,255,.08);
+}
+
+html.dark .header-nav__link {
+  color: rgba(255,255,255,.55);
+}
+
+html.dark .header-nav__link:hover {
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+
+html.dark .lesson-nav__counter {
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+/* Barra de progreso */
+html.dark .progress-bar {
+  background: #1e2d4a;
+}
+
+/* Logo */
+html.dark .logo-wordmark__name {
+  filter: brightness(1.2);
+}
+
+/* Inputs */
+html.dark input {
+  background: #0f1629 !important;
+  border-color: #1e2d4a !important;
+  color: var(--text) !important;
+}
+
+html.dark input:focus {
+  border-color: #2563eb !important;
+}
+
+/* Lecciones */
+html.dark .lesson-card {
+  background: var(--surface);
+  border-left-color: #2563eb;
+}
+
+html.dark .lesson-card--done {
+  border-left-color: #00c853;
+}
+
+html.dark .lesson-card__title {
+  color: var(--text);
+}
+
+html.dark .lesson-card__excerpt {
+  color: var(--text-muted);
+}
+
+html.dark .lesson-card:hover {
+  box-shadow: -2px 0 0 #2563eb, 0 8px 28px rgba(30,58,138,.25);
+}
+
+html.dark .lesson-card--done:hover {
+  box-shadow: -2px 0 0 #00c853, 0 8px 28px rgba(0,200,83,.2);
+}
+
+/* Tooltips */
+html.dark .module-tooltip {
+  background: #0f1629;
+  box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(30,58,138,.2);
+}
+
+html.dark .module-tooltip::before {
+  border-bottom-color: #0f1629;
+}
+
+html.dark .module-tooltip__list li {
+  color: var(--text-muted);
+}
+
+/* Pantalla de celebración */
+html.dark .completion-card {
+  background: #0f1629;
+  color: var(--text);
+}
+
+html.dark .completion-module,
+html.dark .completion-msg {
+  color: var(--text-muted);
+}
+
+/* Menú móvil */
+html.dark .mob-menu__btn {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(255,255,255,.1);
+  color: #fff;
+}
+
+html.dark .mob-menu__dropdown {
+  background: #0f1629;
+  box-shadow: 0 8px 28px rgba(0,0,0,.5), 0 0 0 1px rgba(30,58,138,.15);
+}
+
+html.dark .mob-menu__item {
+  color: var(--text-muted);
+}
+
+html.dark .mob-menu__item:hover {
+  background: #1a2540;
+  color: #93c5fd;
+}
+
+html.dark .mob-menu__divider {
+  background: #1e2d4a;
+}

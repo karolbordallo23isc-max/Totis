@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LoopBook - Crear Cuenta</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .register-card {
+            background: white;
+            padding: 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            color: #000;
+        }
+
+        .subtitle {
+            color: #888;
+            font-size: 14px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            text-align: left;
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 10px;
+            background-color: #f1f3f5;
+            font-size: 14px;
+            color: #666;
+            box-sizing: border-box;
+        }
+
+        .form-group input::placeholder {
+            color: #adb5bd;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            background-color: #080a1a;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: bold;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            transition: background-color 0.3s;
+        }
+
+        .btn-register:hover {
+            background-color: #1a1d2e;
+        }
+
+        .back-link {
+            text-decoration: none;
+            color: #4a5568;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+
+        .back-link:hover {
+            color: #000;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="register-card">
+        <h1>Crear Cuenta</h1>
+        <p class="subtitle">Regístrate para comenzar tu viaje en programación</p>
+
+        <form action="iniciarSesion.html">
+            <div class="form-group">
+                <label>Usuario</label>
+                <input type="text" placeholder="Elige un nombre de usuario">
+            </div>
+
+            <div class="form-group">
+                <label>Correo Electrónico</label>
+                <input type="email" placeholder="tu@email.com">
+            </div>
+
+            <div class="form-group">
+                <label>Contraseña</label>
+                <input type="password" placeholder="Mínimo 6 caracteres">
+            </div>
+
+            <div class="form-group">
+                <label>Confirmar Contraseña</label>
+                <input type="password" placeholder="Repite tu contraseña">
+            </div>
+
+            <button type="submit" class="btn-register">Registrarse</button>
+        </form>
+
+        <a href="iniciarSesion.html" class="back-link">
+            <span>←</span> Volver al inicio de sesión
+        </a>
+    </div>
+
+</body>
+</html>
+m
