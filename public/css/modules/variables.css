@@ -1,0 +1,40 @@
+/* ============================================================
+   VARIABLES CSS - Loopbook
+   ============================================================ */
+
+:root {
+  /* ── Paleta Principal ───────────────────────────────────── */
+  --primary:   #1e3a8a;   /* Azul marino */
+  --secondary: #7c3aed;   /* Morado */
+  --green:     #10b981;
+  --blue:      #3b82f6;
+  --cyan:      #06b6d4;
+  --emerald:   #059669;
+  --red:       #ef4444;
+  
+  /* ── Escala de Grises ───────────────────────────────────── */
+  --gray-50:   #f9fafb;
+  --gray-100:  #f3f4f6;
+  --gray-200:  #e5e7eb;
+  --gray-600:  #4b5563;
+  --gray-700:  #374151;
+  --gray-900:  #111827;
+  
+  /* ── Dimensiones ────────────────────────────────────────── */
+  --radius: 12px;
+  --shadow: 0 4px 20px rgba(0,0,0,.08);
+  --shadow-lg: 0 8px 40px rgba(0,0,0,.14);
+  
+  /* ── Alias para compatibilidad ──────────────────────────── */
+  --purple: #7c3aed;
+  --pink:   #a855f7;
+}
+
+/* ── Modo Oscuro ───────────────────────────────────────────── */
+html.dark {
+  --bg:        #080c1a;
+  --surface:   #0f1629;
+  --text:      #f3f4f6;
+  --text-muted:#9ca3af;
+  --border:    #1e2d4a;
+}

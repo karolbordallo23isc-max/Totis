@@ -1,164 +1,206 @@
 'use strict';
 
+/**
+ * app.js — Lógica del cliente para Loopbook
+ *
+ * Responsabilidades:
+ *  1. Modo oscuro        — aplica/quita la clase `dark` en <html> y persiste en localStorage
+ *  2. Selección de opción — resalta visualmente la opción elegida en un ejercicio
+ *  3. Verificación de respuesta — envía la respuesta al servidor (AJAX) y actualiza la interfaz
+ *  4. Pantalla de celebración — muestra un overlay al completar todos los ejercicios del módulo
+ */
+
+/* Contador de respuestas correctas en la sesión actual de la lección */
 let correctCount = 0;
 
 /* ══════════════════════════════════════════════════════════
-   1. SONIDOS (Web Audio API — sin archivos externos)
-   ══════════════════════════════════════════════════════════ */
-const AudioCtx = window.AudioContext || window.webkitAudioContext;
-let _ctx = null;
-function getAudioCtx() {
-  if (!_ctx) _ctx = new AudioCtx();
-  return _ctx;
-}
-
-function playSound(type) {
-  try {
-    const ctx = getAudioCtx();
-    const master = ctx.createGain();
-    master.gain.value = 0.18;
-    master.connect(ctx.destination);
-
-    if (type === 'correct') {
-      // Acorde mayor ascendente — satisfactorio
-      [[523.25, 0], [659.25, 0.1], [783.99, 0.2], [1046.5, 0.32]].forEach(([freq, delay]) => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'sine';
-        o.frequency.value = freq;
-        g.gain.setValueAtTime(0, ctx.currentTime + delay);
-        g.gain.linearRampToValueAtTime(0.5, ctx.currentTime + delay + 0.04);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.35);
-        o.connect(g); g.connect(master);
-        o.start(ctx.currentTime + delay);
-        o.stop(ctx.currentTime + delay + 0.4);
-      });
-    } else if (type === 'wrong') {
-      // Dos tonos descendentes — error suave
-      [[300, 0], [220, 0.15]].forEach(([freq, delay]) => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'sawtooth';
-        o.frequency.value = freq;
-        g.gain.setValueAtTime(0.3, ctx.currentTime + delay);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.25);
-        o.connect(g); g.connect(master);
-        o.start(ctx.currentTime + delay);
-        o.stop(ctx.currentTime + delay + 0.3);
-      });
-    } else if (type === 'complete') {
-      // Fanfarria corta — módulo completado
-      [[523, 0], [659, 0.12], [784, 0.24], [1047, 0.38], [1319, 0.52]].forEach(([freq, delay]) => {
-        const o = ctx.createOscillator();
-        const g = ctx.createGain();
-        o.type = 'triangle';
-        o.frequency.value = freq;
-        g.gain.setValueAtTime(0, ctx.currentTime + delay);
-        g.gain.linearRampToValueAtTime(0.6, ctx.currentTime + delay + 0.05);
-        g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + delay + 0.5);
-        o.connect(g); g.connect(master);
-        o.start(ctx.currentTime + delay);
-        o.stop(ctx.currentTime + delay + 0.55);
-      });
-    } else if (type === 'select') {
-      // Click suave al seleccionar opción
-      const o = ctx.createOscillator();
-      const g = ctx.createGain();
-      o.type = 'sine';
-      o.frequency.value = 880;
-      g.gain.setValueAtTime(0.15, ctx.currentTime);
-      g.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.08);
-      o.connect(g); g.connect(master);
-      o.start(); o.stop(ctx.currentTime + 0.1);
-    }
-  } catch(e) { /* silencioso si el navegador bloquea */ }
-}
-
-/* ══════════════════════════════════════════════════════════
-   2. MODO OSCURO
+   1. MODO OSCURO
+   Inyecta el botón 🌙/☀️ en el header (solo pantallas grandes).
+   En móvil el toggle está dentro del menú desplegable (header.php).
+   Al hacer clic alterna la clase `dark` en <html> y guarda
+   la preferencia en localStorage con la clave 'lb-dark'.
    ══════════════════════════════════════════════════════════ */
 function initDarkMode() {
+  /* Restaurar preferencia guardada antes de pintar la página */
   const saved = localStorage.getItem('lb-dark');
   if (saved === '1') document.documentElement.classList.add('dark');
-  // Solo inyectar la luna en desktop — en móvil ya está dentro del menú desplegable
+
   if (window.innerWidth <= 640) return;
+
   const headerRight = document.querySelector('.header-right');
   if (!headerRight) return;
+
+  /* Crear botón y colocarlo al inicio del área derecha del header */
   const btn = document.createElement('button');
   btn.className = 'btn btn-outline btn-sm dark-toggle';
   btn.setAttribute('aria-label', 'Cambiar tema');
   btn.innerHTML = document.documentElement.classList.contains('dark') ? '☀️' : '🌙';
+
   btn.addEventListener('click', () => {
     const isDark = document.documentElement.classList.toggle('dark');
     localStorage.setItem('lb-dark', isDark ? '1' : '0');
+    /* Actualizar ícono según el tema activo */
     btn.innerHTML = isDark ? '☀️' : '🌙';
-    playSound('select');
   });
+
   headerRight.insertBefore(btn, headerRight.firstChild);
 }
 
 /* ══════════════════════════════════════════════════════════
-   3. TOOLTIPS EN MÓDULOS (preview de lecciones)
+   2. SELECCIONAR OPCIÓN
+   Llamado desde onclick en cada botón de opción (lesson.php).
+   Visualmente:
+   - Quita la clase `selected` y `wrong` de todas las opciones
+   - Agrega `selected` al botón pulsado (borde azul + fondo claro)
+   - Muestra el botón "Verificar Respuesta" que estaba oculto
+   - Si había un mensaje de error previo, lo oculta para reintentar
    ══════════════════════════════════════════════════════════ */
-function initModuleTooltips() {
-  document.querySelectorAll('.module-card').forEach(card => {
-    const link = card.querySelector('a.btn');
-    if (!link) return;
-    const href = link.getAttribute('href');
-    if (!href) return;
+function selectOption(btn) {
+  const exercise = btn.closest('.exercise');
 
-    // Crear tooltip
-    const tip = document.createElement('div');
-    tip.className = 'module-tooltip';
-    tip.innerHTML = '<div class="module-tooltip__loading">Cargando…</div>';
-    card.style.position = 'relative';
-    card.appendChild(tip);
-
-    let loaded = false;
-    let showTimer, hideTimer;
-
-    card.addEventListener('mouseenter', () => {
-      clearTimeout(hideTimer);
-      showTimer = setTimeout(() => {
-        tip.classList.add('module-tooltip--visible');
-        if (!loaded) {
-          loaded = true;
-          // Extraer module id del href
-          const match = href.match(/id=(\d+)/);
-          if (!match) return;
-          fetch(`${href.split('?')[0].replace('module.php','api/module_preview.php')}?id=${match[1]}`)
-            .then(r => r.json())
-            .then(data => {
-              if (!data.lessons) return;
-              tip.innerHTML = `
-                <div class="module-tooltip__title">${data.moduleName}</div>
-                <ul class="module-tooltip__list">
-                  ${data.lessons.map((l, i) => `
-                    <li class="${l.completed ? 'done' : ''}">
-                      ${l.completed ? '✅' : `<span class="tip-num">${i+1}</span>`}
-                      ${l.title}
-                    </li>`).join('')}
-                </ul>`;
-            })
-            .catch(() => { tip.innerHTML = '<div class="module-tooltip__loading">Vista previa no disponible</div>'; });
-        }
-      }, 350);
-    });
-
-    card.addEventListener('mouseleave', () => {
-      clearTimeout(showTimer);
-      hideTimer = setTimeout(() => tip.classList.remove('module-tooltip--visible'), 150);
-    });
+  /* Limpiar selección anterior */
+  exercise.querySelectorAll('.option-btn').forEach(b => {
+    b.classList.remove('selected', 'wrong');
   });
+
+  /* Marcar la opción elegida */
+  btn.classList.add('selected');
+
+  /* Mostrar el botón de verificar */
+  const checkBtn = exercise.querySelector('.check-btn');
+  if (checkBtn) checkBtn.classList.remove('hidden');
+
+  /* Ocultar mensaje de error anterior para permitir reintento */
+  const feedback = exercise.querySelector('.exercise__feedback');
+  if (feedback && feedback.classList.contains('exercise__feedback--wrong')) {
+    feedback.classList.add('hidden');
+    feedback.classList.remove('exercise__feedback--wrong');
+  }
 }
 
 /* ══════════════════════════════════════════════════════════
-   4. PANTALLA DE CELEBRACIÓN AL COMPLETAR MÓDULO
+   3. VERIFICAR RESPUESTA
+   Llamado desde onclick en el botón "Verificar Respuesta".
+   Flujo visual:
+   - Deshabilita el botón y muestra "Verificando…" mientras espera
+   - Si CORRECTO:
+       · Colorea en verde la opción correcta (.correct)
+       · Oculta el botón de verificar
+       · Muestra el mensaje en verde (.exercise__feedback--correct)
+       · Muestra la explicación si el servidor la envía
+       · Si es el último ejercicio de la última lección → celebración
+   - Si INCORRECTO:
+       · Colorea en rojo la opción elegida (.wrong)
+       · Muestra el mensaje en naranja (.exercise__feedback--wrong)
+       · Reactiva el botón para reintentar
+   - Si hay error de red: reactiva el botón y muestra alerta
+   ══════════════════════════════════════════════════════════ */
+function checkAnswer(checkBtn, exerciseId) {
+  const exercise    = checkBtn.closest('.exercise');
+  const selectedBtn = exercise.querySelector('.option-btn.selected');
+  if (!selectedBtn) return;
+
+  const selectedOptionId = parseInt(selectedBtn.dataset.optionId, 10);
+
+  /* Estado de carga */
+  checkBtn.disabled = true;
+  checkBtn.textContent = 'Verificando…';
+
+  const formData = new FormData();
+  formData.append('exercise_id',        exerciseId);
+  formData.append('selected_option_id', selectedOptionId);
+
+  fetch(CHECK_ANSWER_URL, { method: 'POST', body: formData })
+    .then(r => r.json())
+    .then(data => {
+      if (!data.success) {
+        /* Error del servidor — reactivar para reintentar */
+        checkBtn.disabled = false;
+        checkBtn.textContent = 'Verificar Respuesta';
+        return;
+      }
+
+      const isCorrect       = data.correct;
+      const correctOptionId = data.correctOptionId;
+
+      if (isCorrect) {
+        /* ── Respuesta correcta ── */
+
+        /* Bloquear todas las opciones y marcar la correcta en verde */
+        exercise.querySelectorAll('.option-btn').forEach(btn => {
+          btn.disabled = true;
+          if (parseInt(btn.dataset.optionId, 10) === correctOptionId) {
+            btn.classList.add('correct');
+          }
+        });
+
+        checkBtn.classList.add('hidden');
+
+        /* Mostrar mensaje de éxito en verde */
+        const feedback = exercise.querySelector('.exercise__feedback');
+        feedback.classList.remove('hidden', 'exercise__feedback--wrong');
+        feedback.classList.add('exercise__feedback--correct');
+        feedback.textContent = data.feedback || '¡Correcto! 🎉';
+
+        /* Mostrar explicación adicional si el servidor la envía */
+        const explanation = exercise.querySelector('.exercise__explanation');
+        if (explanation && data.explanation) {
+          explanation.textContent = data.explanation;
+          explanation.classList.remove('hidden');
+        }
+
+        correctCount++;
+
+        /* Mostrar celebración si se completaron todos los ejercicios
+           de la última lección del módulo */
+        if (typeof IS_LAST_LESSON !== 'undefined' && IS_LAST_LESSON &&
+            typeof TOTAL_EXERCISES !== 'undefined' && correctCount >= TOTAL_EXERCISES) {
+          setTimeout(() => {
+            if (typeof MODULE_NAME !== 'undefined') {
+              showCompletionScreen(MODULE_NAME);
+            }
+          }, 800);
+        }
+
+      } else {
+        /* ── Respuesta incorrecta ── */
+
+        /* Marcar en rojo solo la opción elegida */
+        exercise.querySelectorAll('.option-btn').forEach(btn => {
+          if (parseInt(btn.dataset.optionId, 10) === selectedOptionId) {
+            btn.classList.add('wrong');
+          }
+        });
+
+        /* Mostrar mensaje de error en naranja */
+        const feedback = exercise.querySelector('.exercise__feedback');
+        feedback.classList.remove('hidden', 'exercise__feedback--correct');
+        feedback.classList.add('exercise__feedback--wrong');
+        feedback.textContent = data.feedback || '¡Respuesta incorrecta! Selecciona otra opción. 💡';
+
+        /* Reactivar botón para que el usuario pueda reintentar */
+        checkBtn.disabled = false;
+        checkBtn.textContent = 'Verificar Respuesta';
+        checkBtn.classList.remove('hidden');
+      }
+    })
+    .catch(() => {
+      /* Error de red — reactivar y avisar */
+      checkBtn.disabled = false;
+      checkBtn.textContent = 'Verificar Respuesta';
+      alert('Error de conexión. Intenta de nuevo.');
+    });
+}
+
+/* ══════════════════════════════════════════════════════════
+   4. PANTALLA DE CELEBRACIÓN
+   Se muestra cuando el usuario completa todos los ejercicios
+   de la última lección de un módulo.
+   Crea un overlay oscuro con una tarjeta centrada que contiene:
+   trofeo 🏆, título, nombre del módulo, estrellas y botón
+   para cerrar el overlay y continuar navegando.
    ══════════════════════════════════════════════════════════ */
 function showCompletionScreen(moduleName) {
-  playSound('complete');
-  launchConfetti(['#ff2800','#ff6b00','#ffcc00','#fff','#ff9500'], 120);
-
   const overlay = document.createElement('div');
   overlay.className = 'completion-overlay';
   overlay.innerHTML = `
@@ -173,153 +215,14 @@ function showCompletionScreen(moduleName) {
       </button>
     </div>`;
   document.body.appendChild(overlay);
-
-  // Segunda ola de confetti
-  setTimeout(() => launchConfetti(['#ff2800','#ffcc00','#fff'], 80), 600);
 }
 
-// Exponer para uso desde PHP
+/* Exponer para que pueda ser llamada desde lesson.php */
 window.showCompletionScreen = showCompletionScreen;
 
 /* ══════════════════════════════════════════════════════════
-   SELECCIONAR OPCIÓN
-   ══════════════════════════════════════════════════════════ */
-function selectOption(btn) {
-  playSound('select');
-  const exercise = btn.closest('.exercise');
-  exercise.querySelectorAll('.option-btn').forEach(b => {
-    b.classList.remove('selected', 'wrong');
-  });
-  btn.classList.add('selected');
-  const checkBtn = exercise.querySelector('.check-btn');
-  if (checkBtn) checkBtn.classList.remove('hidden');
-
-  const feedback = exercise.querySelector('.exercise__feedback');
-  if (feedback && feedback.classList.contains('exercise__feedback--wrong')) {
-    feedback.classList.add('hidden');
-    feedback.classList.remove('exercise__feedback--wrong');
-  }
-}
-
-/* ══════════════════════════════════════════════════════════
-   VERIFICAR RESPUESTA
-   ══════════════════════════════════════════════════════════ */
-function checkAnswer(checkBtn, exerciseId) {
-  const exercise    = checkBtn.closest('.exercise');
-  const selectedBtn = exercise.querySelector('.option-btn.selected');
-  if (!selectedBtn) return;
-
-  const selectedOptionId = parseInt(selectedBtn.dataset.optionId, 10);
-  checkBtn.disabled = true;
-  checkBtn.textContent = 'Verificando…';
-
-  const formData = new FormData();
-  formData.append('exercise_id',        exerciseId);
-  formData.append('selected_option_id', selectedOptionId);
-
-  fetch(CHECK_ANSWER_URL, { method: 'POST', body: formData })
-    .then(r => r.json())
-    .then(data => {
-      if (!data.success) {
-        checkBtn.disabled = false;
-        checkBtn.textContent = 'Verificar Respuesta';
-        return;
-      }
-
-      const isCorrect       = data.correct;
-      const correctOptionId = data.correctOptionId;
-
-      if (isCorrect) {
-        playSound('correct');
-
-        exercise.querySelectorAll('.option-btn').forEach(btn => {
-          btn.disabled = true;
-          if (parseInt(btn.dataset.optionId, 10) === correctOptionId) btn.classList.add('correct');
-        });
-        checkBtn.classList.add('hidden');
-
-        const feedback = exercise.querySelector('.exercise__feedback');
-        feedback.classList.remove('hidden', 'exercise__feedback--wrong');
-        feedback.classList.add('exercise__feedback--correct');
-        feedback.textContent = data.feedback || '¡Correcto! 🎉';
-
-        const explanation = exercise.querySelector('.exercise__explanation');
-        if (explanation && data.explanation) {
-          explanation.textContent = data.explanation;
-          explanation.classList.remove('hidden');
-        }
-
-        correctCount++;
-        launchConfetti(['#ff2800','#ff6b00','#ffcc00'], 35);
-
-        // Solo mostrar celebración si es la última lección del módulo
-        if (typeof IS_LAST_LESSON !== 'undefined' && IS_LAST_LESSON &&
-            typeof TOTAL_EXERCISES !== 'undefined' && correctCount >= TOTAL_EXERCISES) {
-          setTimeout(() => {
-            if (typeof MODULE_NAME !== 'undefined') {
-              showCompletionScreen(MODULE_NAME);
-            }
-          }, 800);
-        }
-
-      } else {
-        playSound('wrong');
-
-        exercise.querySelectorAll('.option-btn').forEach(btn => {
-          if (parseInt(btn.dataset.optionId, 10) === selectedOptionId) btn.classList.add('wrong');
-        });
-
-        const feedback = exercise.querySelector('.exercise__feedback');
-        feedback.classList.remove('hidden', 'exercise__feedback--correct');
-        feedback.classList.add('exercise__feedback--wrong');
-        feedback.textContent = data.feedback || '¡Respuesta incorrecta! Selecciona otra opción. 💡';
-
-        checkBtn.disabled = false;
-        checkBtn.textContent = 'Verificar Respuesta';
-        checkBtn.classList.remove('hidden');
-      }
-    })
-    .catch(() => {
-      checkBtn.disabled = false;
-      checkBtn.textContent = 'Verificar Respuesta';
-      alert('Error de conexión. Intenta de nuevo.');
-    });
-}
-
-/* ══════════════════════════════════════════════════════════
-   CONFETTI
-   ══════════════════════════════════════════════════════════ */
-function launchConfetti(colors, count = 50) {
-  const cols = colors || ['#ff2800','#ff6b00','#ffcc00','#fff'];
-  for (let i = 0; i < count; i++) {
-    const dot = document.createElement('div');
-    const size = 6 + Math.random() * 8;
-    const isRect = Math.random() > 0.5;
-    dot.style.cssText = `
-      position:fixed;
-      width:${size}px; height:${isRect ? size * 0.4 : size}px;
-      border-radius:${isRect ? '2px' : '50%'};
-      background:${cols[i % cols.length]};
-      left:${Math.random() * 100}vw; top:-10px;
-      pointer-events:none; z-index:9999;
-      animation:fall ${0.8 + Math.random() * 1.2}s ease-in forwards;
-      transform:rotate(${Math.random()*360}deg);`;
-    document.body.appendChild(dot);
-    setTimeout(() => dot.remove(), 2500);
-  }
-}
-
-if (!document.getElementById('confetti-style')) {
-  const s = document.createElement('style');
-  s.id = 'confetti-style';
-  s.textContent = '@keyframes fall { to { transform: translateY(110vh) rotate(720deg); opacity:0; } }';
-  document.head.appendChild(s);
-}
-
-/* ══════════════════════════════════════════════════════════
-   INIT
+   INICIO — Punto de entrada al cargar el DOM
    ══════════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
-  initModuleTooltips();
 });

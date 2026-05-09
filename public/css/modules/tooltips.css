@@ -1,0 +1,85 @@
+/* ============================================================
+   TOOLTIPS - Tooltips de módulos
+   ============================================================ */
+
+.module-tooltip {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(6px);
+  width: 240px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 8px 32px rgba(0,0,0,.18), 0 0 0 1px rgba(30,58,138,.1);
+  padding: .85rem 1rem;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.module-tooltip--visible {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Flecha */
+.module-tooltip::before {
+  content: '';
+  position: absolute;
+  top: -6px;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: #fff;
+  border-top: none;
+}
+
+.module-tooltip__title {
+  font-size: .8rem;
+  font-weight: 800;
+  color: #1e3a8a;
+  margin-bottom: .5rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.module-tooltip__loading {
+  font-size: .82rem;
+  color: #9ca3af;
+  text-align: center;
+  padding: .5rem 0;
+}
+
+.module-tooltip__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: .3rem;
+}
+
+.module-tooltip__list li {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .82rem;
+  color: #374151;
+}
+
+.module-tooltip__list li.done {
+  color: #059669;
+}
+
+.tip-num {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1e3a8a, #7c3aed);
+  color: #fff;
+  font-size: .65rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}

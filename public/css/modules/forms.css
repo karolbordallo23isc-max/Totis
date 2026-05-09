@@ -1,0 +1,62 @@
+/* ============================================================
+   FORMULARIOS - Inputs y formularios
+   ============================================================ */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: .35rem;
+}
+
+.form-group label {
+  font-size: .9rem;
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+.input-icon-wrap {
+  position: relative;
+}
+
+.input-icon {
+  position: absolute;
+  left: .75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 1rem;
+  pointer-events: none;
+}
+
+.input-icon-wrap input {
+  width: 100%;
+  padding: .7rem .9rem .7rem 2.5rem;
+  border: 1.5px solid var(--gray-200);
+  border-radius: 8px;
+  font-size: .95rem;
+  outline: none;
+}
+
+.input-icon-wrap input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 4px 12px rgba(30,58,138,.12);
+}
+
+/* ── Alertas ──────────────────────────────────────────────── */
+.alert {
+  padding: .75rem 1rem;
+  border-radius: 8px;
+  font-size: .9rem;
+  margin-bottom: .5rem;
+}
+
+.alert-error {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #dc2626;
+}
+
+.alert-success {
+  background: #d1fae5;
+  border: 1px solid #6ee7b7;
+  color: #065f46;
+}

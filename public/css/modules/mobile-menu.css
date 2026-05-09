@@ -1,0 +1,124 @@
+/* ============================================================
+   MENÚ MÓVIL - Navegación responsive
+   ============================================================ */
+
+/* Por defecto: desktop ve el botón Salir, no el menú móvil */
+.hdr-mobile-only {
+  display: none;
+}
+
+.hdr-desktop-only {
+  display: inline-flex;
+}
+
+@media (max-width: 640px) {
+  .hdr-desktop-only {
+    display: none;
+  }
+
+  .hdr-mobile-only {
+    display: block;
+  }
+
+  .header-inner {
+    padding: 0 .75rem;
+    height: 56px;
+    gap: .5rem;
+  }
+
+  .header-nav {
+    padding: .25rem;
+  }
+
+  .header-nav__link {
+    padding: .28rem .6rem;
+    font-size: .8rem;
+  }
+
+  .logo-wordmark__name {
+    font-size: 1rem;
+  }
+}
+
+/* Botón del menú móvil */
+.mob-menu {
+  position: relative;
+}
+
+.mob-menu__btn {
+  background: #f5f7ff;
+  border: 1.5px solid rgba(30,58,138,.2);
+  border-radius: 999px;
+  padding: .28rem .65rem;
+  font-size: .9rem;
+  cursor: pointer;
+  color: var(--gray-700);
+}
+
+.mob-menu__btn:hover {
+  border-color: #2563eb;
+}
+
+/* Dropdown */
+.mob-menu__dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 170px;
+  background: #fff;
+  border-radius: 14px;
+  box-shadow: 0 8px 28px rgba(0,0,0,.14), 0 0 0 1px rgba(30,58,138,.08);
+  padding: .4rem;
+  z-index: 400;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(6px) scale(.97);
+  transform-origin: top right;
+}
+
+.mob-menu--open .mob-menu__dropdown {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+}
+
+.mob-menu__item {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  width: 100%;
+  padding: .6rem .85rem;
+  border-radius: 9px;
+  border: none;
+  background: none;
+  font-size: .88rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  text-decoration: none;
+  cursor: pointer;
+  text-align: left;
+}
+
+.mob-menu__item:hover {
+  background: #f5f7ff;
+  color: #1e3a8a;
+  text-decoration: none;
+}
+
+.mob-menu__item--danger:hover {
+  background: #eff6ff;
+  color: #1e3a8a;
+}
+
+.mob-menu__divider {
+  height: 1px;
+  background: var(--gray-200);
+  margin: .3rem .4rem;
+}
+
+/* Ocultar link de perfil del nav en móvil */
+@media (max-width: 640px) {
+  .header-nav .header-nav__link--profile {
+    display: none !important;
+  }
+}
