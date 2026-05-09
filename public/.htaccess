@@ -1,0 +1,13 @@
+Options -Indexes
+
+# Redirige errores 404 al front controller
+ErrorDocument 404 /loopbook/public/index.php
+
+RewriteEngine On
+
+# Permite acceso directo a archivos y carpetas que existen (css, js, imágenes, etc.)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Todo lo demás va a index.php
+RewriteRule ^ index.php [L]
