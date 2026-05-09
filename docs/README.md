@@ -12,13 +12,14 @@ LoopBook es una plataforma web de aprendizaje diseñada para estudiantes de nuev
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | HTML5, CSS3 (diseño propio, sin frameworks) |
+| Frontend | HTML5, CSS3 modular (16 archivos por componente, sin frameworks) |
 | Backend | PHP 8.x (sin framework, arquitectura MVC manual) |
 | Base de datos | MySQL — normalizada en 3FN |
 | Acceso a datos | PDO con prepared statements (prevención de SQL injection) |
 | Autenticación | Sesiones PHP + bcrypt (`password_hash` / `password_verify`) |
 | Interactividad | JavaScript vanilla (Web Audio API, fetch para AJAX) |
 | Seguridad | Tokens CSRF + rate limiting en login (bloqueo 15 min tras 5 intentos) |
+| Tipografía | Plus Jakarta Sans (Google Fonts) |
 
 > No se utilizó ningún framework de PHP (Laravel, Symfony, Slim), ni librería de JavaScript (jQuery, React, Vue), ni framework de CSS (Bootstrap, Tailwind). Todo el código es escrito a mano.
 
@@ -56,9 +57,28 @@ loopbook/
 │   │   ├── module_preview.php  # GET  — devuelve lecciones de un módulo (tooltip)
 │   │   └── reset_progress.php  # POST — reinicia progreso de lección o módulo
 │   ├── css/
-│   │   └── styles.css          # Sistema de diseño completo (~1300 líneas)
+│   │   ├── styles.css          # Hoja principal — importa variables y módulos
+│   │   └── modules/            # CSS dividido por componente (16 archivos)
+│   │       ├── variables.css   # Paleta de colores, fuentes y tokens de diseño
+│   │       ├── base.css        # Estilos globales del body y reset
+│   │       ├── buttons.css     # Sistema de botones y variantes
+│   │       ├── cards.css       # Tarjetas de módulos y lecciones
+│   │       ├── forms.css       # Inputs y formularios
+│   │       ├── header.css      # Barra de navegación
+│   │       ├── layout.css      # Estructura de páginas
+│   │       ├── auth.css        # Login y registro
+│   │       ├── exercises.css   # Ejercicios y opciones
+│   │       ├── progress.css    # Barras de progreso
+│   │       ├── profile.css     # Página de perfil
+│   │       ├── celebration.css # Pantalla de celebración al completar módulo
+│   │       ├── dark-mode.css   # Modo oscuro
+│   │       ├── tooltips.css    # Tooltips del dashboard
+│   │       ├── mobile-menu.css # Menú móvil
+│   │       └── responsive.css  # Media queries
+│   ├── img/
+│   │   └── loopbook_logo.png   # Logo del proyecto (PNG transparente)
 │   └── js/
-│       └── app.js              # Sonidos, modo oscuro, tooltips, confetti, AJAX
+│       └── app.js              # Sonidos Web Audio API, modo oscuro, tooltips, confetti, AJAX
 │
 ├── src/                        # Todo el código PHP de la aplicación
 │   ├── helpers.php             # Funciones globales: redirect, base_url, require_auth,
