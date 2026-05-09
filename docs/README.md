@@ -130,16 +130,22 @@ git clone <url-del-repositorio> C:/xampp/htdocs/loopbook
 3. Crea una base de datos llamada `loopbook`.
 4. Selecciona esa base de datos → pestaña **Importar** → selecciona el archivo `config/loopbook.sql` → clic en **Continuar**.
 
-### 3. Verificar la configuración de conexión
+### 3. Configurar las variables de entorno
 
-Abre `config/database.php` y confirma que las credenciales coincidan con tu entorno:
+Copia el archivo de ejemplo y renómbralo:
 
-```php
-define('DB_HOST', 'localhost');
-define('DB_PORT', '3306');   // XAMPP usa 3306; algunos usan 3307
-define('DB_NAME', 'loopbook');
-define('DB_USER', 'root');
-define('DB_PASS', '');       // En XAMPP por defecto está vacío
+```bash
+copy .env.example .env
+```
+
+Abre el archivo `.env` y ajusta las credenciales a tu entorno local:
+
+```
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=loopbook
+DB_USER=root
+DB_PASS=        # En XAMPP por defecto está vacío
 ```
 
 ### 4. Acceder al sistema

@@ -119,16 +119,22 @@ git clone https://github.com/karolbordallo23isc-max/Totis.git C:/xampp/htdocs/lo
 3. Crear una base de datos llamada `loopbook` o importar directamente sin crear la base de datos.
 4. Seleccionar la base de datos → pestaña **Importar** → seleccionar `config/loopbook.sql` → clic en **Continuar**
 
-### Paso 3 — Verificar credenciales
+### Paso 3 — Configurar las variables de entorno
 
-Abrir `config/database.php` y confirmar que coincidan con el entorno local:
+Copia el archivo de ejemplo y renómbralo:
 
-```php
-define('DB_HOST', 'localhost');
-define('DB_PORT', '3306');   // XAMPP usa 3306 por defecto
-define('DB_NAME', 'loopbook');
-define('DB_USER', 'root');
-define('DB_PASS', '');       // En XAMPP el password está vacío por defecto
+```bash
+copy .env.example .env
+```
+
+Abre el `.env` y ajusta las credenciales a tu entorno local:
+
+```
+DB_HOST=localhost
+DB_PORT=3306
+DB_NAME=loopbook
+DB_USER=root
+DB_PASS=        # En XAMPP por defecto está vacío
 ```
 
 ### Paso 4 — Abrir en el navegador
