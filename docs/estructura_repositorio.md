@@ -125,21 +125,29 @@ git clone https://github.com/karolbordallo23isc-max/Totis.git C:/xampp/htdocs/lo
 
 ### Paso 3 — Configurar las variables de entorno
 
-Copia el archivo de ejemplo y renómbralo:
+En la carpeta del proyecto verás un archivo llamado `.env.example`. Tienes que crear una copia de ese archivo y llamarla `.env`.
 
+**En Windows (Explorador de archivos):**
+1. Busca el archivo `.env.example` en la raíz del proyecto
+2. Cópialo y pégalo en la misma carpeta
+3. Renombra la copia a `.env`
+
+**O desde la terminal en la carpeta del proyecto:**
 ```bash
 copy .env.example .env
 ```
 
-Abre el `.env` y ajusta las credenciales a tu entorno local:
+Abre el `.env` con cualquier editor de texto y verifica las credenciales:
 
 ```
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=loopbook
 DB_USER=root
-DB_PASS=        # En XAMPP por defecto está vacío
+DB_PASS=
 ```
+
+> En XAMPP el campo `DB_PASS` normalmente está vacío. Si tu MySQL tiene contraseña, escríbela ahí.
 
 ### Paso 4 — Abrir en el navegador
 
