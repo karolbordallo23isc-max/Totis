@@ -130,10 +130,9 @@ git clone <url-del-repositorio> C:/xampp/htdocs/loopbook
 
 ### 2. Crear la base de datos
 
-1. Inicia XAMPP y activa los servicios **Apache** y **MySQL**.
-2. Abre **phpMyAdmin** en `http://localhost/phpmyadmin`.
-3. Crea una base de datos llamada `loopbook`.
-4. Selecciona esa base de datos → pestaña **Importar** → selecciona el archivo `config/loopbook.sql` → clic en **Continuar**.
+1. Inicia XAMPP y activa los servicios **Apache** y **MySQL**
+2. Abre **phpMyAdmin** dando clic en el botón **Admin** de MySQL en el panel de XAMPP
+3. Ve a la pestaña **Importar** → selecciona el archivo `config/loopbook.sql` → clic en **Continuar**
 
 ### 3. Configurar las variables de entorno
 
@@ -166,7 +165,7 @@ DB_PASS=
 Abre tu navegador e ingresa a:
 
 ```
-http://localhost/loopbook/public/index.php
+http://localhost/loopbook/public
 ```
 
 El router detecta automáticamente si hay sesión activa y redirige al dashboard o al login.
