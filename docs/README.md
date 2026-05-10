@@ -106,7 +106,12 @@ loopbook/
 │           └── next_module_card.php
 │
 └── docs/
-    └── README.md
+    ├── README.md                        # Documentación principal del proyecto (Dev Líder)
+    ├── estructura_repositorio.md        # Estructura y decisiones de arquitectura (Dev Líder)
+    ├── mejoras_interfaz.md              # Documentación de mejoras visuales (Diseñador)
+    ├── validacion_requisitos.md         # Validación de requisitos funcionales (Analista)
+    ├── test_report.md                   # Reporte de pruebas y casos de QA (QA/Tester)
+    └── bitacora_sprint4.pdf             # Bitácora del sprint (Coordinador)
 ```
 
 ---

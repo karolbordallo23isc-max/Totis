@@ -16,8 +16,12 @@ loopbook/
 │   └── loopbook.sql
 │
 ├── docs/
-│   ├── README.md
-│   └── estructura_repositorio.md
+│   ├── README.md                  # Documentación principal del proyecto (Dev Líder)
+│   ├── estructura_repositorio.md  # Estructura y decisiones de arquitectura (Dev Líder)
+│   ├── mejoras_interfaz.md        # Documentación de mejoras visuales (Diseñador)
+│   ├── validacion_requisitos.md   # Validación de requisitos funcionales (Analista)
+│   ├── test_report.md             # Reporte de pruebas y casos de QA (QA/Tester)
+│   └── bitacora_sprint4.pdf       # Bitácora del sprint (Coordinador)
 │
 ├── public/
 │   ├── .htaccess
@@ -84,7 +88,7 @@ loopbook/
 | `config/` | Configuración de la base de datos y schema SQL con datos de prueba. |
 | `config/database.php` | Función `getDB()` — conexión PDO singleton a MySQL. Único punto de acceso a la BD. |
 | `config/loopbook.sql` | Schema completo de la base de datos con tablas, relaciones y datos de prueba listos para importar. |
-| `docs/` | Documentación del proyecto. No contiene código ejecutable. |
+| `docs/` | Documentación del proyecto. Aquí van todos los entregables por rol: README, estructura del repositorio, mejoras de interfaz, validación de requisitos, reporte de QA y bitácora del sprint. No contiene código ejecutable. |
 | `public/` | Único directorio expuesto al navegador. Todo lo que el usuario puede acceder directamente está aquí. |
 | `public/index.php` | Front Controller — punto de entrada único. Recibe todas las peticiones y las enruta al controlador correspondiente según el parámetro `?page=`. |
 | `public/.htaccess` | Configuración de Apache: desactiva listado de directorios y redirige todo al Front Controller. |
