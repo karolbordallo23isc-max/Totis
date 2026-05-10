@@ -119,9 +119,8 @@ git clone https://github.com/karolbordallo23isc-max/Totis.git C:/xampp/htdocs/lo
 ### Paso 2 — Crear la base de datos
 
 1. Iniciar XAMPP y activar **Apache** y **MySQL**
-2. Abrir **phpMyAdmin** en `http://localhost/phpmyadmin`
-3. Crear una base de datos llamada `loopbook` o importar directamente sin crear la base de datos.
-4. Seleccionar la base de datos → pestaña **Importar** → seleccionar `config/loopbook.sql` → clic en **Continuar**
+2. Abrir **phpMyAdmin** dando clic en el botón **Admin** de MySQL en el panel de XAMPP
+3. Ir a la pestaña **Importar** → seleccionar `config/loopbook.sql` → clic en **Continuar**
 
 ### Paso 3 — Configurar las variables de entorno
 
