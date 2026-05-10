@@ -1,0 +1,20 @@
+# Credenciales y configuración local — nunca subir al repositorio
+.env
+
+# Dependencias (si se agregan en el futuro)
+vendor/
+node_modules/
+
+# Logs del servidor
+*.log
+/logs/
+
+# Archivos del sistema operativo
+.DS_Store
+Thumbs.db
+
+# Caché y temporales de editores
+.idea/
+.vscode/
+*.swp
+*.swo
