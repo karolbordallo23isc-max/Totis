@@ -137,21 +137,29 @@ git clone <url-del-repositorio> C:/xampp/htdocs/loopbook
 
 ### 3. Configurar las variables de entorno
 
-Copia el archivo de ejemplo y renómbralo:
+En la carpeta del proyecto verás un archivo llamado `.env.example`. Tienes que crear una copia de ese archivo y llamarla `.env`.
 
+**En Windows (Explorador de archivos):**
+1. Busca el archivo `.env.example` en la raíz del proyecto
+2. Cópialo y pégalo en la misma carpeta
+3. Renombra la copia a `.env`
+
+**O desde la terminal en la carpeta del proyecto:**
 ```bash
 copy .env.example .env
 ```
 
-Abre el archivo `.env` y ajusta las credenciales a tu entorno local:
+Abre el archivo `.env` con cualquier editor de texto y verifica que las credenciales coincidan con tu XAMPP:
 
 ```
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=loopbook
 DB_USER=root
-DB_PASS=        # En XAMPP por defecto está vacío
+DB_PASS=
 ```
+
+> En XAMPP el campo `DB_PASS` normalmente está vacío. Si tu MySQL tiene contraseña, escríbela ahí.
 
 ### 4. Acceder al sistema
 
