@@ -1,83 +1,18 @@
-# Test Report - QA
+TEST REPORT
 
-## Proyecto
-LoopBook
+Diseñador:
+Sus pantallas renovadas dan un buen uso, ya que son mas llamativas
+al publico y están muy bien organizadas 
 
-## Fecha
-22 de abril de 2026
+Dev líder:
+Por este modo me resulto difícil entrar pero por problemas de usuario,
+y una vez visto el sistema, hay un pequeño detalle al momento del registro
+ya que tengo que hacer el zoom lejos para poder escribir en todos los campos,
+fuera de eso el registro cumple, los espacios no quedan vacíos, los emails
+deben ser aceptados, el sistema funciona bien y tiene mejor diseño que el 
+anterior
 
-## Responsable
-Alexis Alavarado Gomez - QA
-
-## TC-001
-| Campo                | Detalle                         |
-|---------------------|---------------------------------|
-| Caso                | Registro de usuario     |
-| Entrada             | Usuario, correo y contraseña   |
-| Esperado            | Usuario se registra |
-| Obtenido            | Usuario guardado en la BD               |
-| Estado              | Correcto                        |
-## TC-002
-| Campo                | Detalle                         |
-|---------------------|---------------------------------|
-| Caso                | Inicio de sesión          |
-| Entrada             | Correo y contraseña correctos   |
-| Esperado            | Usuario inicia sesión  |
-| Obtenido            | Usuario inicia sesión y tiene acceso al contenido|
-| Estado              | Correcto                        |
-## TC-003
-| Campo                | Detalle                         |
-|---------------------|---------------------------------|
-| Caso                | Acceso a módulos          |
-| Entrada             | Inicio de sesion   |
-| Esperado            | Mostrar módulos  |
-| Obtenido            | Usuario puede ver los módulos y ingresar a ellos|
-| Estado              | Correcto                        |
-## TC-004
-| Campo                | Detalle                         |
-|---------------------|---------------------------------|
-| Caso                | Ejercicios          |
-| Entrada             | Contenido de módulos   |
-| Esperado            | Mostrar contenido   |
-| Obtenido            | Usuario puede ver contenido y preguntas|
-| Estado              | Correcto                        |
-## TC-005
-| Campo                | Detalle                         |
-|---------------------|---------------------------------|
-| Caso                | Ejercicios          |
-| Entrada             | Realizar ejercicio   |
-| Esperado            | Guardar respuestas en BD   |
-| Obtenido            | Respuesta y progreso guardado|
-| Estado              | Correcto                        |
-## TC-006
-| Campo                | Detalle                         |
-|---------------------|---------------------------------|
-| Caso                | Ejercicios          |
-| Entrada             | Progreso de módulos   |
-| Esperado            | Mostrar progreso de modulos  |
-| Obtenido            | Sistema muestra el progreso por módulo |
-| Estado              | Correcto                        |
-## TC-007
-| Campo                | Detalle                         |
-|---------------------|---------------------------------|
-| Caso                | Boton de inicio|
-| Entrada             | Regresar al inicio   |
-| Esperado            | Funcionalidad correcta de la función inicio   |
-| Obtenido            | Regreso al incio|
-| Estado              | Correcto                        |
-## TC-008
-| Campo                | Detalle                         |
-|---------------------|---------------------------------|
-| Caso                | Regresar a lecciones |
-| Entrada             | Funcion de navegacion   |
-| Esperado            | Regreso a la ventana Módulos  |
-| Obtenido            | Acción realizada|
-| Estado              | Correcto                        |
-## TC-009
-| Campo                | Detalle                         |
-|---------------------|---------------------------------|
-| Caso                | Cerrar Sesión |
-| Entrada             | Cierre de sesion   |
-| Esperado            | Sesión cerrada desde la página |
-| Obtenido            | Sesión cerrada de froma correcta|
-| Estado              | Correcto                        |
+Analista:
+Los requisitos funcionales y no funcionales cumplen en su mayoría, 
+hay uno de “las contraseñas no se muestran visibles” 
+en si no se muestran pero si tiene una opción para hacerlo, y sobre todo la ortografía 
