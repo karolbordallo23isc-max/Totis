@@ -1,420 +1,279 @@
--- phpMyAdmin SQL Dump
--- version 5.2.1
--- https://www.phpmyadmin.net/
---
--- Servidor: 127.0.0.1:3307
--- Tiempo de generación: 23-04-2026 a las 03:00:52
--- Versión del servidor: 10.4.32-MariaDB
--- Versión de PHP: 8.2.12
+-- ============================================================
+-- Loopbook — Base de datos completa
+-- Importar en phpMyAdmin: BD loopbook > Importar > este archivo
+-- Un solo archivo, todo incluido, listo para usar.
+-- ============================================================
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-START TRANSACTION;
-SET time_zone = "+00:00";
+CREATE DATABASE IF NOT EXISTS loopbook CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
+USE loopbook;
 
+SET FOREIGN_KEY_CHECKS = 0;
+DROP TABLE IF EXISTS progreso;
+DROP TABLE IF EXISTS opcion;
+DROP TABLE IF EXISTS ejercicios;
+DROP TABLE IF EXISTS contenido;
+DROP TABLE IF EXISTS modulos;
+DROP TABLE IF EXISTS curso;
+DROP TABLE IF EXISTS usuario;
+SET FOREIGN_KEY_CHECKS = 1;
 
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8mb4 */;
-
---
--- Base de datos: `loopbook`
---
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `contenido`
---
-
-CREATE TABLE `contenido` (
-  `id_contenido` int(11) NOT NULL,
-  `id_modulo` int(11) NOT NULL,
-  `titulo` varchar(150) NOT NULL,
-  `texto` text DEFAULT NULL,
-  `tipo` enum('texto','video','imagen') NOT NULL,
-  `url` varchar(255) DEFAULT NULL,
-  `orden` int(11) NOT NULL
+-- ── Usuarios ──────────────────────────────────────────────────
+CREATE TABLE `usuario` (
+  `id_usuario`     INT(11)      NOT NULL AUTO_INCREMENT,
+  `nombre`         VARCHAR(100) NOT NULL,
+  `avatar`         VARCHAR(10)  NOT NULL DEFAULT '👤',
+  `usuario`        VARCHAR(100) NOT NULL UNIQUE,
+  `correo`         VARCHAR(150) NOT NULL UNIQUE,
+  `contraseña`     VARCHAR(255) NOT NULL,
+  `fecha_registro` DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_usuario`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `contenido`
---
+-- Usuarios de prueba (contraseñas: prueba123 / test123)
+INSERT INTO `usuario` (`id_usuario`, `nombre`, `avatar`, `usuario`, `correo`, `contraseña`, `fecha_registro`) VALUES
+(1, 'Prueba', '👤', 'prueba', 'prueba@gmail.com', '$2y$10$AVQpnPEoIjBynjowNUj95e2y6J8CF/QavadIvA8MGe8IbMVB9mSNW', '2026-04-22 22:58:24'),
+(2, 'Test',   '👤', 'test',   't@gmail.com',      '$2y$10$POvcAnwcJ1GlpoitPbSDPuN7OrGkv6KCoz6/7cT5DqB8ljkWL7jYa', '2026-04-22 23:27:53');
 
-INSERT INTO `contenido` (`id_contenido`, `id_modulo`, `titulo`, `texto`, `tipo`, `url`, `orden`) VALUES
-(1, 1, 'Definición', 'Los lenguajes de programación son conjuntos de reglas sintácticas y semánticas que permiten a los desarrolladores crear instrucciones para que las computadoras ejecuten software, sitios web y aplicaciones.', 'texto', NULL, 1),
-(2, 2, 'Diferencias', 'Las dos principales diferencias entre lenguajes compilados (como C++) e interpretados (como Python) son el momento de la traducción a código máquina y la velocidad de ejecución.', 'texto', NULL, 1),
-(3, 5, '¿Qué es una función?', 'Una función es un bloque de código que realiza una tarea específica y puede ejecutarse cuantas veces sea necesario sin repetir el código.', 'texto', NULL, 1),
-(4, 5, 'Ventajas de usar funciones', 'Las funciones permiten reutilizar código, facilitan la lectura del programa y hacen más sencillo encontrar y corregir errores.', 'texto', NULL, 2),
-(5, 1, 'Historia de los lenguajes', 'Los primeros lenguajes de programación surgieron en los años 50. Fortran fue uno de los primeros lenguajes de alto nivel, diseñado para cálculos científicos. Con el tiempo fueron evolucionando hasta los lenguajes modernos que usamos hoy como Python, JavaScript y Java.', 'texto', NULL, 2);
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `curso`
---
-
+-- ── Curso ──────────────────────────────────────────────────────
 CREATE TABLE `curso` (
-  `id_curso` int(11) NOT NULL,
-  `nombre` varchar(150) NOT NULL,
-  `descripcion` text DEFAULT NULL
+  `id_curso`    INT(11)      NOT NULL AUTO_INCREMENT,
+  `nombre`      VARCHAR(150) NOT NULL,
+  `descripcion` TEXT         DEFAULT NULL,
+  PRIMARY KEY (`id_curso`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `curso`
---
 
 INSERT INTO `curso` (`id_curso`, `nombre`, `descripcion`) VALUES
 (1, 'Lenguajes de programación', 'Aprende los fundamentos de los lenguajes de programación');
 
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `ejercicios`
---
-
-CREATE TABLE `ejercicios` (
-  `id_ejercicio` int(11) NOT NULL,
-  `id_modulo` int(11) NOT NULL,
-  `pregunta` text NOT NULL,
-  `retroalimentacion` text DEFAULT NULL,
-  `tipo` enum('opcion_multiple','verdadero_falso') NOT NULL,
-  `fecha_creacion` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `ejercicios`
---
-
-INSERT INTO `ejercicios` (`id_ejercicio`, `id_modulo`, `pregunta`, `retroalimentacion`, `tipo`, `fecha_creacion`) VALUES
-(1, 1, '¿Qué es un lenguaje de programación?', 'Recuerda que es un sistema formal de instrucciones para computadoras.', 'verdadero_falso', '2026-04-22 15:58:31'),
-(2, 1, '¿Para qué sirven los lenguajes de programación?', 'Piensa en las aplicaciones que usas a diario.', 'verdadero_falso', '2026-04-22 15:58:31'),
-(3, 2, '¿Cuál es la diferencia principal entre un lenguaje compilado e interpretado?', 'Piensa en cuándo se traduce el código a lenguaje máquina.', 'verdadero_falso', '2026-04-22 15:58:31'),
-(4, 2, 'Menciona un ejemplo de lenguaje compilado y uno interpretado.', 'Ejemplos: C++ es compilado, Python es interpretado.', 'verdadero_falso', '2026-04-22 15:58:31'),
-(5, 3, '¿Qué es una variable en programación?', 'Una variable es un espacio en memoria que almacena un valor.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(6, 3, '¿Cuál es la diferencia entre int y float?', 'int almacena enteros, float almacena decimales.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(7, 3, '¿Para qué sirven los tipos de datos?', 'Definen qué tipo de valor puede almacenar una variable.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(8, 4, '¿Qué es un condicional if?', 'Ejecuta un bloque de código solo si se cumple una condición.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(9, 4, '¿Cuál es la diferencia entre for y while?', 'for itera un número fijo de veces, while itera mientras se cumpla una condición.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(10, 4, '¿Qué es un bucle infinito?', 'Un bucle que nunca termina porque su condición siempre es verdadera.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(11, 1, '¿Puedes mencionar un lenguaje de programación que conozcas?', 'Ejemplos: Python, Java, C++, JavaScript.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(12, 2, '¿Por qué crees que Python es un lenguaje interpretado?', 'Porque su código se ejecuta línea por línea en tiempo real.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(13, 3, '¿Qué tipo de dato usarías para guardar el nombre de una persona?', 'Se usaría el tipo String o cadena de texto.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(14, 4, '¿Cuándo usarías un bucle while en lugar de un for?', 'Cuando no sabes de antemano cuántas veces se repetirá el ciclo.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(15, 5, '¿Qué es una función en programación?', 'Recuerda que una función agrupa código reutilizable bajo un nombre.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(16, 5, '¿Cuál es la ventaja principal de usar funciones?', 'Piensa en qué pasa cuando necesitas repetir la misma lógica varias veces.', 'verdadero_falso', '0000-00-00 00:00:00'),
-(17, 5, '¿Qué diferencia hay entre una función y un método?', 'Un método es una función que pertenece a un objeto o clase.', 'verdadero_falso', '0000-00-00 00:00:00');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `inscripcion`
---
-
-CREATE TABLE `inscripcion` (
-  `id_inscripcion` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  `id_curso` int(11) NOT NULL,
-  `estado_inscripcion` enum('activo','completado','cancelado') NOT NULL,
-  `fecha_inscripcion` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `modulos`
---
-
+-- ── Módulos ────────────────────────────────────────────────────
 CREATE TABLE `modulos` (
-  `id_modulo` int(11) NOT NULL,
-  `id_curso` int(11) NOT NULL,
-  `nombre` varchar(150) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  `orden` int(11) NOT NULL
+  `id_modulo`   INT(11)      NOT NULL AUTO_INCREMENT,
+  `id_curso`    INT(11)      NOT NULL,
+  `nombre`      VARCHAR(150) NOT NULL,
+  `descripcion` TEXT         DEFAULT NULL,
+  `orden`       INT(11)      NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_modulo`),
+  KEY `id_curso` (`id_curso`),
+  CONSTRAINT `modulos_ibfk_1` FOREIGN KEY (`id_curso`) REFERENCES `curso` (`id_curso`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `modulos`
---
 
 INSERT INTO `modulos` (`id_modulo`, `id_curso`, `nombre`, `descripcion`, `orden`) VALUES
-(1, 1, '¿Qué son los Lenguajes de programación?', 'Introducción a los lenguajes', 1),
-(2, 1, '¿Qué diferencia hay entre lenguaje compilado e interpretado?', 'Compilado vs interpretado', 2),
-(3, 1, 'Variables y tipos de datos', 'Aprenderás a almacenar y manipular información', 3),
-(4, 1, 'Estructura de control', 'Condicionales, bucles y control de flujos', 4),
-(5, 1, 'Funciones y métodos', 'Aprenderás a organizar tu código en bloques reutilizables', 5);
+(1, 1, '¿Qué son los Lenguajes de Programación?', 'Introducción a los lenguajes de programación y su historia', 1),
+(2, 1, 'Lenguajes Compilados vs Interpretados',   'Diferencias, ventajas y ejemplos de cada tipo',              2),
+(3, 1, 'Variables y Tipos de Datos',              'Aprende a almacenar y manipular información',                3),
+(4, 1, 'Estructuras de Control',                  'Condicionales, bucles y control de flujo',                   4),
+(5, 1, 'Funciones y Métodos',                     'Organiza tu código en bloques reutilizables',                5);
 
--- --------------------------------------------------------
+-- ── Contenido (lecciones) ──────────────────────────────────────
+CREATE TABLE `contenido` (
+  `id_contenido` INT(11)                        NOT NULL AUTO_INCREMENT,
+  `id_modulo`    INT(11)                        NOT NULL,
+  `titulo`       VARCHAR(150)                   NOT NULL,
+  `texto`        TEXT                           DEFAULT NULL,
+  `tipo`         ENUM('texto','video','imagen') NOT NULL DEFAULT 'texto',
+  `url`          VARCHAR(255)                   DEFAULT NULL,
+  `orden`        INT(11)                        NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id_contenido`),
+  KEY `id_modulo` (`id_modulo`),
+  CONSTRAINT `contenido_ibfk_1` FOREIGN KEY (`id_modulo`) REFERENCES `modulos` (`id_modulo`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Estructura de tabla para la tabla `opcion`
---
+INSERT INTO `contenido` (`id_contenido`, `id_modulo`, `titulo`, `texto`, `tipo`, `orden`) VALUES
+-- Módulo 1
+(1,  1, '¿Qué es un lenguaje de programación?',
+ 'Un lenguaje de programación es un conjunto de reglas sintácticas y semánticas que permite a los desarrolladores escribir instrucciones para que las computadoras ejecuten tareas. Son la base de todo el software, sitios web y aplicaciones que usamos a diario.',
+ 'texto', 1),
+(2,  1, 'Historia breve de los lenguajes',
+ 'Los primeros lenguajes surgieron en los años 50. Fortran (1957) fue uno de los primeros lenguajes de alto nivel, diseñado para cálculos científicos. Le siguieron COBOL, BASIC, C, y con el tiempo llegaron los lenguajes modernos como Python, JavaScript y Java que usamos hoy.',
+ 'texto', 2),
+(3,  1, '¿Para qué sirven?',
+ 'Los lenguajes de programación sirven para crear software de todo tipo: aplicaciones móviles, páginas web, videojuegos, sistemas operativos, inteligencia artificial y mucho más. Cada lenguaje tiene sus fortalezas y se adapta mejor a ciertos tipos de proyectos.',
+ 'texto', 3),
+-- Módulo 2
+(4,  2, '¿Qué es un lenguaje compilado?',
+ 'Un lenguaje compilado traduce todo el código fuente a código máquina ANTES de ejecutarlo. Esto se hace mediante un programa llamado compilador. El resultado es un archivo ejecutable muy rápido. Ejemplos: C, C++, Go, Rust.',
+ 'texto', 1),
+(5,  2, '¿Qué es un lenguaje interpretado?',
+ 'Un lenguaje interpretado traduce y ejecuta el código línea por línea EN TIEMPO REAL, usando un programa llamado intérprete. Es más flexible y fácil de depurar, aunque generalmente más lento. Ejemplos: Python, JavaScript, Ruby, PHP.',
+ 'texto', 2),
+(6,  2, 'Comparación práctica',
+ 'Compilado: escribes el código → el compilador lo traduce todo → obtienes un ejecutable rápido. Interpretado: escribes el código → el intérprete lo lee y ejecuta línea a línea → más lento pero más portable. Hoy muchos lenguajes usan enfoques híbridos (como Java con su JVM).',
+ 'texto', 3),
+-- Módulo 3
+(7,  3, '¿Qué es una variable?',
+ 'Una variable es un espacio en la memoria del computador que tiene un nombre y almacena un valor que puede cambiar durante la ejecución del programa. Puedes imaginarla como una caja etiquetada donde guardas información.',
+ 'texto', 1),
+(8,  3, 'Tipos de datos básicos',
+ 'Los tipos de datos más comunes son: int (números enteros como 5, -3), float (decimales como 3.14), string (texto como "Hola"), boolean (verdadero/falso). Cada tipo define qué clase de valor puede almacenar una variable y cuánta memoria ocupa.',
+ 'texto', 2),
+(9,  3, 'Declaración y uso',
+ 'En Python: nombre = "Ana", edad = 25, precio = 9.99, activo = True. En JavaScript: let nombre = "Ana". En Java: String nombre = "Ana". La sintaxis varía según el lenguaje, pero el concepto es el mismo: asignar un valor a un nombre.',
+ 'texto', 3),
+-- Módulo 4
+(10, 4, 'Condicionales IF / ELSE',
+ 'Un condicional permite que el programa tome decisiones. Si una condición es verdadera, ejecuta un bloque de código; si no, ejecuta otro. Ejemplo: si la edad >= 18, mostrar "Mayor de edad", sino mostrar "Menor de edad".',
+ 'texto', 1),
+(11, 4, 'Bucles: FOR y WHILE',
+ 'Un bucle FOR repite un bloque de código un número determinado de veces (cuando sabes cuántas iteraciones necesitas). Un bucle WHILE repite mientras una condición sea verdadera (cuando no sabes cuántas veces se repetirá). Ambos evitan escribir código repetido.',
+ 'texto', 2),
+(12, 4, 'Bucle infinito y cómo evitarlo',
+ 'Un bucle infinito ocurre cuando la condición de parada nunca se vuelve falsa. Esto congela el programa. Para evitarlo: asegúrate de que la variable de control cambie en cada iteración, o usa una condición de salida (break) dentro del bucle.',
+ 'texto', 3),
+-- Módulo 5
+(13, 5, '¿Qué es una función?',
+ 'Una función es un bloque de código con nombre que realiza una tarea específica y puede ejecutarse cuantas veces sea necesario sin repetir el código. Se define una vez y se llama (invoca) cuando se necesita.',
+ 'texto', 1),
+(14, 5, 'Parámetros y valor de retorno',
+ 'Las funciones pueden recibir datos de entrada llamados parámetros, y pueden devolver un resultado usando return. Ejemplo: función sumar(a, b) → devuelve a + b. Esto hace el código más flexible y reutilizable.',
+ 'texto', 2),
+(15, 5, 'Funciones vs Métodos',
+ 'Una función es independiente y se llama directamente por su nombre. Un método es una función que pertenece a un objeto o clase, y se llama usando la notación punto: objeto.metodo(). En Python, len("hola") es una función; "hola".upper() es un método.',
+ 'texto', 3);
 
+-- ── Ejercicios ─────────────────────────────────────────────────
+CREATE TABLE `ejercicios` (
+  `id_ejercicio`      INT(11)                                  NOT NULL AUTO_INCREMENT,
+  `id_modulo`         INT(11)                                  NOT NULL,
+  `id_contenido`      INT(11)                                  DEFAULT NULL,
+  `pregunta`          TEXT                                     NOT NULL,
+  `retroalimentacion` TEXT                                     DEFAULT NULL,
+  `tipo`              ENUM('opcion_multiple','verdadero_falso') NOT NULL DEFAULT 'opcion_multiple',
+  `fecha_creacion`    DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_ejercicio`),
+  KEY `id_modulo`    (`id_modulo`),
+  KEY `id_contenido` (`id_contenido`),
+  CONSTRAINT `ejercicios_ibfk_1` FOREIGN KEY (`id_modulo`)    REFERENCES `modulos`   (`id_modulo`)   ON DELETE CASCADE,
+  CONSTRAINT `ejercicios_ibfk_2` FOREIGN KEY (`id_contenido`) REFERENCES `contenido` (`id_contenido`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+INSERT INTO `ejercicios` (`id_ejercicio`, `id_modulo`, `id_contenido`, `pregunta`, `retroalimentacion`, `tipo`) VALUES
+-- Módulo 1: lección 1 (id_contenido=1) → pregunta sobre qué es un lenguaje
+(1,  1, 1,  '¿Qué es un lenguaje de programación?',                              'Un lenguaje de programación es un sistema formal de instrucciones que permite comunicarse con la computadora.',                                                                    'opcion_multiple'),
+-- Módulo 1: lección 2 (id_contenido=2) → pregunta sobre historia de los lenguajes
+(2,  1, 2,  '¿En qué década surgieron los primeros lenguajes de alto nivel?',    'Fortran, uno de los primeros lenguajes de alto nivel, fue creado en 1957, en la década de los 50.',                                                                                 'opcion_multiple'),
+-- Módulo 1: lección 3 (id_contenido=3) → pregunta sobre para qué sirven
+(3,  1, 3,  '¿Cuál de los siguientes es un lenguaje de programación?',           'Python, Java y C++ son lenguajes de programación. HTML es un lenguaje de marcado, no de programación.',                                                                             'opcion_multiple'),
+-- Módulo 2
+(4,  2, 4,  '¿Cuál es la diferencia principal entre compilado e interpretado?',  'La diferencia clave es el momento en que el código se traduce a lenguaje máquina: antes (compilado) o durante la ejecución (interpretado).',                                       'opcion_multiple'),
+(5,  2, 5,  '¿Cuál de estos es un lenguaje COMPILADO?',                          'C++ es compilado: necesita un compilador para convertir el código a ejecutable antes de correrlo. Python y JavaScript son interpretados.',                                           'opcion_multiple'),
+(6,  2, 6,  '¿Cuál de estos es un lenguaje INTERPRETADO?',                       'Python es interpretado: su código se ejecuta línea por línea en tiempo real mediante un intérprete.',                                                                                'opcion_multiple'),
+-- Módulo 3
+(7,  3, 7,  '¿Qué es una variable en programación?',                             'Una variable es un espacio en memoria con un nombre que almacena un valor que puede cambiar durante la ejecución.',                                                                  'opcion_multiple'),
+(8,  3, 8,  '¿Qué tipo de dato usarías para guardar el nombre de una persona?',  'El tipo String (cadena de texto) es el adecuado para almacenar texto como nombres.',                                                                                                  'opcion_multiple'),
+(9,  3, 9,  '¿Cuál es la diferencia entre int y float?',                         'int almacena números enteros (sin decimales), float almacena números con punto decimal.',                                                                                             'opcion_multiple'),
+-- Módulo 4
+(10, 4, 10, '¿Qué hace la estructura IF en programación?',                       'IF evalúa una condición: si es verdadera ejecuta un bloque de código, si no, puede ejecutar el bloque ELSE.',                                                                        'opcion_multiple'),
+(11, 4, 11, '¿Cuándo usarías un bucle WHILE en lugar de un FOR?',                'WHILE se usa cuando no sabes de antemano cuántas veces se repetirá el ciclo, ya que repite mientras la condición sea verdadera.',                                                   'opcion_multiple'),
+(12, 4, 12, '¿Qué es un bucle infinito?',                                        'Un bucle infinito ocurre cuando la condición de parada nunca se vuelve falsa, haciendo que el programa se quede atascado.',                                                          'opcion_multiple'),
+-- Módulo 5
+(13, 5, 13, '¿Cuál es la ventaja principal de usar funciones?',                  'Las funciones permiten reutilizar código: defines la lógica una vez y la llamas cuantas veces necesites.',                                                                            'opcion_multiple'),
+(14, 5, 14, '¿Qué hace la palabra clave return en una función?',                 'return devuelve un valor desde la función al lugar donde fue llamada y termina la ejecución de la función.',                                                                          'opcion_multiple'),
+(15, 5, 15, '¿Cuál es la diferencia entre una función y un método?',             'Un método es una función que pertenece a un objeto o clase y se llama con la notación punto (objeto.metodo()).',                                                                     'opcion_multiple');
+
+-- ── Opciones de respuesta ──────────────────────────────────────
 CREATE TABLE `opcion` (
-  `id_opcion` int(11) NOT NULL,
-  `id_ejercicio` int(11) NOT NULL,
-  `texto` varchar(255) NOT NULL,
-  `es_correcta` tinyint(1) NOT NULL,
-  `retroalimentacion` text DEFAULT NULL
+  `id_opcion`         INT(11)      NOT NULL AUTO_INCREMENT,
+  `id_ejercicio`      INT(11)      NOT NULL,
+  `texto`             VARCHAR(255) NOT NULL,
+  `es_correcta`       TINYINT(1)   NOT NULL DEFAULT 0,
+  `retroalimentacion` TEXT         DEFAULT NULL,
+  PRIMARY KEY (`id_opcion`),
+  KEY `id_ejercicio` (`id_ejercicio`),
+  CONSTRAINT `opcion_ibfk_1` FOREIGN KEY (`id_ejercicio`) REFERENCES `ejercicios` (`id_ejercicio`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
--- --------------------------------------------------------
+INSERT INTO `opcion` (`id_ejercicio`, `texto`, `es_correcta`, `retroalimentacion`) VALUES
+-- Ejercicio 1
+(1, 'Un conjunto de reglas para escribir instrucciones que entiende la computadora', 1, '¡Correcto! Esa es la definición exacta.'),
+(1, 'Un programa para navegar en internet',                                          0, 'No, eso describe un navegador web.'),
+(1, 'Un tipo de hardware del computador',                                            0, 'No, los lenguajes son software, no hardware.'),
+(1, 'Un sistema para almacenar archivos',                                            0, 'No, eso describe un sistema de archivos.'),
+-- Ejercicio 2 (lección 2: Historia breve → pregunta sobre décadas)
+(2, 'En los años 50', 1, '¡Correcto! Fortran fue creado en 1957.'),
+(2, 'En los años 30', 0, 'En los 30 no existían computadoras programables modernas.'),
+(2, 'En los años 70', 0, 'En los 70 ya existían varios lenguajes, pero los primeros de alto nivel fueron en los 50.'),
+(2, 'En los años 90', 0, 'En los 90 surgieron lenguajes modernos como Java, pero los primeros fueron en los 50.'),
+-- Ejercicio 3 (lección 3: ¿Para qué sirven? → pregunta sobre cuál es un lenguaje)
+(3, 'Python',   1, '¡Correcto! Python es un lenguaje de programación muy popular.'),
+(3, 'HTML',     0, 'HTML es un lenguaje de marcado para estructurar páginas web, no de programación.'),
+(3, 'CSS',      0, 'CSS es un lenguaje de estilos, no de programación.'),
+(3, 'Markdown', 0, 'Markdown es un lenguaje de formato de texto, no de programación.'),
+-- Ejercicio 4
+(4, 'El compilado traduce todo el código antes de ejecutarlo; el interpretado lo traduce línea a línea durante la ejecución', 1, '¡Correcto! Esa es la diferencia fundamental.'),
+(4, 'El compilado es más lento que el interpretado',                                                                          0, 'Al contrario: los compilados suelen ser más rápidos en ejecución.'),
+(4, 'No hay diferencia, ambos funcionan igual',                                                                               0, 'Sí hay diferencias importantes en velocidad y portabilidad.'),
+(4, 'El interpretado solo funciona en Windows',                                                                               0, 'Los lenguajes interpretados funcionan en múltiples sistemas operativos.'),
+-- Ejercicio 5
+(5, 'C++',        1, '¡Correcto! C++ es un lenguaje compilado clásico.'),
+(5, 'Python',     0, 'Python es interpretado, no compilado.'),
+(5, 'JavaScript', 0, 'JavaScript es interpretado (aunque los motores modernos usan JIT).'),
+(5, 'Ruby',       0, 'Ruby es un lenguaje interpretado.'),
+-- Ejercicio 6
+(6, 'Python', 1, '¡Correcto! Python es el ejemplo más conocido de lenguaje interpretado.'),
+(6, 'C',      0, 'C es un lenguaje compilado.'),
+(6, 'C++',    0, 'C++ es un lenguaje compilado.'),
+(6, 'Go',     0, 'Go es un lenguaje compilado.'),
+-- Ejercicio 7
+(7, 'Un espacio en memoria con nombre que almacena un valor que puede cambiar', 1, '¡Correcto! Esa es la definición de variable.'),
+(7, 'Un tipo de bucle que repite código',                                        0, 'Eso describe un bucle, no una variable.'),
+(7, 'Una función que realiza cálculos',                                          0, 'Eso describe una función, no una variable.'),
+(7, 'Un archivo donde se guarda el programa',                                    0, 'Eso describe un archivo de código fuente.'),
+-- Ejercicio 8
+(8, 'String (cadena de texto)',  1, '¡Correcto! String es el tipo adecuado para texto como nombres.'),
+(8, 'int (entero)',              0, 'int es para números enteros, no para texto.'),
+(8, 'float (decimal)',           0, 'float es para números decimales, no para texto.'),
+(8, 'boolean (verdadero/falso)', 0, 'boolean solo puede ser true o false, no texto.'),
+-- Ejercicio 9
+(9, 'int almacena enteros sin decimales; float almacena números con punto decimal', 1, '¡Correcto! Esa es la diferencia clave.'),
+(9, 'int es más grande que float',                                                   0, 'No es cuestión de tamaño sino de tipo de número.'),
+(9, 'float es para texto y int para números',                                        0, 'Ambos son para números; la diferencia es si tienen decimales o no.'),
+(9, 'Son exactamente lo mismo',                                                      0, 'No, tienen diferencias importantes en precisión y uso de memoria.'),
+-- Ejercicio 10
+(10, 'Evalúa una condición y ejecuta un bloque de código solo si es verdadera', 1, '¡Correcto! IF toma decisiones basadas en condiciones.'),
+(10, 'Repite un bloque de código varias veces',                                  0, 'Eso describe un bucle (for/while), no un IF.'),
+(10, 'Define una función reutilizable',                                           0, 'Eso describe la declaración de una función.'),
+(10, 'Importa librerías externas',                                                0, 'Eso lo hace import/require, no IF.'),
+-- Ejercicio 11
+(11, 'Cuando no sabes de antemano cuántas veces se repetirá el ciclo', 1, '¡Correcto! WHILE es ideal cuando la cantidad de iteraciones depende de una condición dinámica.'),
+(11, 'Cuando quieres repetir exactamente 10 veces',                     0, 'Para un número fijo de repeticiones, FOR es más apropiado.'),
+(11, 'Cuando quieres recorrer una lista',                               0, 'Para recorrer listas, FOR es más natural y legible.'),
+(11, 'Nunca, FOR siempre es mejor',                                     0, 'WHILE tiene casos de uso específicos donde es la mejor opción.'),
+-- Ejercicio 12
+(12, 'Un bucle cuya condición de parada nunca se vuelve falsa, haciendo que el programa se quede atascado', 1, '¡Correcto! Los bucles infinitos congelan el programa.'),
+(12, 'Un bucle que se repite exactamente infinito veces y luego para',                                       0, 'Un bucle infinito nunca para por sí solo.'),
+(12, 'Un bucle muy rápido',                                                                                   0, 'La velocidad no define si un bucle es infinito.'),
+(12, 'Un bucle que solo funciona con números grandes',                                                        0, 'Los bucles infinitos no tienen relación con el tamaño de los números.'),
+-- Ejercicio 13
+(13, 'Permite reutilizar código: defines la lógica una vez y la llamas cuantas veces necesites', 1, '¡Correcto! La reutilización es la ventaja principal.'),
+(13, 'Hace que el programa sea más lento',                                                        0, 'Las funciones no hacen el programa más lento; al contrario, lo organizan mejor.'),
+(13, 'Solo sirven para hacer cálculos matemáticos',                                               0, 'Las funciones pueden hacer cualquier tipo de tarea, no solo matemáticas.'),
+(13, 'Reemplazan completamente a los bucles',                                                     0, 'Las funciones y los bucles son herramientas diferentes con propósitos distintos.'),
+-- Ejercicio 14
+(14, 'Devuelve un valor desde la función al lugar donde fue llamada y termina su ejecución', 1, '¡Correcto! return es la forma de obtener resultados de una función.'),
+(14, 'Imprime un valor en la pantalla',                                                       0, 'Para imprimir se usa print() o console.log(), no return.'),
+(14, 'Declara una nueva variable',                                                            0, 'return no declara variables, devuelve valores.'),
+(14, 'Inicia un bucle dentro de la función',                                                  0, 'return no tiene relación con bucles.'),
+-- Ejercicio 15
+(15, 'Un método pertenece a un objeto/clase y se llama con punto (objeto.metodo()); una función es independiente', 1, '¡Correcto! Esa es la distinción clave entre función y método.'),
+(15, 'No hay diferencia, son exactamente lo mismo',                                                               0, 'Sí hay diferencia: los métodos están asociados a objetos.'),
+(15, 'Las funciones son más rápidas que los métodos',                                                             0, 'La velocidad no es la diferencia entre función y método.'),
+(15, 'Los métodos solo existen en Python',                                                                        0, 'Los métodos existen en todos los lenguajes orientados a objetos.');
 
---
--- Estructura de tabla para la tabla `progreso`
---
-
+-- ── Progreso ───────────────────────────────────────────────────
 CREATE TABLE `progreso` (
-  `id_progreso` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  `id_ejercicio` int(11) NOT NULL,
-  `intentos` int(11) DEFAULT NULL,
-  `calificacion` decimal(5,2) DEFAULT NULL,
-  `completado` tinyint(1) DEFAULT NULL,
-  `fecha_progreso` datetime DEFAULT NULL
+  `id_progreso`    INT(11)      NOT NULL AUTO_INCREMENT,
+  `id_usuario`     INT(11)      NOT NULL,
+  `id_ejercicio`   INT(11)      NOT NULL,
+  `intentos`       INT(11)      DEFAULT 0,
+  `calificacion`   DECIMAL(5,2) DEFAULT NULL,
+  `completado`     TINYINT(1)   DEFAULT 0,
+  `fecha_progreso` DATETIME     DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id_progreso`),
+  UNIQUE KEY `unico_progreso` (`id_usuario`, `id_ejercicio`),
+  KEY `id_usuario`   (`id_usuario`),
+  KEY `id_ejercicio` (`id_ejercicio`),
+  CONSTRAINT `progreso_ibfk_1` FOREIGN KEY (`id_usuario`)   REFERENCES `usuario`    (`id_usuario`)   ON DELETE CASCADE,
+  CONSTRAINT `progreso_ibfk_2` FOREIGN KEY (`id_ejercicio`) REFERENCES `ejercicios` (`id_ejercicio`) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `progreso`
---
-
-INSERT INTO `progreso` (`id_progreso`, `id_usuario`, `id_ejercicio`, `intentos`, `calificacion`, `completado`, `fecha_progreso`) VALUES
-(1, 2, 1, 1, 100.00, 1, '2026-04-23 00:50:30'),
-(2, 2, 2, 1, 100.00, 1, '2026-04-23 00:50:30'),
-(3, 2, 3, 1, 100.00, 1, '2026-04-23 01:39:30'),
-(4, 2, 4, 1, 100.00, 1, '2026-04-23 01:39:30'),
-(5, 2, 15, 1, 100.00, 1, '2026-04-23 02:09:55'),
-(6, 2, 16, 1, 100.00, 1, '2026-04-23 02:09:55'),
-(7, 2, 17, 1, 100.00, 1, '2026-04-23 02:09:55');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `respuesta_abierta`
---
-
-CREATE TABLE `respuesta_abierta` (
-  `id_respuesta` int(11) NOT NULL,
-  `id_usuario` int(11) NOT NULL,
-  `id_ejercicio` int(11) NOT NULL,
-  `respuesta` text NOT NULL,
-  `fecha_respuesta` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `respuesta_abierta`
---
-
-INSERT INTO `respuesta_abierta` (`id_respuesta`, `id_usuario`, `id_ejercicio`, `respuesta`, `fecha_respuesta`) VALUES
-(1, 2, 1, 'asddd', '2026-04-23 01:33:55'),
-(2, 1, 1, 'bar', '2026-04-23 00:03:43'),
-(3, 1, 2, 'dxczcv', '2026-04-23 00:02:35'),
-(7, 2, 2, 'f', '2026-04-23 00:59:33'),
-(11, 2, 3, 'asdads', '2026-04-23 01:39:20'),
-(12, 2, 4, 'asdaf', '2026-04-23 01:39:28'),
-(13, 2, 15, 's', '2026-04-23 02:09:40'),
-(14, 2, 17, 'ddd', '2026-04-23 02:09:52'),
-(15, 2, 16, 'f', '2026-04-23 02:09:54');
-
--- --------------------------------------------------------
-
---
--- Estructura de tabla para la tabla `usuario`
---
-
-CREATE TABLE `usuario` (
-  `id_usuario` int(11) NOT NULL,
-  `nombre` varchar(100) NOT NULL,
-  `usuario` varchar(100) NOT NULL,
-  `correo` varchar(150) NOT NULL,
-  `contraseña` varchar(255) NOT NULL,
-  `fecha_registro` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `usuario`
---
-
-INSERT INTO `usuario` (`id_usuario`, `nombre`, `usuario`, `correo`, `contraseña`, `fecha_registro`) VALUES
-(1, 'prueba', 'prueba', 'prueba@gmail.com', '$2y$10$AVQpnPEoIjBynjowNUj95e2y6J8CF/QavadIvA8MGe8IbMVB9mSNW', '2026-04-22 22:58:24'),
-(2, 'test', 'test', 't@gmail.com', '$2y$10$POvcAnwcJ1GlpoitPbSDPuN7OrGkv6KCoz6/7cT5DqB8ljkWL7jYa', '2026-04-22 23:27:53');
-
---
--- Índices para tablas volcadas
---
-
---
--- Indices de la tabla `contenido`
---
-ALTER TABLE `contenido`
-  ADD PRIMARY KEY (`id_contenido`),
-  ADD KEY `id_modulo` (`id_modulo`);
-
---
--- Indices de la tabla `curso`
---
-ALTER TABLE `curso`
-  ADD PRIMARY KEY (`id_curso`);
-
---
--- Indices de la tabla `ejercicios`
---
-ALTER TABLE `ejercicios`
-  ADD PRIMARY KEY (`id_ejercicio`),
-  ADD KEY `id_modulo` (`id_modulo`);
-
---
--- Indices de la tabla `inscripcion`
---
-ALTER TABLE `inscripcion`
-  ADD PRIMARY KEY (`id_inscripcion`),
-  ADD KEY `id_usuario` (`id_usuario`),
-  ADD KEY `id_curso` (`id_curso`);
-
---
--- Indices de la tabla `modulos`
---
-ALTER TABLE `modulos`
-  ADD PRIMARY KEY (`id_modulo`),
-  ADD KEY `id_curso` (`id_curso`);
-
---
--- Indices de la tabla `opcion`
---
-ALTER TABLE `opcion`
-  ADD PRIMARY KEY (`id_opcion`),
-  ADD KEY `id_ejercicio` (`id_ejercicio`);
-
---
--- Indices de la tabla `progreso`
---
-ALTER TABLE `progreso`
-  ADD PRIMARY KEY (`id_progreso`),
-  ADD KEY `id_usuario` (`id_usuario`),
-  ADD KEY `id_ejercicio` (`id_ejercicio`);
-
---
--- Indices de la tabla `respuesta_abierta`
---
-ALTER TABLE `respuesta_abierta`
-  ADD PRIMARY KEY (`id_respuesta`),
-  ADD UNIQUE KEY `unica_respuesta` (`id_usuario`,`id_ejercicio`),
-  ADD KEY `id_ejercicio` (`id_ejercicio`);
-
---
--- Indices de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`id_usuario`);
-
---
--- AUTO_INCREMENT de las tablas volcadas
---
-
---
--- AUTO_INCREMENT de la tabla `contenido`
---
-ALTER TABLE `contenido`
-  MODIFY `id_contenido` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT de la tabla `curso`
---
-ALTER TABLE `curso`
-  MODIFY `id_curso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
-
---
--- AUTO_INCREMENT de la tabla `ejercicios`
---
-ALTER TABLE `ejercicios`
-  MODIFY `id_ejercicio` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
-
---
--- AUTO_INCREMENT de la tabla `inscripcion`
---
-ALTER TABLE `inscripcion`
-  MODIFY `id_inscripcion` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `modulos`
---
-ALTER TABLE `modulos`
-  MODIFY `id_modulo` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
-
---
--- AUTO_INCREMENT de la tabla `opcion`
---
-ALTER TABLE `opcion`
-  MODIFY `id_opcion` int(11) NOT NULL AUTO_INCREMENT;
-
---
--- AUTO_INCREMENT de la tabla `progreso`
---
-ALTER TABLE `progreso`
-  MODIFY `id_progreso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
-
---
--- AUTO_INCREMENT de la tabla `respuesta_abierta`
---
-ALTER TABLE `respuesta_abierta`
-  MODIFY `id_respuesta` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
-
---
--- AUTO_INCREMENT de la tabla `usuario`
---
-ALTER TABLE `usuario`
-  MODIFY `id_usuario` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
-
---
--- Restricciones para tablas volcadas
---
-
---
--- Filtros para la tabla `contenido`
---
-ALTER TABLE `contenido`
-  ADD CONSTRAINT `contenido_ibfk_1` FOREIGN KEY (`id_modulo`) REFERENCES `modulos` (`id_modulo`);
-
---
--- Filtros para la tabla `ejercicios`
---
-ALTER TABLE `ejercicios`
-  ADD CONSTRAINT `ejercicios_ibfk_1` FOREIGN KEY (`id_modulo`) REFERENCES `modulos` (`id_modulo`);
-
---
--- Filtros para la tabla `inscripcion`
---
-ALTER TABLE `inscripcion`
-  ADD CONSTRAINT `inscripcion_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `inscripcion_ibfk_2` FOREIGN KEY (`id_curso`) REFERENCES `curso` (`id_curso`);
-
---
--- Filtros para la tabla `modulos`
---
-ALTER TABLE `modulos`
-  ADD CONSTRAINT `modulos_ibfk_1` FOREIGN KEY (`id_curso`) REFERENCES `curso` (`id_curso`);
-
---
--- Filtros para la tabla `opcion`
---
-ALTER TABLE `opcion`
-  ADD CONSTRAINT `opcion_ibfk_1` FOREIGN KEY (`id_ejercicio`) REFERENCES `ejercicios` (`id_ejercicio`);
-
---
--- Filtros para la tabla `progreso`
---
-ALTER TABLE `progreso`
-  ADD CONSTRAINT `progreso_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `progreso_ibfk_2` FOREIGN KEY (`id_ejercicio`) REFERENCES `ejercicios` (`id_ejercicio`);
-
---
--- Filtros para la tabla `respuesta_abierta`
---
-ALTER TABLE `respuesta_abierta`
-  ADD CONSTRAINT `respuesta_abierta_ibfk_1` FOREIGN KEY (`id_usuario`) REFERENCES `usuario` (`id_usuario`),
-  ADD CONSTRAINT `respuesta_abierta_ibfk_2` FOREIGN KEY (`id_ejercicio`) REFERENCES `ejercicios` (`id_ejercicio`);
 COMMIT;
-
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
