@@ -16,12 +16,14 @@ loopbook/
 │   └── loopbook.sql
 │
 ├── docs/
-│   ├── README.md                  # Documentación principal del proyecto (Dev Líder)
-│   ├── estructura_repositorio.md  # Estructura y decisiones de arquitectura (Dev Líder)
-│   ├── mejoras_interfaz.md        # Documentación de mejoras visuales (Diseñador)
-│   ├── validacion_requisitos.md   # Validación de requisitos funcionales (Analista)
-│   ├── test_report.md             # Reporte de pruebas y casos de QA (QA/Tester)
-│   └── bitacora_sprint4.pdf       # Bitácora del sprint (Coordinador)
+│   ├── README.md                       # Documentación principal del proyecto (Dev Líder)
+│   ├── estructura_repositorio.md       # Estructura y decisiones de arquitectura (Dev Líder)
+│   ├── mejoras_interfaz.md             # Documentación de mejoras visuales (Diseñador)
+│   ├── Actualización de interfaz.pdf   # Reporte visual del diseño (Diseñador)
+│   ├── evidencia_ejecucion.pdf         # Evidencia de ejecución del proyecto (Dev Líder)
+│   ├── criterios_aceptacion.md         # Criterios de aceptación (Analista)
+│   ├── test_report.md                  # Reporte de pruebas y casos de QA (QA/Tester)
+│   └── bitacora_sprint4.pdf            # Bitácora del sprint (Coordinador)
 │
 ├── public/
 │   ├── .htaccess
@@ -119,27 +121,34 @@ git clone https://github.com/karolbordallo23isc-max/Totis.git C:/xampp/htdocs/lo
 ### Paso 2 — Crear la base de datos
 
 1. Iniciar XAMPP y activar **Apache** y **MySQL**
-2. Abrir **phpMyAdmin** en `http://localhost/phpmyadmin`
-3. Crear una base de datos llamada `loopbook` o importar directamente sin crear la base de datos.
-4. Seleccionar la base de datos → pestaña **Importar** → seleccionar `config/loopbook.sql` → clic en **Continuar**
+2. Abrir **phpMyAdmin** dando clic en el botón **Admin** de MySQL en el panel de XAMPP
+3. Ir a la pestaña **Importar** → seleccionar `config/loopbook.sql` → clic en **Continuar**
 
 ### Paso 3 — Configurar las variables de entorno
 
-Copia el archivo de ejemplo y renómbralo:
+En la carpeta del proyecto verás un archivo llamado `.env.example`. Tienes que crear una copia de ese archivo y llamarla `.env`.
 
+**En Windows (Explorador de archivos):**
+1. Busca el archivo `.env.example` en la raíz del proyecto
+2. Cópialo y pégalo en la misma carpeta
+3. Renombra la copia a `.env`
+
+**O desde la terminal en la carpeta del proyecto:**
 ```bash
 copy .env.example .env
 ```
 
-Abre el `.env` y ajusta las credenciales a tu entorno local:
+Abre el `.env` con cualquier editor de texto y verifica las credenciales:
 
 ```
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=loopbook
 DB_USER=root
-DB_PASS=        # En XAMPP por defecto está vacío
+DB_PASS=
 ```
+
+> En XAMPP el campo `DB_PASS` normalmente está vacío. Si tu MySQL tiene contraseña, escríbela ahí.
 
 ### Paso 4 — Abrir en el navegador
 

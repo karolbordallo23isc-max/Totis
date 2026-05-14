@@ -21,7 +21,7 @@ LoopBook es una plataforma web de aprendizaje diseñada para estudiantes de nuev
 | Seguridad | Tokens CSRF + rate limiting en login (bloqueo 15 min tras 5 intentos) |
 | Tipografía | Plus Jakarta Sans (Google Fonts) |
 
-> No se utilizó ningún framework de PHP (Laravel, Symfony, Slim), ni librería de JavaScript (jQuery, React, Vue), ni framework de CSS (Bootstrap, Tailwind). Todo el código es escrito a mano.
+> No se utilizó ningún framework de PHP (Laravel, Symfony, Slim), ni librería de JavaScript (jQuery, React, Vue), ni framework de CSS (Bootstrap, Tailwind).
 
 ---
 
@@ -42,7 +42,7 @@ El archivo `app.js` maneja toda la interactividad del lado del cliente:
 
 ```
 loopbook/
-├── .env.example                # Variables de entorno de referencia (no subir .env real)
+├── .env.example                # Variables de entorno de referencia
 ├── .gitignore                  # Excluye .env, logs, vendor, etc.
 │
 ├── config/
@@ -106,12 +106,14 @@ loopbook/
 │           └── next_module_card.php
 │
 └── docs/
-    ├── README.md                        # Documentación principal del proyecto (Dev Líder)
-    ├── estructura_repositorio.md        # Estructura y decisiones de arquitectura (Dev Líder)
-    ├── mejoras_interfaz.md              # Documentación de mejoras visuales (Diseñador)
-    ├── validacion_requisitos.md         # Validación de requisitos funcionales (Analista)
-    ├── test_report.md                   # Reporte de pruebas y casos de QA (QA/Tester)
-    └── bitacora_sprint4.pdf             # Bitácora del sprint (Coordinador)
+    ├── README.md                       # Documentación principal del proyecto (Dev Líder)
+    ├── estructura_repositorio.md       # Estructura y decisiones de arquitectura (Dev Líder)
+    ├── mejoras_interfaz.md             # Documentación de mejoras visuales (Diseñador)
+    ├── Actualización de interfaz.pdf   # Reporte visual del diseño (Diseñador)
+    ├── evidencia_ejecucion.pdf         # Evidencia de ejecución del proyecto (Dev Líder)
+    ├── criterios_aceptacion.md         # Criterios de aceptación (Analista)
+    ├── test_report.md                  # Reporte de pruebas y casos de QA (QA/Tester)
+    └── bitacora_sprint4.pdf            # Bitácora del sprint (Coordinador)
 ```
 
 ---
@@ -130,35 +132,42 @@ git clone <url-del-repositorio> C:/xampp/htdocs/loopbook
 
 ### 2. Crear la base de datos
 
-1. Inicia XAMPP y activa los servicios **Apache** y **MySQL**.
-2. Abre **phpMyAdmin** en `http://localhost/phpmyadmin`.
-3. Crea una base de datos llamada `loopbook`.
-4. Selecciona esa base de datos → pestaña **Importar** → selecciona el archivo `config/loopbook.sql` → clic en **Continuar**.
+1. Inicia XAMPP y activa los servicios **Apache** y **MySQL**
+2. Abre **phpMyAdmin** dando clic en el botón **Admin** de MySQL en el panel de XAMPP
+3. Ve a la pestaña **Importar** → selecciona el archivo `config/loopbook.sql` → clic en **Continuar**
 
 ### 3. Configurar las variables de entorno
 
-Copia el archivo de ejemplo y renómbralo:
+En la carpeta del proyecto verás un archivo llamado `.env.example`. Tienes que crear una copia de ese archivo y llamarla `.env`.
 
+**En Windows (Explorador de archivos):**
+1. Busca el archivo `.env.example` en la raíz del proyecto
+2. Cópialo y pégalo en la misma carpeta
+3. Renombra la copia a `.env`
+
+**O desde la terminal en la carpeta del proyecto:**
 ```bash
 copy .env.example .env
 ```
 
-Abre el archivo `.env` y ajusta las credenciales a tu entorno local:
+Abre el archivo `.env` con cualquier editor de texto y verifica que las credenciales coincidan con tu XAMPP:
 
 ```
 DB_HOST=localhost
 DB_PORT=3306
 DB_NAME=loopbook
 DB_USER=root
-DB_PASS=        # En XAMPP por defecto está vacío
+DB_PASS=
 ```
+
+> En XAMPP el campo `DB_PASS` normalmente está vacío. Si tu MySQL tiene contraseña, escríbela ahí.
 
 ### 4. Acceder al sistema
 
 Abre tu navegador e ingresa a:
 
 ```
-http://localhost/loopbook/public/index.php
+http://localhost/loopbook/public
 ```
 
 El router detecta automáticamente si hay sesión activa y redirige al dashboard o al login.
