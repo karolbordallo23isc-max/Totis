@@ -46,7 +46,7 @@ Se ajustan y expanden los requisitos **RF-3** (Acceso a contenido por módulos),
 | :--- | :--- | :--- |
 | **Requisitos** | Expansión del alcance de la gestión de módulos y control de usuarios (RF-3, RF-5, RNF-4). | Actualizar la matriz de trazabilidad de requisitos del proyecto. |
 | **Interfaz** | Creación del panel administrativo y reestructuración del menú de inicio por asignaturas. | Diseñar los prototipos de la nueva interfaz manteniendo la coherencia visual del sistema. |
-| **Lógica** | Implementación de middleware o condicionales de enrutamiento por roles de usuario. | Programar la validación de accesos y los métodos de actualización de contenido en el código. |
+| **Lógica** | Ajuste en los permisos del sistema para identificar si quien entra es un usuario común o un administrador. |Programar las condiciones que permiten o bloquean el acceso a las pantallas según el tipo de usuario. |
 | **Base de datos** | Actualización de esquemas para soportar roles y permisos de edición. | Modificar la colección o tablas en el gestor de bases de datos para incluir los nuevos campos. |
 | **Pruebas** | Necesidad de validar la seguridad de las rutas y la persistencia de datos modificados. | Diseñar el plan de pruebas de QA enfocado en control de accesos y consistencia de datos. |
 | **Documentación** | Modificación del flujo de navegación general del sistema. | Actualizar el mapa del sitio y registrar los cambios técnicos dentro de este documento. |
