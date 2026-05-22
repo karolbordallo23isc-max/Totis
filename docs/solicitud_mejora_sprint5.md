@@ -48,4 +48,5 @@
 Se seleccionó implementar el panel de administración para que los administradores tengan un mejor control sobre los usuarios y los componentes del sistema, ya que en la versión anterior, al no tener este panel, es más complicado para el administrador revisar el progreso y modificar el contenido de los módulos.
 
 ### Evidencia de su registro en Trello
-* **Enlace a la tarjeta de Trello:** https://trello.com/c/Ew5FIzvc/44-analista
+* **Enlace a la tarjeta de Trello:**  
+https://trello.com/c/Ew5FIzvc/44-analista
