@@ -33,6 +33,30 @@
         <h3>Contenido de la Lección</h3>
       </div>
       <p class="lesson-content"><?= e($lesson['content']) ?></p>
+
+      <?php
+        // Mostrar video embebido si la lección tiene URL de video
+        $stmt = getDB()->prepare('SELECT tipo, url FROM contenido WHERE id_contenido = ? LIMIT 1');
+        $stmt->execute([$lesson['id']]);
+        $rawLesson = $stmt->fetch();
+      ?>
+      <?php if ($rawLesson && $rawLesson['tipo'] === 'video' && !empty($rawLesson['url'])): ?>
+      <div class="lesson-video-wrap mt-4">
+        <div class="lesson-video-label">🎬 Video de la lección</div>
+        <div class="lesson-video-container">
+          <iframe src="<?= e($rawLesson['url']) ?>"
+                  title="Video de la lección"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"></iframe>
+        </div>
+      </div>
+      <?php elseif ($rawLesson && $rawLesson['tipo'] === 'imagen' && !empty($rawLesson['url'])): ?>
+      <div class="lesson-image-wrap mt-4">
+        <img src="<?= e($rawLesson['url']) ?>" alt="Imagen de la lección" class="lesson-image">
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 
@@ -115,7 +139,7 @@
     <?php endif; ?>
   </div>
 
-  <?php if (!$nextLesson):
+  <?php if (!$nextLesson && $moduleCompleted):
     $titleText = '¡Has terminado este módulo!';
     require __DIR__ . '/partials/next_module_card.php';
   endif; ?>

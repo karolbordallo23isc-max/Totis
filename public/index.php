@@ -19,6 +19,8 @@ require_once __DIR__ . '/../src/controllers/DashboardController.php';
 require_once __DIR__ . '/../src/controllers/ModuleController.php';
 require_once __DIR__ . '/../src/controllers/LessonController.php';
 require_once __DIR__ . '/../src/controllers/ProfileController.php';
+require_once __DIR__ . '/../src/models/Admin.php';
+require_once __DIR__ . '/../src/controllers/AdminController.php';
 
 $page = $_GET['page'] ?? '';
 
@@ -77,6 +79,10 @@ switch ($page) {
 
     case 'logout':
         AuthController::logout();
+        break;
+
+    case 'admin':
+        AdminController::dispatch();
         break;
 
     default:

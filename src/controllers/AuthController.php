@@ -64,6 +64,7 @@ class AuthController {
         $_SESSION['username'] = $user['usuario'];
         $_SESSION['nombre']   = $user['nombre'];
         $_SESSION['avatar']   = $user['avatar'] ?? '👤';
+        $_SESSION['is_admin'] = !empty($user['is_admin']) ? true : false;
         redirect(base_url('index.php?page=dashboard'));
     }
 

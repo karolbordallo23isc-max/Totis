@@ -19,26 +19,34 @@ class DashboardController {
         require_auth();
 
         $userId  = $_SESSION['user_id'];
-        $modules = Module::all();
+        $modules = Module::allWithStatus($userId);
 
         $progressData  = [];
         $totalProgress = 0;
 
         foreach ($modules as $module) {
-            $moduleId       = (int)$module['id_modulo'];
-            $totalExercises = Progress::totalExercises($moduleId);
+            $moduleId           = (int)$module['id_modulo'];
+            $totalExercises     = Progress::totalExercises($moduleId);
             $completedExercises = Progress::countCompleted($userId, $moduleId);
-            $percent        = $totalExercises > 0 ? round(($completedExercises / $totalExercises) * 100) : 0;
+            $percent            = $totalExercises > 0 ? round(($completedExercises / $totalExercises) * 100) : 0;
 
             $progressData[$moduleId] = [
                 'total'     => $totalExercises,
                 'completed' => $completedExercises,
                 'percent'   => $percent,
+                'unlocked'  => $module['unlocked'],
             ];
             $totalProgress += $percent;
         }
 
         $overallProgress = count($modules) > 0 ? round($totalProgress / count($modules)) : 0;
+
+        // Agrupar módulos por categoría (con fallback si no existe el campo)
+        $categories = [];
+        foreach ($modules as $m) {
+            $cat = $m['categoria'] ?? 'General';
+            $categories[$cat][] = $m;
+        }
 
         require __DIR__ . '/../views/dashboard.php';
     }

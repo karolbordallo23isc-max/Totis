@@ -1,0 +1,709 @@
+/* ============================================================
+   ANIMATIONS — Loopbook
+   Todas las animaciones, transiciones y efectos visuales.
+   ============================================================ */
+
+/* ══════════════════════════════════════════════════════════
+   KEYFRAMES
+   ══════════════════════════════════════════════════════════ */
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(28px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeInLeft {
+  from { opacity: 0; transform: translateX(-24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeInRight {
+  from { opacity: 0; transform: translateX(24px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(.88); }
+  to   { opacity: 1; transform: scale(1); }
+}
+
+@keyframes scaleInBounce {
+  0%   { opacity: 0; transform: scale(.7); }
+  70%  { transform: scale(1.06); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(40px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50%       { transform: scale(1.06); }
+}
+
+@keyframes shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position:  200% center; }
+}
+
+@keyframes gradientShift {
+  0%   { background-position: 0%   50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0%   50%; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50%       { transform: translateY(-8px); }
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes progressFill {
+  from { width: 0%; }
+}
+
+@keyframes bounceIn {
+  0%   { opacity: 0; transform: scale(.3); }
+  50%  { opacity: 1; transform: scale(1.08); }
+  70%  { transform: scale(.95); }
+  100% { transform: scale(1); }
+}
+
+@keyframes ripple {
+  0%   { transform: scale(0); opacity: .6; }
+  100% { transform: scale(2.5); opacity: 0; }
+}
+
+@keyframes typewriter {
+  from { width: 0; }
+  to   { width: 100%; }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(37,99,235,.4); }
+  50%       { box-shadow: 0 0 24px rgba(37,99,235,.8), 0 0 48px rgba(124,58,237,.3); }
+}
+
+@keyframes trophyBounce {
+  0%   { transform: translateY(0) rotate(0deg); }
+  20%  { transform: translateY(-16px) rotate(-8deg); }
+  40%  { transform: translateY(-8px) rotate(6deg); }
+  60%  { transform: translateY(-12px) rotate(-4deg); }
+  80%  { transform: translateY(-4px) rotate(2deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+@keyframes starPop {
+  0%   { transform: scale(0) rotate(-30deg); opacity: 0; }
+  60%  { transform: scale(1.3) rotate(10deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+@keyframes cardEntrance {
+  0%   { opacity: 0; transform: translateY(32px) scale(.96); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes headerSlide {
+  from { opacity: 0; transform: translateY(-100%); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes badgePop {
+  0%   { opacity: 0; transform: scale(.5) rotate(-10deg); }
+  70%  { transform: scale(1.15) rotate(3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+@keyframes optionSlideIn {
+  from { opacity: 0; transform: translateX(-12px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes correctFlash {
+  0%   { background: #d1fae5; }
+  30%  { background: #a7f3d0; box-shadow: 0 0 0 4px rgba(16,185,129,.25); }
+  100% { background: #ecfdf5; }
+}
+
+@keyframes wrongShake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-8px); }
+  40%       { transform: translateX(8px); }
+  60%       { transform: translateX(-5px); }
+  80%       { transform: translateX(5px); }
+}
+
+@keyframes progressBarGrow {
+  from { width: 0 !important; }
+}
+
+@keyframes navLinkHover {
+  from { transform: translateY(0); }
+  to   { transform: translateY(-1px); }
+}
+
+@keyframes logoFloat {
+  0%, 100% { transform: rotate(-2deg) scale(1); }
+  50%       { transform: rotate(2deg) scale(1.04); }
+}
+
+/* ══════════════════════════════════════════════════════════
+   CLASES DE UTILIDAD
+   ══════════════════════════════════════════════════════════ */
+
+.anim-fade-in-up   { animation: fadeInUp   .55s cubic-bezier(.22,.68,0,1.2) both; }
+.anim-fade-in-down { animation: fadeInDown .45s ease both; }
+.anim-fade-in      { animation: fadeIn     .4s ease both; }
+.anim-scale-in     { animation: scaleIn    .4s cubic-bezier(.22,.68,0,1.2) both; }
+.anim-slide-right  { animation: slideInRight .45s ease both; }
+
+/* Delays escalonados para listas */
+.anim-delay-1  { animation-delay: .05s; }
+.anim-delay-2  { animation-delay: .10s; }
+.anim-delay-3  { animation-delay: .15s; }
+.anim-delay-4  { animation-delay: .20s; }
+.anim-delay-5  { animation-delay: .25s; }
+.anim-delay-6  { animation-delay: .30s; }
+
+/* ══════════════════════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════════════════════ */
+
+.header {
+  animation: headerSlide .5s cubic-bezier(.22,.68,0,1.2) both;
+  transition: background .3s, box-shadow .3s;
+}
+
+.logo-icon-img {
+  transition: transform .35s cubic-bezier(.22,.68,0,1.2);
+}
+.logo-link:hover .logo-icon-img {
+  animation: logoFloat 1.2s ease-in-out infinite;
+}
+
+.header-nav__link {
+  transition: background .2s, color .2s, box-shadow .2s, transform .15s;
+}
+.header-nav__link:hover {
+  transform: translateY(-1px);
+}
+.header-nav__link--active {
+  animation: scaleIn .3s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD — Módulos
+   ══════════════════════════════════════════════════════════ */
+
+.dashboard-header {
+  animation: fadeInDown .5s ease both;
+}
+
+.progress-badge {
+  animation: badgePop .6s cubic-bezier(.22,.68,0,1.2) .2s both;
+  transition: transform .25s cubic-bezier(.22,.68,0,1.2), box-shadow .25s;
+}
+.progress-badge:hover {
+  transform: translateY(-3px) scale(1.03);
+}
+.progress-badge__icon {
+  animation: float 3s ease-in-out infinite;
+}
+
+/* Cards de módulo con entrada escalonada */
+.modules-grid .module-card {
+  animation: cardEntrance .55s cubic-bezier(.22,.68,0,1.2) both;
+  transition: transform .25s cubic-bezier(.22,.68,0,1.2),
+              box-shadow .25s,
+              border-color .2s;
+}
+.modules-grid .module-card:nth-child(1) { animation-delay: .05s; }
+.modules-grid .module-card:nth-child(2) { animation-delay: .10s; }
+.modules-grid .module-card:nth-child(3) { animation-delay: .15s; }
+.modules-grid .module-card:nth-child(4) { animation-delay: .20s; }
+.modules-grid .module-card:nth-child(5) { animation-delay: .25s; }
+.modules-grid .module-card:nth-child(6) { animation-delay: .30s; }
+
+.module-card:hover {
+  transform: translateY(-6px) scale(1.015);
+  box-shadow: 0 20px 48px rgba(30,58,138,.18);
+}
+
+.module-card__icon {
+  transition: transform .3s cubic-bezier(.22,.68,0,1.2);
+}
+.module-card:hover .module-card__icon {
+  transform: scale(1.18) rotate(-5deg);
+}
+
+.module-card__done-badge {
+  animation: bounceIn .5s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+/* ══════════════════════════════════════════════════════════
+   BARRAS DE PROGRESO
+   ══════════════════════════════════════════════════════════ */
+
+.progress-bar__fill {
+  animation: progressBarGrow .9s cubic-bezier(.22,.68,0,1.2) .3s both;
+  transition: width .6s cubic-bezier(.22,.68,0,1.2);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Shimmer sobre la barra */
+.progress-bar__fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255,255,255,.35) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2.2s linear infinite;
+}
+
+/* ══════════════════════════════════════════════════════════
+   MÓDULO — Lista de lecciones
+   ══════════════════════════════════════════════════════════ */
+
+.module-header {
+  animation: fadeInDown .45s ease both;
+}
+
+.lessons-list .lesson-card {
+  animation: fadeInLeft .45s cubic-bezier(.22,.68,0,1.2) both;
+}
+.lessons-list .lesson-card:nth-child(1) { animation-delay: .05s; }
+.lessons-list .lesson-card:nth-child(2) { animation-delay: .10s; }
+.lessons-list .lesson-card:nth-child(3) { animation-delay: .15s; }
+.lessons-list .lesson-card:nth-child(4) { animation-delay: .20s; }
+.lessons-list .lesson-card:nth-child(5) { animation-delay: .25s; }
+
+.lesson-card {
+  transition: transform .2s cubic-bezier(.22,.68,0,1.2),
+              box-shadow .2s,
+              border-color .2s;
+}
+.lesson-card:hover {
+  transform: translateX(6px);
+}
+
+.icon-circle {
+  transition: transform .3s cubic-bezier(.22,.68,0,1.2);
+}
+.lesson-card:hover .icon-circle {
+  transform: scale(1.15) rotate(-8deg);
+}
+
+/* ══════════════════════════════════════════════════════════
+   LECCIÓN — Contenido y ejercicios
+   ══════════════════════════════════════════════════════════ */
+
+.lesson-header {
+  animation: fadeInDown .4s ease both;
+}
+
+/* Cards de contenido */
+.card {
+  animation: fadeInUp .5s cubic-bezier(.22,.68,0,1.2) both;
+  transition: box-shadow .25s;
+}
+.card:nth-child(2) { animation-delay: .08s; }
+.card:nth-child(3) { animation-delay: .14s; }
+
+/* Ejercicios con entrada escalonada */
+.exercise {
+  animation: fadeInUp .45s cubic-bezier(.22,.68,0,1.2) both;
+  transition: box-shadow .2s;
+}
+.exercises-list .exercise:nth-child(1) { animation-delay: .10s; }
+.exercises-list .exercise:nth-child(2) { animation-delay: .18s; }
+.exercises-list .exercise:nth-child(3) { animation-delay: .26s; }
+.exercises-list .exercise:nth-child(4) { animation-delay: .34s; }
+
+/* Opciones de respuesta */
+.option-btn {
+  animation: optionSlideIn .35s ease both;
+  transition: transform .18s cubic-bezier(.22,.68,0,1.2),
+              border-color .18s,
+              background .18s,
+              box-shadow .18s;
+  position: relative;
+  overflow: hidden;
+}
+.exercise__options .option-btn:nth-child(1) { animation-delay: .05s; }
+.exercise__options .option-btn:nth-child(2) { animation-delay: .10s; }
+.exercise__options .option-btn:nth-child(3) { animation-delay: .15s; }
+.exercise__options .option-btn:nth-child(4) { animation-delay: .20s; }
+
+.option-btn:hover:not(:disabled) {
+  transform: translateX(5px);
+  box-shadow: -3px 0 0 var(--primary), 0 4px 12px rgba(30,58,138,.12);
+}
+
+.option-btn.selected {
+  transform: translateX(5px);
+  box-shadow: -3px 0 0 var(--primary), 0 4px 16px rgba(30,58,138,.18);
+}
+
+/* Efecto ripple al hacer clic en opción */
+.option-btn::after {
+  content: '';
+  position: absolute;
+  inset: 50% auto auto 50%;
+  width: 0; height: 0;
+  background: rgba(30,58,138,.12);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width .4s ease, height .4s ease, opacity .4s ease;
+  opacity: 0;
+}
+.option-btn:active::after {
+  width: 200px; height: 200px;
+  opacity: 0;
+  transition: 0s;
+}
+
+/* Respuesta correcta */
+.option-btn.correct {
+  animation: correctFlash .5s ease both;
+  border-color: var(--green) !important;
+}
+
+/* Respuesta incorrecta */
+.option-btn.wrong {
+  animation: wrongShake .4s ease both;
+  border-color: var(--red) !important;
+}
+
+/* Feedback */
+.exercise__feedback {
+  animation: scaleInBounce .4s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+/* Botón verificar */
+.check-btn {
+  transition: transform .18s, box-shadow .18s, opacity .18s;
+}
+.check-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(30,58,138,.3);
+}
+.check-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Badge completada */
+.badge-green {
+  animation: badgePop .5s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+/* ══════════════════════════════════════════════════════════
+   BOTONES — Transiciones globales
+   ══════════════════════════════════════════════════════════ */
+
+.btn {
+  transition: transform .18s cubic-bezier(.22,.68,0,1.2),
+              box-shadow .18s,
+              opacity .18s,
+              border-color .18s,
+              background .18s;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  opacity: 1 !important;
+}
+
+.btn:active {
+  transform: translateY(0) scale(.97);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 8px 24px rgba(30,58,138,.4);
+}
+
+.btn-gradient:hover {
+  box-shadow: 0 8px 24px rgba(30,58,138,.35);
+  filter: brightness(1.08);
+}
+
+.btn-back {
+  transition: transform .18s, color .18s, border-color .18s;
+}
+.btn-back:hover {
+  transform: translateX(-4px) translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════════
+   NAVEGACIÓN DE LECCIÓN
+   ══════════════════════════════════════════════════════════ */
+
+.lesson-nav {
+  animation: fadeInUp .4s ease .2s both;
+}
+
+.lesson-nav__counter {
+  animation: scaleIn .4s cubic-bezier(.22,.68,0,1.2) .3s both;
+}
+
+/* ══════════════════════════════════════════════════════════
+   CELEBRACIÓN — Overlay de completado
+   ══════════════════════════════════════════════════════════ */
+
+.completion-overlay {
+  animation: fadeIn .3s ease both;
+}
+
+.completion-card {
+  animation: scaleInBounce .55s cubic-bezier(.22,.68,0,1.2) .1s both;
+}
+
+.completion-icon {
+  animation: trophyBounce 1.2s cubic-bezier(.22,.68,0,1.2) .4s both,
+             float 3s ease-in-out 1.8s infinite;
+  display: block;
+}
+
+.completion-title {
+  animation: fadeInUp .4s ease .5s both;
+}
+
+.completion-module {
+  animation: fadeInUp .4s ease .6s both;
+}
+
+.completion-stars span {
+  display: inline-block;
+  animation: starPop .4s cubic-bezier(.22,.68,0,1.2) both;
+}
+.completion-stars span:nth-child(1) { animation-delay: .7s; }
+.completion-stars span:nth-child(2) { animation-delay: .85s; }
+.completion-stars span:nth-child(3) { animation-delay: 1.0s; }
+
+.completion-btn {
+  animation: fadeInUp .4s ease 1.1s both;
+}
+
+/* ══════════════════════════════════════════════════════════
+   AUTH — Login / Registro
+   ══════════════════════════════════════════════════════════ */
+
+.auth-card {
+  animation: scaleInBounce .55s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+.auth-blob {
+  animation: float 6s ease-in-out infinite;
+}
+.auth-blob:nth-child(2) {
+  animation-delay: -3s;
+  animation-direction: reverse;
+}
+
+/* Inputs */
+input, textarea, select {
+  transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+/* ══════════════════════════════════════════════════════════
+   PERFIL
+   ══════════════════════════════════════════════════════════ */
+
+.avatar-btn {
+  transition: transform .2s cubic-bezier(.22,.68,0,1.2),
+              border-color .2s,
+              box-shadow .2s;
+}
+.avatar-btn:hover {
+  transform: scale(1.18) rotate(-5deg);
+}
+.avatar-btn--active {
+  animation: bounceIn .35s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+/* ══════════════════════════════════════════════════════════
+   TOOLTIPS
+   ══════════════════════════════════════════════════════════ */
+
+.module-tooltip {
+  transition: opacity .2s ease, transform .2s cubic-bezier(.22,.68,0,1.2);
+}
+
+/* ══════════════════════════════════════════════════════════
+   MENÚ MÓVIL
+   ══════════════════════════════════════════════════════════ */
+
+.mob-menu__dropdown {
+  transition: opacity .2s ease,
+              transform .2s cubic-bezier(.22,.68,0,1.2);
+}
+
+/* ══════════════════════════════════════════════════════════
+   ADMIN PANEL
+   ══════════════════════════════════════════════════════════ */
+
+.admin-stat-card {
+  animation: cardEntrance .5s cubic-bezier(.22,.68,0,1.2) both;
+  transition: transform .2s cubic-bezier(.22,.68,0,1.2), box-shadow .2s;
+}
+.admin-stats-grid .admin-stat-card:nth-child(1) { animation-delay: .05s; }
+.admin-stats-grid .admin-stat-card:nth-child(2) { animation-delay: .10s; }
+.admin-stats-grid .admin-stat-card:nth-child(3) { animation-delay: .15s; }
+.admin-stats-grid .admin-stat-card:nth-child(4) { animation-delay: .20s; }
+.admin-stats-grid .admin-stat-card:nth-child(5) { animation-delay: .25s; }
+
+.admin-stat-card__value {
+  animation: scaleInBounce .5s cubic-bezier(.22,.68,0,1.2) .3s both;
+}
+
+.admin-quick-card {
+  animation: fadeInLeft .45s cubic-bezier(.22,.68,0,1.2) both;
+  transition: transform .2s cubic-bezier(.22,.68,0,1.2),
+              border-color .2s, box-shadow .2s;
+}
+.admin-quick-grid .admin-quick-card:nth-child(1) { animation-delay: .1s; }
+.admin-quick-grid .admin-quick-card:nth-child(2) { animation-delay: .18s; }
+
+.admin-quick-card:hover {
+  transform: translateY(-3px);
+}
+
+.admin-exercise-card {
+  animation: fadeInUp .4s cubic-bezier(.22,.68,0,1.2) both;
+  transition: box-shadow .2s, transform .2s;
+}
+.admin-exercises-list .admin-exercise-card:nth-child(1) { animation-delay: .05s; }
+.admin-exercises-list .admin-exercise-card:nth-child(2) { animation-delay: .10s; }
+.admin-exercises-list .admin-exercise-card:nth-child(3) { animation-delay: .15s; }
+.admin-exercises-list .admin-exercise-card:nth-child(4) { animation-delay: .20s; }
+
+.admin-exercise-card:hover {
+  transform: translateX(4px);
+  box-shadow: -3px 0 0 var(--purple), 0 8px 24px rgba(124,58,237,.12);
+}
+
+/* Filas de tabla */
+.admin-table tbody tr {
+  transition: background .15s;
+}
+
+/* ══════════════════════════════════════════════════════════
+   ALERTAS
+   ══════════════════════════════════════════════════════════ */
+
+.alert {
+  animation: slideInRight .4s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+/* ══════════════════════════════════════════════════════════
+   NEXT MODULE CARD
+   ══════════════════════════════════════════════════════════ */
+
+.next-module-card {
+  animation: fadeInUp .5s cubic-bezier(.22,.68,0,1.2) .2s both;
+  transition: transform .2s cubic-bezier(.22,.68,0,1.2), box-shadow .2s;
+}
+.next-module-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 16px 40px rgba(30,58,138,.18);
+}
+
+/* ══════════════════════════════════════════════════════════
+   GRADIENTE ANIMADO — Títulos principales
+   ══════════════════════════════════════════════════════════ */
+
+.gradient-text {
+  background-size: 200% auto;
+  animation: gradientShift 5s ease infinite;
+}
+
+/* ══════════════════════════════════════════════════════════
+   LOADING SPINNER (para botones en estado de carga)
+   ══════════════════════════════════════════════════════════ */
+
+.btn-loading::after {
+  content: '';
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255,255,255,.4);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin-left: .4rem;
+}
+
+/* ══════════════════════════════════════════════════════════
+   SCROLL REVEAL — Clase aplicada por JS
+   ══════════════════════════════════════════════════════════ */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity .55s cubic-bezier(.22,.68,0,1.2),
+              transform .55s cubic-bezier(.22,.68,0,1.2);
+}
+.reveal.revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ══════════════════════════════════════════════════════════
+   DARK MODE — Ajustes de animación
+   ══════════════════════════════════════════════════════════ */
+
+html.dark .option-btn:hover:not(:disabled) {
+  box-shadow: -3px 0 0 #2563eb, 0 4px 12px rgba(37,99,235,.2);
+}
+html.dark .option-btn.selected {
+  box-shadow: -3px 0 0 #2563eb, 0 4px 16px rgba(37,99,235,.25);
+}
+html.dark .completion-card {
+  box-shadow: 0 24px 80px rgba(37,99,235,.35), 0 0 0 2px rgba(37,99,235,.2);
+}
+html.dark .btn-primary:hover {
+  box-shadow: 0 8px 24px rgba(37,99,235,.5);
+}
+
+/* ══════════════════════════════════════════════════════════
+   REDUCED MOTION — Respeta preferencias del usuario
+   ══════════════════════════════════════════════════════════ */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .progress-bar__fill::after { display: none; }
+  .gradient-text { animation: none; }
+}

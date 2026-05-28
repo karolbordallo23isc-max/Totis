@@ -193,6 +193,7 @@ function checkAnswer(checkBtn, exerciseId) {
   /* Estado de carga */
   checkBtn.disabled = true;
   checkBtn.textContent = 'Verificando…';
+  checkBtn.classList.add('btn-loading');
 
   const formData = new FormData();
   formData.append('exercise_id',        exerciseId);
@@ -205,6 +206,7 @@ function checkAnswer(checkBtn, exerciseId) {
         /* Error del servidor — reactivar para reintentar */
         checkBtn.disabled = false;
         checkBtn.textContent = 'Verificar Respuesta';
+        checkBtn.classList.remove('btn-loading');
         return;
       }
 
@@ -271,6 +273,7 @@ function checkAnswer(checkBtn, exerciseId) {
         /* Reactivar botón para que el usuario pueda reintentar */
         checkBtn.disabled = false;
         checkBtn.textContent = 'Verificar Respuesta';
+        checkBtn.classList.remove('btn-loading');
         checkBtn.classList.remove('hidden');
       }
     })
@@ -278,6 +281,7 @@ function checkAnswer(checkBtn, exerciseId) {
       /* Error de red — reactivar y avisar */
       checkBtn.disabled = false;
       checkBtn.textContent = 'Verificar Respuesta';
+      checkBtn.classList.remove('btn-loading');
       alert('Error de conexión. Intenta de nuevo.');
     });
 }
@@ -300,7 +304,7 @@ function showCompletionScreen(moduleName) {
       <div class="completion-icon">🏆</div>
       <h2 class="completion-title">¡Módulo Completado!</h2>
       <p class="completion-module">${moduleName}</p>
-      <div class="completion-stars">⭐⭐⭐</div>
+      <div class="completion-stars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
       <p class="completion-msg">Respondiste todos los ejercicios correctamente</p>
       <button class="btn btn-primary completion-btn" onclick="this.closest('.completion-overlay').remove()">
         ¡Continuar! →
@@ -318,4 +322,42 @@ window.showCompletionScreen = showCompletionScreen;
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
   initTooltips();
+  initScrollReveal();
+  initButtonLoadingState();
 });
+
+/* ══════════════════════════════════════════════════════════
+   SCROLL REVEAL
+   Observa elementos con clase .reveal y les agrega .revealed
+   cuando entran en el viewport.
+   ══════════════════════════════════════════════════════════ */
+function initScrollReveal() {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('revealed');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(el => obs.observe(el));
+}
+
+/* ══════════════════════════════════════════════════════════
+   BOTONES — Estado de carga
+   Agrega clase btn-loading al botón de submit de formularios
+   para mostrar el spinner mientras se procesa.
+   ══════════════════════════════════════════════════════════ */
+function initButtonLoadingState() {
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', () => {
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn && !btn.classList.contains('btn-danger')) {
+        btn.classList.add('btn-loading');
+        btn.disabled = true;
+      }
+    });
+  });
+}
