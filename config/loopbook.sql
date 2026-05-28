@@ -2,7 +2,7 @@
 -- Loopbook — Base de datos completa
 -- Importar en phpMyAdmin: BD loopbook > Importar > este archivo
 -- Un solo archivo, todo incluido, listo para usar.
--- ===========================================================
+-- ==========================================================
 
 CREATE DATABASE IF NOT EXISTS loopbook CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;
 USE loopbook;
