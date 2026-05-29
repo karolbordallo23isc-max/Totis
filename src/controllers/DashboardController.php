@@ -19,21 +19,22 @@ class DashboardController {
         require_auth();
 
         $userId  = $_SESSION['user_id'];
-        $modules = Module::all();
+        $modules = Module::allWithStatus($userId);
 
         $progressData  = [];
         $totalProgress = 0;
 
         foreach ($modules as $module) {
-            $moduleId       = (int)$module['id_modulo'];
-            $totalExercises = Progress::totalExercises($moduleId);
+            $moduleId           = (int)$module['id_modulo'];
+            $totalExercises     = Progress::totalExercises($moduleId);
             $completedExercises = Progress::countCompleted($userId, $moduleId);
-            $percent        = $totalExercises > 0 ? round(($completedExercises / $totalExercises) * 100) : 0;
+            $percent            = $totalExercises > 0 ? round(($completedExercises / $totalExercises) * 100) : 0;
 
             $progressData[$moduleId] = [
                 'total'     => $totalExercises,
                 'completed' => $completedExercises,
                 'percent'   => $percent,
+                'unlocked'  => $module['unlocked'],
             ];
             $totalProgress += $percent;
         }

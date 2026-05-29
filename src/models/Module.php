@@ -27,6 +27,56 @@ class Module {
     }
 
     /**
+     * Verifica si un módulo está desbloqueado para el usuario.
+     * El primer módulo (orden=1) siempre está desbloqueado.
+     * Los siguientes requieren que el módulo anterior esté 100% completado.
+     */
+    public static function isUnlocked(int $userId, int $moduleId): bool {
+        $stmt = getDB()->prepare('SELECT orden FROM modulos WHERE id_modulo = ? LIMIT 1');
+        $stmt->execute([$moduleId]);
+        $row = $stmt->fetch();
+        if (!$row) return false;
+        if ((int)$row['orden'] === 1) return true;
+
+        // Módulo anterior (orden inmediatamente menor)
+        $stmt2 = getDB()->prepare(
+            'SELECT id_modulo FROM modulos WHERE orden < ? ORDER BY orden DESC LIMIT 1'
+        );
+        $stmt2->execute([(int)$row['orden']]);
+        $prev = $stmt2->fetch();
+        if (!$prev) return true;
+
+        $prevId = (int)$prev['id_modulo'];
+
+        $stmtT = getDB()->prepare('SELECT COUNT(*) FROM ejercicios WHERE id_modulo = ?');
+        $stmtT->execute([$prevId]);
+        $total = (int)$stmtT->fetchColumn();
+        if ($total === 0) return true;
+
+        $stmtC = getDB()->prepare(
+            'SELECT COUNT(*) FROM progreso p
+             JOIN ejercicios e ON e.id_ejercicio = p.id_ejercicio
+             WHERE p.id_usuario = ? AND e.id_modulo = ? AND p.completado = 1'
+        );
+        $stmtC->execute([$userId, $prevId]);
+        $completed = (int)$stmtC->fetchColumn();
+
+        return $completed >= $total;
+    }
+
+    /**
+     * Devuelve todos los módulos con estado de desbloqueo para un usuario.
+     */
+    public static function allWithStatus(int $userId): array {
+        $modules = self::all();
+        foreach ($modules as &$m) {
+            $m['unlocked'] = self::isUnlocked($userId, (int)$m['id_modulo']);
+        }
+        unset($m);
+        return $modules;
+    }
+
+    /**
      * Devuelve el siguiente módulo en la secuencia del curso, comparando por `orden`.
      * Retorna false si el módulo actual es el último.
      *
