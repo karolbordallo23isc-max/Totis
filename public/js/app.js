@@ -240,6 +240,11 @@ function checkAnswer(checkBtn, exerciseId) {
 
         correctCount++;
 
+        /* Notificar a lesson.php que un ejercicio fue completado → desbloquea navegación */
+        if (typeof onExerciseCompleted === 'function') {
+          onExerciseCompleted();
+        }
+
         /* Mostrar celebración si se completaron todos los ejercicios
            de la última lección del módulo */
         if (typeof IS_LAST_LESSON !== 'undefined' && IS_LAST_LESSON &&

@@ -23,18 +23,17 @@
       <div class="card-body">
         <div class="progress-row">
           <span>✨ <strong>Ejercicios completados</strong></span>
-          <span class="text-purple font-bold"><?= $completed ?> / <?= $totalLessons ?></span>
+          <span class="text-purple font-bold"><?= $completedEx ?> / <?= $totalEx ?></span>
         </div>
         <div class="progress-bar mt-2">
           <div class="progress-bar__fill progress-bar__fill--purple-pink"
                style="width:<?= $progressPct ?>%"></div>
         </div>
-        <?php if ($completed > 0): ?>
+        <?php if ($completedEx > 0): ?>
         <div style="text-align:right; margin-top:0.75rem;">
           <button type="button"
                   class="btn btn-outline btn-sm"
-                  onclick="resetModule(<?= (int)$module['id_modulo'] ?>)"
-                  title="Borra todo el progreso de este módulo para volver a intentarlo">
+                  onclick="resetModule(<?= (int)$module['id_modulo'] ?>)">
             🔄 Reiniciar módulo
           </button>
         </div>
@@ -43,6 +42,7 @@
     </div>
   </div>
 
+  <!-- Lista de lecciones -->
   <div class="lessons-list">
     <?php foreach ($lessons as $i => $lesson): ?>
     <div class="lesson-card <?= $lesson['completed'] ? 'lesson-card--done' : '' ?>">
@@ -62,17 +62,38 @@
         </div>
         <a href="<?= base_url('index.php?page=lesson&module_id=' . $module['id_modulo'] . '&lesson_id=' . $lesson['id']) ?>"
            class="btn btn-sm btn-gradient btn-gradient--red-orange">
-          <?= $lesson['completed'] ? 'Revisar' : 'Comenzar' ?> →
+          <?= $lesson['completed'] ? '🔁 Revisar' : '▶️ Comenzar' ?> →
         </a>
       </div>
     </div>
     <?php endforeach; ?>
   </div>
 
-  <?php if ($progressPct === 100):
-    $titleText = '¡Módulo completado!';
-    require __DIR__ . '/partials/next_module_card.php';
-  endif; ?>
+  <!-- ── Banner siguiente módulo: SOLO cuando progressPct = 100 ── -->
+  <?php if ($progressPct === 100 && $totalEx > 0): ?>
+  <div class="module-complete-banner">
+    <div class="module-complete-banner__stars">⭐⭐⭐</div>
+    <div class="module-complete-banner__trophy">🏆</div>
+    <h2 class="module-complete-banner__title">¡Módulo Completado!</h2>
+    <p class="module-complete-banner__sub">
+      Terminaste todos los ejercicios de <strong><?= e($module['nombre']) ?></strong>
+    </p>
+    <?php if ($nextModule): ?>
+      <p class="module-complete-banner__next-label">Siguiente módulo desbloqueado:</p>
+      <p class="module-complete-banner__next-name">📦 <?= e($nextModule['nombre']) ?></p>
+      <a href="<?= base_url('index.php?page=module&id=' . (int)$nextModule['id_modulo']) ?>"
+         class="module-complete-banner__btn">
+        🚀 Ir al siguiente módulo →
+      </a>
+    <?php else: ?>
+      <p class="module-complete-banner__next-label">🎓 ¡Has completado todo el curso!</p>
+      <a href="<?= base_url('index.php?page=dashboard') ?>"
+         class="module-complete-banner__btn">
+        🏠 Ver mis logros →
+      </a>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
 
 </div>
 </main>
@@ -81,16 +102,13 @@
   const RESET_PROGRESS_URL = '<?= base_url('api/reset_progress.php') ?>';
 
   function resetModule(moduleId) {
-    if (!confirm('¿Seguro que quieres reiniciar todo el módulo? Se borrará todo tu progreso en este módulo.')) return;
-    const formData = new FormData();
-    formData.append('type',      'module');
-    formData.append('module_id', moduleId);
-    fetch(RESET_PROGRESS_URL, { method: 'POST', body: formData })
+    if (!confirm('¿Seguro que quieres reiniciar todo el módulo?')) return;
+    const fd = new FormData();
+    fd.append('type',      'module');
+    fd.append('module_id', moduleId);
+    fetch(RESET_PROGRESS_URL, { method: 'POST', body: fd })
       .then(r => r.json())
-      .then(data => {
-        if (data.success) location.reload();
-        else alert('No se pudo reiniciar. Intenta de nuevo.');
-      })
+      .then(d => { if (d.success) location.reload(); else alert('No se pudo reiniciar.'); })
       .catch(() => alert('Error de conexión.'));
   }
 </script>

@@ -21,7 +21,7 @@ LoopBook es una plataforma web de aprendizaje diseñada para estudiantes de nuev
 | Seguridad | Tokens CSRF + rate limiting en login (bloqueo 15 min tras 5 intentos) |
 | Tipografía | Plus Jakarta Sans (Google Fonts) |
 
-> No se utilizó ningún framework de PHP (Laravel, Symfony, Slim), ni librería de JavaScript (jQuery, React, Vue), ni framework de CSS (Bootstrap, Tailwind). Todo el código es escrito a mano.
+> No se utilizó ningún framework de PHP (Laravel, Symfony, Slim), ni librería de JavaScript (jQuery, React, Vue), ni framework de CSS (Bootstrap, Tailwind).
 
 ---
 
@@ -42,7 +42,7 @@ El archivo `app.js` maneja toda la interactividad del lado del cliente:
 
 ```
 loopbook/
-├── .env.example                # Variables de entorno de referencia (no subir .env real)
+├── .env.example                # Variables de entorno de referencia
 ├── .gitignore                  # Excluye .env, logs, vendor, etc.
 │
 ├── config/
@@ -106,12 +106,14 @@ loopbook/
 │           └── next_module_card.php
 │
 └── docs/
-    ├── README.md                        # Documentación principal del proyecto (Dev Líder)
-    ├── estructura_repositorio.md        # Estructura y decisiones de arquitectura (Dev Líder)
-    ├── mejoras_interfaz.md              # Documentación de mejoras visuales (Diseñador)
-    ├── validacion_requisitos.md         # Validación de requisitos funcionales (Analista)
-    ├── test_report.md                   # Reporte de pruebas y casos de QA (QA/Tester)
-    └── bitacora_sprint4.pdf             # Bitácora del sprint (Coordinador)
+    ├── README.md                       # Documentación principal del proyecto (Dev Líder)
+    ├── estructura_repositorio.md       # Estructura y decisiones de arquitectura (Dev Líder)
+    ├── mejoras_interfaz.md             # Documentación de mejoras visuales (Diseñador)
+    ├── Actualización de interfaz.pdf   # Reporte visual del diseño (Diseñador)
+    ├── evidencia_ejecucion.pdf         # Evidencia de ejecución del proyecto (Dev Líder)
+    ├── criterios_aceptacion.md         # Criterios de aceptación (Analista)
+    ├── test_report.md                  # Reporte de pruebas y casos de QA (QA/Tester)
+    └── bitacora_sprint4.pdf            # Bitácora del sprint (Coordinador)
 ```
 
 ---

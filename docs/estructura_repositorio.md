@@ -16,12 +16,14 @@ loopbook/
 │   └── loopbook.sql
 │
 ├── docs/
-│   ├── README.md                  # Documentación principal del proyecto (Dev Líder)
-│   ├── estructura_repositorio.md  # Estructura y decisiones de arquitectura (Dev Líder)
-│   ├── mejoras_interfaz.md        # Documentación de mejoras visuales (Diseñador)
-│   ├── validacion_requisitos.md   # Validación de requisitos funcionales (Analista)
-│   ├── test_report.md             # Reporte de pruebas y casos de QA (QA/Tester)
-│   └── bitacora_sprint4.pdf       # Bitácora del sprint (Coordinador)
+│   ├── README.md                       # Documentación principal del proyecto (Dev Líder)
+│   ├── estructura_repositorio.md       # Estructura y decisiones de arquitectura (Dev Líder)
+│   ├── mejoras_interfaz.md             # Documentación de mejoras visuales (Diseñador)
+│   ├── Actualización de interfaz.pdf   # Reporte visual del diseño (Diseñador)
+│   ├── evidencia_ejecucion.pdf         # Evidencia de ejecución del proyecto (Dev Líder)
+│   ├── criterios_aceptacion.md         # Criterios de aceptación (Analista)
+│   ├── test_report.md                  # Reporte de pruebas y casos de QA (QA/Tester)
+│   └── bitacora_sprint4.pdf            # Bitácora del sprint (Coordinador)
 │
 ├── public/
 │   ├── .htaccess

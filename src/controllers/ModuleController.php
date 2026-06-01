@@ -30,6 +30,12 @@ class ModuleController {
             render_error(404, 'Módulo no encontrado', base_url('index.php?page=dashboard'), 'Volver al dashboard');
         }
 
+        // Bloqueo secuencial: si el módulo anterior no está completo, redirige
+        if (!Module::isUnlocked($userId, $moduleId)) {
+            $_SESSION['lock_msg'] = '🔒 Debes completar el módulo anterior antes de continuar.';
+            redirect(base_url('index.php?page=dashboard'));
+        }
+
         $lessons     = Lesson::byModule($moduleId);
         $totalEx     = Progress::totalExercises($moduleId);
         $completedEx = Progress::countCompleted($userId, $moduleId);
