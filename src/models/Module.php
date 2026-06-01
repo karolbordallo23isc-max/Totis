@@ -9,9 +9,26 @@ class Module {
      * @return array Lista de módulos como arrays asociativos.
      */
     public static function all(): array {
-        return getDB()
-            ->query('SELECT * FROM modulos ORDER BY orden ASC')
-            ->fetchAll();
+        // Detectar si la columna categoria existe (puede no existir antes de migrate_v2)
+        try {
+            $rows = getDB()
+                ->query('SELECT m.*,
+                                (SELECT COUNT(*) FROM ejercicios WHERE id_modulo = m.id_modulo) AS total_ejercicios
+                         FROM modulos m ORDER BY m.orden ASC')
+                ->fetchAll();
+        } catch (\PDOException $e) {
+            $rows = getDB()
+                ->query('SELECT * FROM modulos ORDER BY orden ASC')
+                ->fetchAll();
+        }
+        // Garantizar que siempre exista la clave 'categoria'
+        foreach ($rows as &$r) {
+            if (!isset($r['categoria'])) {
+                $r['categoria'] = 'General';
+            }
+        }
+        unset($r);
+        return $rows;
     }
 
     /**
@@ -30,6 +47,10 @@ class Module {
      * Verifica si un módulo está desbloqueado para el usuario.
      * El primer módulo (orden=1) siempre está desbloqueado.
      * Los siguientes requieren que el módulo anterior esté 100% completado.
+     *
+     * @param int $userId   ID del usuario.
+     * @param int $moduleId ID del módulo a verificar.
+     * @return bool true si el usuario puede acceder al módulo.
      */
     public static function isUnlocked(int $userId, int $moduleId): bool {
         $stmt = getDB()->prepare('SELECT orden FROM modulos WHERE id_modulo = ? LIMIT 1');
@@ -38,9 +59,10 @@ class Module {
         if (!$row) return false;
         if ((int)$row['orden'] === 1) return true;
 
-        // Módulo anterior (orden inmediatamente menor)
+        // Buscar el módulo anterior (orden inmediatamente menor)
         $stmt2 = getDB()->prepare(
-            'SELECT id_modulo FROM modulos WHERE orden < ? ORDER BY orden DESC LIMIT 1'
+            'SELECT id_modulo FROM modulos
+             WHERE orden < ? ORDER BY orden DESC LIMIT 1'
         );
         $stmt2->execute([(int)$row['orden']]);
         $prev = $stmt2->fetch();
@@ -48,6 +70,7 @@ class Module {
 
         $prevId = (int)$prev['id_modulo'];
 
+        // Verificar que el módulo anterior esté 100% completado
         $stmtT = getDB()->prepare('SELECT COUNT(*) FROM ejercicios WHERE id_modulo = ?');
         $stmtT->execute([$prevId]);
         $total = (int)$stmtT->fetchColumn();
@@ -66,6 +89,9 @@ class Module {
 
     /**
      * Devuelve todos los módulos con estado de desbloqueo para un usuario.
+     *
+     * @param int $userId ID del usuario.
+     * @return array Módulos con clave 'unlocked' (bool).
      */
     public static function allWithStatus(int $userId): array {
         $modules = self::all();

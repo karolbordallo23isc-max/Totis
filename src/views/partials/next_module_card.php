@@ -1,31 +1,39 @@
 <?php
 /**
  * Partial: tarjeta de siguiente módulo.
- * Variables esperadas del contexto:
- *   $nextModule — array del siguiente módulo, o null si es el último del curso.
- *   $titleText  — texto del título (ej: "¡Módulo completado!" o "¡Has terminado este módulo!").
+ * Variables esperadas:
+ *   $nextModule — array del siguiente módulo, o false si es el último.
+ *   $titleText  — texto del título.
  */
 ?>
-<div class="card mt-4" style="border: 2px solid #10b981;">
-  <div class="card-body next-module-card" style="display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;">
-    <div>
-      <p style="font-weight:700; font-size:1.05rem; margin:0;">🎉 <?= e($titleText) ?></p>
+<div class="next-module-banner">
+  <div class="next-module-banner__confetti">🎉</div>
+
+  <div class="next-module-banner__body">
+    <div class="next-module-banner__check">✅</div>
+    <div class="next-module-banner__text">
+      <h3 class="next-module-banner__title"><?= e($titleText) ?></h3>
       <?php if ($nextModule): ?>
-        <p class="text-sm text-gray" style="margin:0.25rem 0 0;">Siguiente: <?= e($nextModule['nombre']) ?></p>
+        <p class="next-module-banner__sub">
+          Siguiente módulo: <strong><?= e($nextModule['nombre']) ?></strong>
+        </p>
       <?php else: ?>
-        <p class="text-sm text-gray" style="margin:0.25rem 0 0;">Has completado todos los módulos del curso.</p>
+        <p class="next-module-banner__sub">
+          🏆 ¡Has completado todos los módulos del curso!
+        </p>
       <?php endif; ?>
     </div>
-    <?php if ($nextModule): ?>
-      <a href="<?= base_url('index.php?page=module&id=' . (int)$nextModule['id_modulo']) ?>"
-         class="btn btn-gradient btn-gradient--purple-pink">
-        Siguiente módulo →
-      </a>
-    <?php else: ?>
-      <a href="<?= base_url('index.php?page=dashboard') ?>"
-         class="btn btn-gradient btn-gradient--purple-pink">
-        Ver todos los módulos →
-      </a>
-    <?php endif; ?>
   </div>
+
+  <?php if ($nextModule): ?>
+    <a href="<?= base_url('index.php?page=module&id=' . (int)$nextModule['id_modulo']) ?>"
+       class="btn next-module-banner__btn">
+      Ir al siguiente módulo →
+    </a>
+  <?php else: ?>
+    <a href="<?= base_url('index.php?page=dashboard') ?>"
+       class="btn next-module-banner__btn">
+      Ver todos los módulos →
+    </a>
+  <?php endif; ?>
 </div>

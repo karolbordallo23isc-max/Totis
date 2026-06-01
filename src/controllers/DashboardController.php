@@ -41,6 +41,13 @@ class DashboardController {
 
         $overallProgress = count($modules) > 0 ? round($totalProgress / count($modules)) : 0;
 
+        // Agrupar módulos por categoría (con fallback si no existe el campo)
+        $categories = [];
+        foreach ($modules as $m) {
+            $cat = $m['categoria'] ?? 'General';
+            $categories[$cat][] = $m;
+        }
+
         require __DIR__ . '/../views/dashboard.php';
     }
 }

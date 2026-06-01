@@ -30,9 +30,9 @@ class ModuleController {
             render_error(404, 'Módulo no encontrado', base_url('index.php?page=dashboard'), 'Volver al dashboard');
         }
 
-        // Bloqueo secuencial: si el módulo anterior no está completo, redirige
+        // Validación secuencial: verificar que el módulo esté desbloqueado
         if (!Module::isUnlocked($userId, $moduleId)) {
-            $_SESSION['lock_msg'] = '🔒 Debes completar el módulo anterior antes de continuar.';
+            $_SESSION['admin_error'] = '🔒 Debes completar el módulo anterior antes de acceder a este.';
             redirect(base_url('index.php?page=dashboard'));
         }
 

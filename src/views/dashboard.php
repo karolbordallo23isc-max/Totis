@@ -14,11 +14,11 @@
 <div class="page-container">
 
   <?php
-  // Mensaje cuando intentan acceder a un módulo bloqueado por URL directa
-  $lockMsg = $_SESSION['lock_msg'] ?? '';
-  unset($_SESSION['lock_msg']);
+  /* Mostrar mensaje de módulo bloqueado si viene del ModuleController */
+  $lockMsg = $_SESSION['admin_error'] ?? '';
+  unset($_SESSION['admin_error']);
+  if ($lockMsg):
   ?>
-  <?php if ($lockMsg): ?>
   <div class="alert-lock">
     <span class="alert-lock__icon">🔒</span>
     <span><?= e($lockMsg) ?></span>
@@ -30,7 +30,7 @@
       <h1 class="page-title gradient-text">
         ¡Hola, <?= e($_SESSION['nombre'] ?? $_SESSION['username'] ?? 'estudiante') ?>! 👋
       </h1>
-      <p class="page-subtitle">Completa cada módulo en orden para desbloquear el siguiente 🔓</p>
+      <p class="page-subtitle">Completa cada módulo en orden para desbloquear el siguiente</p>
     </div>
     <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
       <?php if (!empty($_SESSION['is_admin'])): ?>
@@ -45,7 +45,7 @@
   </div>
 
   <!-- Barra de progreso global -->
-  <div class="global-progress-bar">
+  <div class="global-progress-bar mb-4">
     <div class="global-progress-bar__fill" style="width:<?= $overallProgress ?>%"></div>
   </div>
 
@@ -60,12 +60,12 @@
       $icon     = $icons[$i % count($icons)];
       $pData    = $progressData[$mid];
       $isDone   = $pData['percent'] === 100;
-      $unlocked = $pData['unlocked'] ?? ($i === 0);
+      $unlocked = $pData['unlocked'] ?? true;
+      $isFirst  = $i === 0;
     ?>
 
     <div class="module-card <?= !$unlocked ? 'module-card--locked' : '' ?> <?= $isDone ? 'module-card--done' : '' ?>">
 
-      <!-- Badge esquina -->
       <?php if ($isDone): ?>
         <span class="module-card__done-badge">✅</span>
       <?php elseif (!$unlocked): ?>
@@ -77,7 +77,7 @@
       <div class="module-card__lock-overlay">
         <div class="module-card__lock-content">
           <span class="module-card__lock-icon">🔒</span>
-          <p class="module-card__lock-msg">Completa el módulo <?= $i ?> primero</p>
+          <p class="module-card__lock-msg">Completa el módulo anterior</p>
         </div>
       </div>
       <?php endif; ?>
@@ -110,24 +110,28 @@
           </div>
           <?php else: ?>
           <div class="module-card__locked-info">
-            🔐 Termina el módulo <?= $i ?> para desbloquear
+            <span>🔐 Bloqueado — termina el módulo <?= $i ?> primero</span>
           </div>
           <?php endif; ?>
 
           <div class="module-card__footer">
-            <span class="module-card__lessons">📚 <?= $pData['total'] ?> ejercicios</span>
+            <span class="module-card__lessons">
+              📚 <?= $pData['total'] ?> ejercicios
+            </span>
 
             <?php if ($unlocked): ?>
               <a href="<?= base_url('index.php?page=module&id=' . $mid) ?>"
                  class="btn btn-sm btn-gradient btn-gradient--<?= $grad ?>">
                 <?php
-                  if ($isDone)                    echo '🔁 Repasar →';
-                  elseif ($pData['percent'] > 0)  echo '▶️ Continuar →';
-                  else                            echo '🚀 Comenzar →';
+                  if ($isDone)          echo '🔁 Repasar →';
+                  elseif ($pData['percent'] > 0) echo '▶️ Continuar →';
+                  else                  echo '🚀 Comenzar →';
                 ?>
               </a>
             <?php else: ?>
-              <button class="btn btn-sm btn-locked" disabled>🔒 Bloqueado</button>
+              <button class="btn btn-sm btn-locked" disabled title="Completa el módulo anterior para desbloquear">
+                🔒 Bloqueado
+              </button>
             <?php endif; ?>
           </div>
         </div>
