@@ -71,6 +71,7 @@ class ProfileController {
 
             User::updateProfile($userId, $username, $avatar);
             $_SESSION['username'] = $username;
+            $_SESSION['nombre']   = $username;
             $_SESSION['avatar']   = $avatar;
             $_SESSION['profile_success'] = 'Perfil actualizado correctamente.';
 

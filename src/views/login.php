@@ -49,6 +49,14 @@
       <div class="alert alert-error"><?= e($error) ?></div>
     <?php endif; ?>
 
+    <?php
+      $resetSuccess = $_SESSION['reset_success_login'] ?? '';
+      unset($_SESSION['reset_success_login']);
+    ?>
+    <?php if (!empty($resetSuccess)): ?>
+      <div class="alert alert-success"><?= e($resetSuccess) ?></div>
+    <?php endif; ?>
+
     <?php if ($blocked): ?>
       <div class="alert alert-error" id="blockAlert">
         🔒 Acceso bloqueado. Espera <strong id="blockCountdown"><?= e($blockTime) ?></strong> antes de intentar de nuevo.
@@ -78,6 +86,10 @@
         <?= $blocked ? '🔒 Bloqueado' : 'Iniciar Sesión' ?>
       </button>
     </form>
+
+    <p style="text-align:right; margin-top:.75rem; margin-bottom:.5rem; font-size:.85rem;">
+      <a href="<?= base_url('index.php?page=forgot') ?>" style="color:var(--color-primary);">¿Olvidaste tu contraseña?</a>
+    </p>
 
     <p class="auth-switch">
       ¿No tienes cuenta? <a href="<?= base_url('index.php?page=register') ?>">Regístrate aquí</a>

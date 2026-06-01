@@ -21,15 +21,17 @@ class Progress {
         $completed    = $correct ? 1 : 0;
 
         $stmt = getDB()->prepare(
-            'INSERT INTO progreso (id_usuario, id_ejercicio, intentos, calificacion, completado, fecha_progreso)
-             VALUES (?, ?, 1, ?, ?, NOW())
+            'INSERT INTO progreso (id_usuario, id_ejercicio, intentos, calificacion, completado, alguna_vez_correcto, fecha_progreso)
+             VALUES (?, ?, 1, ?, ?, ?, NOW())
              ON DUPLICATE KEY UPDATE
-               intentos       = intentos + 1,
-               calificacion   = ?,
-               completado     = ?,
-               fecha_progreso = NOW()'
+               intentos             = intentos + 1,
+               calificacion         = ?,
+               completado           = ?,
+               alguna_vez_correcto  = IF(? = 1, 1, alguna_vez_correcto),
+               fecha_progreso       = NOW()'
         );
-        $stmt->execute([$userId, $exerciseId, $calificacion, $completed, $calificacion, $completed]);
+        $stmt->execute([$userId, $exerciseId, $calificacion, $completed, $completed,
+                        $calificacion, $completed, $completed]);
     }
 
     /**
@@ -63,6 +65,30 @@ class Progress {
         return (int)$stmt->fetchColumn();
     }
 
+    /** Total de intentos del usuario en un módulo (suma de todos los intentos de todos los ejercicios) */
+    public static function totalAttempts(int $userId, int $moduleId): int {
+        $stmt = getDB()->prepare(
+            'SELECT COALESCE(SUM(p.intentos), 0)
+             FROM progreso p
+             JOIN ejercicios e ON e.id_ejercicio = p.id_ejercicio
+             WHERE p.id_usuario = ? AND e.id_modulo = ?'
+        );
+        $stmt->execute([$userId, $moduleId]);
+        return (int)$stmt->fetchColumn();
+    }
+
+    /** Cuántas veces el usuario ha completado el módulo al 100% históricamente */
+    public static function timesCompleted(int $userId, int $moduleId): int {
+        // Aproximación: cuántos ejercicios del módulo tienen alguna_vez_correcto=1
+        $stmt = getDB()->prepare(
+            'SELECT COUNT(*) FROM progreso p
+             JOIN ejercicios e ON e.id_ejercicio = p.id_ejercicio
+             WHERE p.id_usuario = ? AND e.id_modulo = ? AND p.alguna_vez_correcto = 1'
+        );
+        $stmt->execute([$userId, $moduleId]);
+        return (int)$stmt->fetchColumn();
+    }
+
     /**
      * Verifica si un ejercicio específico fue respondido correctamente por el usuario.
      * Consulta directamente el campo `completado` en la tabla progreso.
@@ -90,8 +116,10 @@ class Progress {
     public static function resetLesson(int $userId, array $exerciseIds): void {
         if (empty($exerciseIds)) return;
         $placeholders = implode(',', array_fill(0, count($exerciseIds), '?'));
+        // Marca como no completado pero conserva intentos para estadísticas
         $stmt = getDB()->prepare(
-            "DELETE FROM progreso WHERE id_usuario = ? AND id_ejercicio IN ($placeholders)"
+            "UPDATE progreso SET completado = 0, fecha_progreso = NOW()
+             WHERE id_usuario = ? AND id_ejercicio IN ($placeholders)"
         );
         $stmt->execute(array_merge([$userId], $exerciseIds));
     }
@@ -104,9 +132,11 @@ class Progress {
      * @param int $moduleId ID del módulo a reiniciar.
      */
     public static function resetModule(int $userId, int $moduleId): void {
+        // Marca como no completado pero conserva intentos para estadísticas
         $stmt = getDB()->prepare(
-            'DELETE p FROM progreso p
+            'UPDATE progreso p
              JOIN ejercicios e ON e.id_ejercicio = p.id_ejercicio
+             SET p.completado = 0, p.fecha_progreso = NOW()
              WHERE p.id_usuario = ? AND e.id_modulo = ?'
         );
         $stmt->execute([$userId, $moduleId]);

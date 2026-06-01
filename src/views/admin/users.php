@@ -54,11 +54,28 @@ unset($_SESSION['admin_ok'], $_SESSION['admin_error']);
             <td><?= (int)$u['id_usuario'] ?></td>
             <td><?= e($u['nombre']) ?></td>
             <td><?= e($u['correo']) ?></td>
-            <td><?= $u['is_admin'] ? '<span class="badge badge--admin">Admin</span>' : '<span class="badge">Usuario</span>' ?></td>
+            <td>
+              <?php if (!empty($u['is_superadmin'])): ?>
+                <span class="badge badge--admin">Superadmin</span>
+              <?php elseif ($u['is_admin']): ?>
+                <span class="badge badge--admin">Admin</span>
+              <?php else: ?>
+                <span class="badge">Usuario</span>
+              <?php endif; ?>
+            </td>
             <td><?= (int)$u['ejercicios_completados'] ?></td>
             <td>
               <a href="<?= base_url('index.php?page=admin&action=user_progress&user_id=' . (int)$u['id_usuario']) ?>"
                  class="btn btn-outline btn-xs">Ver progreso</a>
+              <?php if (!empty($_SESSION['is_superadmin']) && empty($u['is_superadmin']) && (int)$u['id_usuario'] !== (int)$_SESSION['user_id']): ?>
+              <form method="POST" action="<?= base_url('index.php?page=admin&action=toggle_admin') ?>" style="display:inline">
+                <input type="hidden" name="csrf_token" value="<?= csrf_token() ?>">
+                <input type="hidden" name="user_id" value="<?= (int)$u['id_usuario'] ?>">
+                <button type="submit" class="btn btn-xs <?= $u['is_admin'] ? 'btn-danger' : 'btn-outline' ?>">
+                  <?= $u['is_admin'] ? 'Quitar Admin' : 'Hacer Admin' ?>
+                </button>
+              </form>
+              <?php endif; ?>
             </td>
           </tr>
           <?php endforeach; ?>

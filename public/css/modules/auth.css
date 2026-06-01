@@ -5,12 +5,21 @@
 .auth-body {
   background: linear-gradient(135deg, var(--primary), var(--secondary), #a855f7);
   min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+  display: block;
+  padding: 2rem 1.5rem;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+}
+
+/* Centrar la card dentro del auth-body */
+.auth-wrapper {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 440px;
+  margin: 0 auto;
+  /* Centrado vertical cuando hay espacio */
+  padding-top: max(0px, calc((100vh - 700px) / 2));
 }
 
 .auth-body--register {
@@ -19,9 +28,11 @@
 
 /* ── Fondo decorativo ─────────────────────────────────────── */
 .auth-bg {
-  position: absolute;
+  position: fixed;
   inset: 0;
   pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
 }
 
 .auth-blob {
@@ -64,13 +75,7 @@
   display: none;
 }
 
-/* ── Wrapper ──────────────────────────────────────────────── */
-.auth-wrapper {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 440px;
-}
+/* ── Wrapper (ya definido arriba con margin:auto) ─────────── */
 
 /* ── Card de Auth ─────────────────────────────────────────── */
 .auth-card {
