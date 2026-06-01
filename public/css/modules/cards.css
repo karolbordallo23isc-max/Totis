@@ -74,10 +74,22 @@
   flex-direction: column;
 }
 
-.module-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(30,58,138,.12);
-  z-index: 2;
+/* Brillo de hover */
+.module-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg,
+    rgba(255,255,255,0) 0%,
+    rgba(255,255,255,.06) 50%,
+    rgba(255,255,255,0) 100%);
+  opacity: 0;
+  transition: opacity .3s;
+  pointer-events: none;
+  z-index: 1;
+}
+.module-card:hover::before {
+  opacity: 1;
 }
 
 .module-card__done-badge {
@@ -318,3 +330,241 @@
   flex-direction: column;
   gap: .85rem;
 }
+
+/* ── Módulo bloqueado ─────────────────────────────────────── */
+.module-card--locked {
+  opacity: .72;
+  filter: grayscale(.55);
+  cursor: not-allowed;
+  position: relative;
+}
+
+.module-card--locked:hover {
+  transform: none !important;
+  box-shadow: var(--shadow) !important;
+}
+
+/* Overlay semitransparente sobre la card bloqueada */
+.module-card__lock-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  background: rgba(15, 23, 42, .45);
+  backdrop-filter: blur(2px);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity .2s;
+}
+
+.module-card--locked:hover .module-card__lock-overlay {
+  background: rgba(15, 23, 42, .55);
+}
+
+.module-card__lock-content {
+  text-align: center;
+}
+
+.module-card__lock-icon {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: .35rem;
+  filter: drop-shadow(0 2px 6px rgba(0,0,0,.5));
+}
+
+.module-card__lock-msg {
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 700;
+  text-shadow: 0 1px 4px rgba(0,0,0,.6);
+  background: rgba(0,0,0,.35);
+  padding: .25rem .65rem;
+  border-radius: 20px;
+}
+
+/* Badge de candado (esquina superior derecha) */
+.module-card__lock-badge {
+  position: absolute;
+  top: .75rem;
+  right: .75rem;
+  z-index: 11;
+  font-size: 1.2rem;
+  filter: drop-shadow(0 1px 3px rgba(0,0,0,.4));
+}
+
+/* Número de módulo */
+.module-card__num {
+  font-size: .7rem;
+  font-weight: 700;
+  letter-spacing: .8px;
+  text-transform: uppercase;
+  color: var(--gray-600);
+  display: block;
+  margin-bottom: .15rem;
+}
+
+/* Info de módulo bloqueado */
+.module-card__locked-info {
+  font-size: .8rem;
+  color: var(--gray-600);
+  padding: .5rem 0;
+  font-style: italic;
+}
+
+/* Botón bloqueado */
+.btn-locked {
+  background: var(--gray-200);
+  color: var(--gray-600);
+  border: 1.5px solid var(--gray-200);
+  cursor: not-allowed;
+  opacity: .8;
+}
+
+/* Módulo completado */
+.module-card--done {
+  border: 2px solid rgba(16,185,129,.3);
+}
+
+/* ── Barra de progreso global ─────────────────────────────── */
+.global-progress-bar {
+  height: 8px;
+  background: var(--gray-100);
+  border-radius: 999px;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+}
+
+.global-progress-bar__fill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #1e3a8a, #2563eb, #7c3aed);
+  background-size: 200% 100%;
+  animation: gradientShift 4s linear infinite, progressBarGrow .9s cubic-bezier(.22,.68,0,1.2) .2s both;
+  position: relative;
+  overflow: hidden;
+}
+
+.global-progress-bar__fill::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
+  background-size: 200% 100%;
+  animation: shimmer 2s linear infinite;
+}
+
+/* ── Alerta de módulo bloqueado ───────────────────────────── */
+.alert-lock {
+  display: flex;
+  align-items: center;
+  gap: .75rem;
+  background: #fef3c7;
+  border: 1.5px solid #fcd34d;
+  color: #92400e;
+  border-radius: var(--radius);
+  padding: .85rem 1.25rem;
+  margin-bottom: 1.25rem;
+  font-weight: 600;
+  font-size: .92rem;
+  animation: slideInRight .4s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+.alert-lock__icon { font-size: 1.3rem; }
+
+/* Dark mode */
+html.dark .module-card--locked { opacity: .55; }
+html.dark .btn-locked { background: #1e2d4a; border-color: #1e2d4a; color: #6b7280; }
+html.dark .module-card__locked-info { color: #6b7280; }
+html.dark .global-progress-bar { background: #1e2d4a; }
+html.dark .alert-lock { background: #451a03; border-color: #92400e; color: #fcd34d; }
+
+/* ── Banner de siguiente módulo ───────────────────────────── */
+.next-module-banner {
+  margin-top: 2rem;
+  background: linear-gradient(135deg, #ecfdf5 0%, #eff6ff 50%, #f5f3ff 100%);
+  border: 2px solid #10b981;
+  border-radius: 16px;
+  padding: 1.5rem 1.75rem;
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  flex-wrap: wrap;
+  position: relative;
+  overflow: hidden;
+  animation: fadeInUp .5s cubic-bezier(.22,.68,0,1.2) both;
+}
+
+/* Brillo de fondo */
+.next-module-banner::before {
+  content: '';
+  position: absolute;
+  top: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: radial-gradient(circle, rgba(16,185,129,.15) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.next-module-banner__confetti {
+  font-size: 2.2rem;
+  animation: float 2.5s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+.next-module-banner__body {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.next-module-banner__check {
+  font-size: 2rem;
+  flex-shrink: 0;
+  animation: bounceIn .6s cubic-bezier(.22,.68,0,1.2) .2s both;
+}
+
+.next-module-banner__text { min-width: 0; }
+
+.next-module-banner__title {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: #065f46;
+  margin: 0 0 .2rem;
+}
+
+.next-module-banner__sub {
+  font-size: .88rem;
+  color: #374151;
+  margin: 0;
+}
+
+.next-module-banner__btn {
+  background: linear-gradient(135deg, #059669, #10b981);
+  color: #fff;
+  font-weight: 700;
+  font-size: .95rem;
+  padding: .7rem 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(16,185,129,.4);
+  white-space: nowrap;
+  flex-shrink: 0;
+  animation: scaleInBounce .5s cubic-bezier(.22,.68,0,1.2) .3s both;
+  transition: transform .18s cubic-bezier(.22,.68,0,1.2), box-shadow .18s;
+}
+
+.next-module-banner__btn:hover {
+  transform: translateY(-3px) scale(1.03);
+  box-shadow: 0 8px 24px rgba(16,185,129,.5);
+  text-decoration: none;
+  color: #fff;
+}
+
+/* Dark mode */
+html.dark .next-module-banner {
+  background: linear-gradient(135deg, #064e3b 0%, #1e3a8a22 100%);
+  border-color: #059669;
+}
+html.dark .next-module-banner__title { color: #6ee7b7; }
+html.dark .next-module-banner__sub   { color: #9ca3af; }
