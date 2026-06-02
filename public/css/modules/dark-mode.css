@@ -12,13 +12,42 @@ html.dark body {
   color: var(--text);
 }
 
-/* Header */
+/* ── Header ───────────────────────────────────────────────── */
 html.dark .header {
   background: rgba(8,12,26,.88);
   border-bottom-color: #2563eb;
 }
 
-/* Progress Badge */
+html.dark .header-nav {
+  background: rgba(255,255,255,.05);
+  border-color: rgba(255,255,255,.08);
+}
+
+html.dark .header-nav__link {
+  color: rgba(255,255,255,.55);
+}
+
+html.dark .header-nav__link:hover {
+  background: rgba(255,255,255,.08);
+  color: #fff;
+}
+
+html.dark .header-user {
+  background: rgba(255,255,255,.06);
+  border-color: rgba(255,255,255,.12);
+  color: var(--text);
+}
+
+html.dark .header-user:hover {
+  border-color: #2563eb;
+  color: #93c5fd;
+}
+
+html.dark .logo-wordmark__name {
+  filter: brightness(1.2);
+}
+
+/* ── Progress Badge ───────────────────────────────────────── */
 html.dark .progress-badge {
   background: linear-gradient(145deg,
     rgba(255,255,255,.06) 0%,
@@ -46,7 +75,7 @@ html.dark .progress-badge__label {
   color: var(--text-muted);
 }
 
-/* Cards */
+/* ── Cards ────────────────────────────────────────────────── */
 html.dark .card,
 html.dark .module-card,
 html.dark .lesson-card,
@@ -65,6 +94,10 @@ html.dark .module-card__title {
   color: #f3f4f6;
 }
 
+html.dark .module-card__num {
+  color: var(--text-muted);
+}
+
 html.dark .module-card__desc,
 html.dark .module-card__lessons,
 html.dark .progress-row span,
@@ -78,7 +111,7 @@ html.dark .progress-row strong {
   color: #f3f4f6;
 }
 
-/* Botones */
+/* ── Botones ──────────────────────────────────────────────── */
 html.dark .btn-outline {
   background: transparent;
   border-color: var(--border);
@@ -90,70 +123,89 @@ html.dark .btn-outline:hover {
   color: #93c5fd;
 }
 
-/* Opciones */
-html.dark .option-btn {
-  background: #0f1629;
-  border-color: #1e2d4a;
-  color: var(--text);
+/* ── Formularios (forms.css) ──────────────────────────────── */
+html.dark .form-group label {
+  color: #d1d5db;
 }
 
-html.dark .option-btn:hover:not(:disabled) {
-  background: #1a2540;
-  border-color: #2563eb;
+html.dark .input-icon-wrap input,
+html.dark input {
+  background: #0f1629 !important;
+  border-color: #1e2d4a !important;
+  color: #f3f4f6 !important;
 }
 
-html.dark .option-btn.selected {
-  background: #1a2540;
-  border-color: #2563eb;
+html.dark .input-icon-wrap input::placeholder,
+html.dark input::placeholder {
+  color: #6b7280 !important;
 }
 
-/* Ejercicios */
-html.dark .exercise {
-  background: #0a1020;
+html.dark .input-icon-wrap input:hover,
+html.dark input:hover {
+  border-color: #2563eb !important;
+  background: #0f1629 !important;
 }
 
-/* Navegación */
-html.dark .header-nav {
-  background: rgba(255,255,255,.05);
-  border-color: rgba(255,255,255,.08);
+html.dark .input-icon-wrap input:focus,
+html.dark input:focus {
+  border-color: #2563eb !important;
+  background: #0f1629 !important;
+  color: #f3f4f6 !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.2) !important;
 }
 
-html.dark .header-nav__link {
-  color: rgba(255,255,255,.55);
+html.dark textarea {
+  background: #0f1629 !important;
+  border-color: #1e2d4a !important;
+  color: #f3f4f6 !important;
 }
 
-html.dark .header-nav__link:hover {
-  background: rgba(255,255,255,.08);
-  color: #fff;
+html.dark textarea::placeholder {
+  color: #6b7280 !important;
 }
 
-html.dark .lesson-nav__counter {
-  background: var(--surface);
-  color: var(--text-muted);
+html.dark textarea:hover {
+  border-color: #2563eb !important;
 }
 
-/* Barra de progreso */
+html.dark textarea:focus {
+  border-color: #2563eb !important;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.2) !important;
+}
+
+html.dark select {
+  background: #0f1629 !important;
+  border-color: #1e2d4a !important;
+  color: #f3f4f6 !important;
+}
+
+html.dark select:hover {
+  border-color: #2563eb !important;
+}
+
+html.dark select:focus {
+  border-color: #2563eb !important;
+}
+
+/* Alertas */
+html.dark .alert-error {
+  background: #2d0a0a;
+  border-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+html.dark .alert-success {
+  background: #052e16;
+  border-color: #166534;
+  color: #86efac;
+}
+
+/* ── Barra de progreso ────────────────────────────────────── */
 html.dark .progress-bar {
   background: #1e2d4a;
 }
 
-/* Logo */
-html.dark .logo-wordmark__name {
-  filter: brightness(1.2);
-}
-
-/* Inputs */
-html.dark input {
-  background: #0f1629 !important;
-  border-color: #1e2d4a !important;
-  color: var(--text) !important;
-}
-
-html.dark input:focus {
-  border-color: #2563eb !important;
-}
-
-/* Lecciones */
+/* ── Lecciones ────────────────────────────────────────────── */
 html.dark .lesson-card {
   background: var(--surface);
   border-left-color: #2563eb;
@@ -179,7 +231,182 @@ html.dark .lesson-card--done:hover {
   box-shadow: -2px 0 0 #00c853, 0 8px 28px rgba(0,200,83,.2);
 }
 
-/* Tooltips */
+html.dark .lesson-nav__counter {
+  background: var(--surface);
+  color: var(--text-muted);
+}
+
+/* ── Ejercicios (exercises.css) ───────────────────────────── */
+html.dark .lesson-content {
+  color: #d1d5db;
+}
+
+html.dark .lesson-header .page-title,
+html.dark .lesson-header .page-subtitle {
+  color: var(--text);
+}
+
+html.dark .exercise {
+  background: #0a1020;
+}
+
+html.dark .exercise__question {
+  color: #f3f4f6;
+}
+
+html.dark .option-btn {
+  background: #0f1629;
+  border-color: #1e2d4a;
+  color: #f3f4f6;
+}
+
+html.dark .option-btn:hover:not(:disabled) {
+  background: #1a2540;
+  border-color: #2563eb;
+  color: #f3f4f6;
+}
+
+html.dark .option-btn.selected {
+  background: #1a2540;
+  border-color: #2563eb;
+  color: #f3f4f6;
+}
+
+html.dark .option-btn.correct {
+  background: #052e16;
+  border-color: #16a34a;
+  color: #86efac;
+}
+
+html.dark .option-btn.wrong {
+  background: #2d0a0a;
+  border-color: #dc2626;
+  color: #fca5a5;
+}
+
+html.dark .exercise__feedback--correct {
+  background: #052e16;
+  border-color: #16a34a;
+  color: #86efac;
+}
+
+html.dark .exercise__feedback--wrong {
+  background: #431407;
+  border-color: #c2410c;
+  color: #fdba74;
+}
+
+html.dark .exercise__code-instructions {
+  background: #0a1020;
+  border-left-color: #2563eb;
+  color: #d1d5db;
+}
+
+html.dark .badge-green {
+  background: #052e16;
+  color: #86efac;
+}
+
+/* ── Perfil (profile.css) ─────────────────────────────────── */
+html.dark .profile-avatar-current {
+  background: linear-gradient(135deg, #0f1629, #1a2540);
+  border-color: #1e2d4a;
+}
+
+html.dark .avatar-btn {
+  background: #0f1629;
+  border-color: #1e2d4a;
+  color: #f3f4f6;
+}
+
+html.dark .avatar-btn:hover {
+  border-color: #2563eb;
+  background: #1a2540;
+}
+
+html.dark .avatar-btn--active {
+  border-color: #2563eb;
+  background: #1a2540;
+  box-shadow: 0 0 0 3px rgba(37,99,235,.3);
+}
+
+/* ── Admin (admin.css) ────────────────────────────────────── */
+html.dark .admin-stat-card,
+html.dark .admin-quick-card,
+html.dark .admin-table-wrap,
+html.dark .admin-exercise-card,
+html.dark .admin-option-row,
+html.dark .card {
+  background: var(--surface);
+  border-color: var(--border);
+}
+
+html.dark .admin-stat-card__value { color: var(--text); }
+html.dark .admin-stat-card__label { color: var(--text-muted); }
+
+html.dark .admin-quick-card { color: var(--text); }
+html.dark .admin-quick-card p { color: var(--text-muted); }
+html.dark .admin-quick-card__arrow { color: var(--text-muted); }
+html.dark .admin-quick-card:hover { border-color: #2563eb; }
+
+html.dark .admin-table thead tr { background: #0f1629; }
+html.dark .admin-table td,
+html.dark .admin-table th { border-color: var(--border); color: var(--text); }
+html.dark .admin-table tbody tr:hover { background: rgba(255,255,255,.03); }
+html.dark .admin-table__desc { color: var(--text-muted); }
+
+html.dark .admin-input,
+html.dark .admin-textarea,
+html.dark .admin-select {
+  background: var(--surface) !important;
+  border-color: var(--border) !important;
+  color: var(--text) !important;
+}
+
+html.dark .admin-input:hover,
+html.dark .admin-textarea:hover,
+html.dark .admin-select:hover {
+  border-color: #2563eb !important;
+}
+
+html.dark .admin-input::placeholder,
+html.dark .admin-textarea::placeholder {
+  color: #6b7280;
+}
+
+html.dark .admin-options-section { background: var(--bg); border-color: var(--border); }
+html.dark .admin-options-section__header h3 { color: var(--text); }
+html.dark .admin-options-section__header small { color: var(--text-muted); }
+
+html.dark .admin-option-row { background: var(--surface); border-color: var(--border); }
+html.dark .admin-option-row__check label { color: var(--text-muted); }
+
+html.dark .admin-options-list__item { background: var(--bg); color: var(--text); }
+html.dark .admin-options-list__item--correct { background: #064e3b; color: #6ee7b7; }
+html.dark .admin-options-list__retro { color: var(--text-muted); }
+
+html.dark .admin-empty-state { background: var(--surface); color: var(--text-muted); }
+html.dark .admin-form-title { color: var(--text); }
+html.dark .admin-breadcrumb { color: var(--text-muted); }
+html.dark .admin-breadcrumb-sep { color: var(--text-muted); }
+html.dark .form-hint { color: var(--text-muted); }
+
+html.dark .admin-exercise-card__question { color: var(--text); }
+html.dark .admin-exercise-card__retro { color: var(--text-muted); }
+
+html.dark .admin-badge--blue   { background: #1e3a8a33; color: #93c5fd; }
+html.dark .admin-badge--purple { background: #4c1d9533; color: #c4b5fd; }
+html.dark .admin-badge--orange { background: #7c2d1233; color: #fdba74; }
+html.dark .admin-badge--green  { background: #05280e33; color: #86efac; }
+html.dark .admin-badge--cyan   { background: #0c4a6e33; color: #67e8f9; }
+
+html.dark .btn-locked { background: #1e2d4a; border-color: #1e2d4a; color: #6b7280; }
+html.dark .module-card--locked { opacity: .55; }
+html.dark .module-card__locked-info { color: #6b7280; }
+html.dark .global-progress-bar { background: #1e2d4a; }
+html.dark .alert-lock { background: #451a03; border-color: #92400e; color: #fcd34d; }
+
+/* ── Tooltips ─────────────────────────────────────────────── */
 html.dark .module-tooltip {
   background: #0f1629;
   box-shadow: 0 8px 32px rgba(0,0,0,.5), 0 0 0 1px rgba(30,58,138,.2);
@@ -193,7 +420,7 @@ html.dark .module-tooltip__list li {
   color: var(--text-muted);
 }
 
-/* Pantalla de celebración */
+/* ── Celebración ──────────────────────────────────────────── */
 html.dark .completion-card {
   background: #0f1629;
   color: var(--text);
@@ -204,7 +431,7 @@ html.dark .completion-msg {
   color: var(--text-muted);
 }
 
-/* Menú móvil */
+/* ── Menú móvil ───────────────────────────────────────────── */
 html.dark .mob-menu__btn {
   background: rgba(255,255,255,.07);
   border-color: rgba(255,255,255,.1);
@@ -228,3 +455,12 @@ html.dark .mob-menu__item:hover {
 html.dark .mob-menu__divider {
   background: #1e2d4a;
 }
+
+/* ── Siguiente módulo banner ──────────────────────────────── */
+html.dark .next-module-banner {
+  background: linear-gradient(135deg, #064e3b 0%, #1e3a8a22 100%);
+  border-color: #059669;
+}
+
+html.dark .next-module-banner__title { color: #6ee7b7; }
+html.dark .next-module-banner__sub   { color: #9ca3af; }

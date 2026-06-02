@@ -31,10 +31,12 @@ class DashboardController {
             $percent            = $totalExercises > 0 ? round(($completedExercises / $totalExercises) * 100) : 0;
 
             $progressData[$moduleId] = [
-                'total'     => $totalExercises,
-                'completed' => $completedExercises,
-                'percent'   => $percent,
-                'unlocked'  => $module['unlocked'],
+                'total'          => $totalExercises,
+                'completed'      => $completedExercises,
+                'percent'        => $percent,
+                'unlocked'       => $module['unlocked'],
+                'attempts'       => Progress::totalAttempts($userId, $moduleId),
+                'ever_completed' => Progress::timesCompleted($userId, $moduleId),
             ];
             $totalProgress += $percent;
         }

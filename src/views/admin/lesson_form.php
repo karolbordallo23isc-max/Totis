@@ -9,7 +9,7 @@ $title  = $isEdit ? 'Editar Lección' : 'Nueva Lección';
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $title ?> — Admin Loopbook</title>
   <link rel="stylesheet" href="<?= base_url('css/styles.css') ?>">
-  <link rel="stylesheet" href="<?= base_url('css/admin.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('css/modules/admin.css') ?>">
 </head>
 <body>
 <?php require __DIR__ . '/../partials/header.php'; ?>

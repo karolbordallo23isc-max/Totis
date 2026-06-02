@@ -11,7 +11,7 @@ $numOpts = max(4, count($optionRows ?? []));
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title><?= $title ?> — Admin Loopbook</title>
   <link rel="stylesheet" href="<?= base_url('css/styles.css') ?>">
-  <link rel="stylesheet" href="<?= base_url('css/admin.css') ?>">
+  <link rel="stylesheet" href="<?= base_url('css/modules/admin.css') ?>">
 </head>
 <body>
 <?php require __DIR__ . '/../partials/header.php'; ?>
@@ -54,10 +54,32 @@ $numOpts = max(4, count($optionRows ?? []));
 
         <div class="form-group">
           <label for="tipo">Tipo de ejercicio</label>
-          <select id="tipo" name="tipo" class="admin-select">
+          <select id="tipo" name="tipo" class="admin-select" onchange="toggleTipo(this.value)">
             <option value="opcion_multiple" <?= (!$isEdit || $exerciseRow['tipo'] === 'opcion_multiple') ? 'selected' : '' ?>>🔘 Opción múltiple</option>
             <option value="verdadero_falso" <?= ($isEdit && $exerciseRow['tipo'] === 'verdadero_falso') ? 'selected' : '' ?>>✅ Verdadero / Falso</option>
+            <option value="codigo"          <?= ($isEdit && $exerciseRow['tipo'] === 'codigo')          ? 'selected' : '' ?>>🖥️ Escritura de código</option>
           </select>
+        </div>
+
+        <!-- Campos exclusivos para tipo código -->
+        <div id="codigo-fields" style="<?= ($isEdit && $exerciseRow['tipo'] === 'codigo') ? '' : 'display:none' ?>">
+          <div class="form-group">
+            <label for="code_instructions">Instrucciones para el alumno</label>
+            <textarea id="code_instructions" name="code_instructions" class="admin-textarea" rows="3"
+                      placeholder="Ej: Declara una variable llamada 'nombre' con el valor 'Loopbook' e imprímela."><?= e($isEdit ? ($exerciseRow['code_instructions'] ?? '') : '') ?></textarea>
+          </div>
+          <div class="form-group">
+            <label for="expected_output">Salida esperada (exacta)</label>
+            <input type="text" id="expected_output" name="expected_output" class="admin-input"
+                   value="<?= e($isEdit ? ($exerciseRow['expected_output'] ?? '') : '') ?>"
+                   placeholder="Ej: Loopbook">
+            <small class="form-hint">Lo que debe imprimir console.log(). Debe coincidir exactamente.</small>
+          </div>
+          <div class="form-group">
+            <label for="code_hint">Pista / código de ejemplo (opcional)</label>
+            <textarea id="code_hint" name="code_hint" class="admin-textarea" rows="3"
+                      placeholder="Ej: let nombre = 'Loopbook';\nconsole.log(nombre);"><?= e($isEdit ? ($exerciseRow['code_hint'] ?? '') : '') ?></textarea>
+          </div>
         </div>
 
         <div class="form-group">
@@ -67,8 +89,8 @@ $numOpts = max(4, count($optionRows ?? []));
           <small class="form-hint">Esta explicación aparece debajo de la respuesta correcta para reforzar el aprendizaje.</small>
         </div>
 
-        <!-- Opciones de respuesta -->
-        <div class="admin-options-section">
+        <!-- Opciones de respuesta (solo para opción múltiple y V/F) -->
+        <div id="options-section" style="<?= ($isEdit && $exerciseRow['tipo'] === 'codigo') ? 'display:none' : '' ?>">
           <div class="admin-options-section__header">
             <h3>Opciones de respuesta</h3>
             <small>Marca ✅ la opción correcta. Puedes agregar hasta 6 opciones.</small>
@@ -104,6 +126,7 @@ $numOpts = max(4, count($optionRows ?? []));
             ➕ Agregar opción
           </button>
         </div>
+        </div>
 
         <div class="admin-form-actions">
           <a href="<?= base_url('index.php?page=admin&action=exercises&lesson_id=' . $lessonId) ?>" class="btn btn-outline">Cancelar</a>
@@ -121,6 +144,18 @@ $numOpts = max(4, count($optionRows ?? []));
 <script>
 let optCount = <?= $numOpts ?>;
 const MAX_OPTS = 6;
+
+function toggleTipo(tipo) {
+  const codigoFields  = document.getElementById('codigo-fields');
+  const optionsSection = document.getElementById('options-section');
+  if (tipo === 'codigo') {
+    codigoFields.style.display  = '';
+    optionsSection.style.display = 'none';
+  } else {
+    codigoFields.style.display  = 'none';
+    optionsSection.style.display = '';
+  }
+}
 
 function addOption() {
   if (optCount >= MAX_OPTS) {

@@ -85,9 +85,23 @@ class LessonController {
 
         $exerciseId       = (int)($_POST['exercise_id']        ?? 0);
         $selectedOptionId = (int)($_POST['selected_option_id'] ?? 0);
+        $isCodeExercise   = !empty($_POST['is_code_exercise']);
         $userId           = $_SESSION['user_id'];
 
-        if ($exerciseId <= 0 || $selectedOptionId <= 0) {
+        if ($exerciseId <= 0) {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'message' => 'Parámetros inválidos']);
+            exit;
+        }
+
+        // Ejercicio de código: el cliente ya verificó la respuesta, solo guardamos progreso
+        if ($isCodeExercise) {
+            Progress::markExercise($userId, $exerciseId, true);
+            echo json_encode(['success' => true, 'correct' => true]);
+            exit;
+        }
+
+        if ($selectedOptionId <= 0) {
             http_response_code(400);
             echo json_encode(['success' => false, 'message' => 'Parámetros inválidos']);
             exit;

@@ -54,6 +54,8 @@ class AdminController {
             'exercise_delete' => self::exerciseDelete(),
             'users'           => self::users(),
             'user_progress'   => self::userProgress(),
+            'toggle_admin'    => self::toggleAdmin(),
+            'module_stats'    => self::moduleStats(),
             default           => self::dashboard(),
         };
     }
@@ -61,8 +63,16 @@ class AdminController {
     // ── DASHBOARD ──────────────────────────────────────────────
 
     private static function dashboard(): void {
-        $stats    = Admin::stats();
-        $ranking  = Admin::userRanking();
+        $stats          = Admin::stats();
+        $ranking        = Admin::userRanking();
+        $statsByModule  = Admin::statsByModule();
+        // Cargar ejercicios de todos los módulos de una vez
+        $allModules     = Admin::allModules();
+        $exercisesByModule = [];
+        foreach ($allModules as $m) {
+            $mid = (int)$m['id_modulo'];
+            $exercisesByModule[$mid] = Admin::statsExercisesByModule($mid);
+        }
         require __DIR__ . '/../views/admin/dashboard.php';
     }
 
@@ -257,28 +267,33 @@ class AdminController {
             $pregunta = trim($_POST['pregunta'] ?? '');
             $retro    = trim($_POST['retroalimentacion'] ?? '');
             $tipo     = $_POST['tipo'] ?? 'opcion_multiple';
+            $expected = trim($_POST['expected_output']   ?? '');
+            $codeInst = trim($_POST['code_instructions'] ?? '');
+            $codeHint = trim($_POST['code_hint']         ?? '');
 
             if ($pregunta === '') {
                 $_SESSION['admin_error'] = 'La pregunta es obligatoria.';
                 redirect(base_url('index.php?page=admin&action=exercise_create&lesson_id=' . $lessonId));
             }
 
-            $exId = Admin::createExercise($moduleId, $lessonId, $pregunta, $retro, $tipo);
+            $exId = Admin::createExercise($moduleId, $lessonId, $pregunta, $retro, $tipo, $expected, $codeInst, $codeHint);
 
-            // Guardar opciones
-            $textos     = $_POST['opt_texto']     ?? [];
-            $correctas  = $_POST['opt_correcta']  ?? [];
-            $retros     = $_POST['opt_retro']      ?? [];
-            $options = [];
-            foreach ($textos as $i => $txt) {
-                if (trim($txt) === '') continue;
-                $options[] = [
-                    'texto'             => trim($txt),
-                    'es_correcta'       => isset($correctas[$i]),
-                    'retroalimentacion' => trim($retros[$i] ?? ''),
-                ];
+            // Guardar opciones (solo para tipos que las usan)
+            if ($tipo !== 'codigo') {
+                $textos    = $_POST['opt_texto']    ?? [];
+                $correctas = $_POST['opt_correcta'] ?? [];
+                $retros    = $_POST['opt_retro']    ?? [];
+                $options   = [];
+                foreach ($textos as $i => $txt) {
+                    if (trim($txt) === '') continue;
+                    $options[] = [
+                        'texto'             => trim($txt),
+                        'es_correcta'       => isset($correctas[$i]),
+                        'retroalimentacion' => trim($retros[$i] ?? ''),
+                    ];
+                }
+                if (!empty($options)) Admin::replaceOptions($exId, $options);
             }
-            if (!empty($options)) Admin::replaceOptions($exId, $options);
 
             $_SESSION['admin_ok'] = 'Ejercicio creado correctamente.';
             redirect(base_url('index.php?page=admin&action=exercises&lesson_id=' . $lessonId));
@@ -306,27 +321,32 @@ class AdminController {
             $pregunta = trim($_POST['pregunta'] ?? '');
             $retro    = trim($_POST['retroalimentacion'] ?? '');
             $tipo     = $_POST['tipo'] ?? 'opcion_multiple';
+            $expected = trim($_POST['expected_output']   ?? '');
+            $codeInst = trim($_POST['code_instructions'] ?? '');
+            $codeHint = trim($_POST['code_hint']         ?? '');
 
             if ($pregunta === '') {
                 $_SESSION['admin_error'] = 'La pregunta es obligatoria.';
                 redirect(base_url('index.php?page=admin&action=exercise_edit&id=' . $id));
             }
 
-            Admin::updateExercise($id, $pregunta, $retro, $tipo);
+            Admin::updateExercise($id, $pregunta, $retro, $tipo, $expected, $codeInst, $codeHint);
 
-            $textos    = $_POST['opt_texto']    ?? [];
-            $correctas = $_POST['opt_correcta'] ?? [];
-            $retros    = $_POST['opt_retro']    ?? [];
-            $options = [];
-            foreach ($textos as $i => $txt) {
-                if (trim($txt) === '') continue;
-                $options[] = [
-                    'texto'             => trim($txt),
-                    'es_correcta'       => isset($correctas[$i]),
-                    'retroalimentacion' => trim($retros[$i] ?? ''),
-                ];
+            if ($tipo !== 'codigo') {
+                $textos    = $_POST['opt_texto']    ?? [];
+                $correctas = $_POST['opt_correcta'] ?? [];
+                $retros    = $_POST['opt_retro']    ?? [];
+                $options   = [];
+                foreach ($textos as $i => $txt) {
+                    if (trim($txt) === '') continue;
+                    $options[] = [
+                        'texto'             => trim($txt),
+                        'es_correcta'       => isset($correctas[$i]),
+                        'retroalimentacion' => trim($retros[$i] ?? ''),
+                    ];
+                }
+                Admin::replaceOptions($id, $options);
             }
-            Admin::replaceOptions($id, $options);
 
             $_SESSION['admin_ok'] = 'Ejercicio actualizado correctamente.';
             redirect(base_url('index.php?page=admin&action=exercises&lesson_id=' . $lessonId));
@@ -346,5 +366,61 @@ class AdminController {
         if ($id > 0) Admin::deleteExercise($id);
         $_SESSION['admin_ok'] = 'Ejercicio eliminado.';
         redirect(base_url('index.php?page=admin&action=exercises&lesson_id=' . $lessonId));
+    }
+
+    // ── USUARIOS ───────────────────────────────────────────────
+
+    private static function users(): void {
+        $users = Admin::allUsers();
+        require __DIR__ . '/../views/admin/users.php';
+    }
+
+    private static function userProgress(): void {
+        $userId = (int)($_GET['user_id'] ?? 0);
+        if ($userId <= 0) redirect(base_url('index.php?page=admin&action=users'));
+        $user     = Admin::findUser($userId);
+        if (!$user) redirect(base_url('index.php?page=admin&action=users'));
+        $progress = Admin::userProgress($userId);
+        require __DIR__ . '/../views/admin/user_progress.php';
+    }
+
+    private static function moduleStats(): void {
+        $moduleId = (int)($_GET['module_id'] ?? 0);
+        if ($moduleId <= 0) redirect(base_url('index.php?page=admin'));
+
+        // Buscar el módulo
+        $moduleRow = null;
+        foreach (Admin::allModules() as $m) {
+            if ((int)$m['id_modulo'] === $moduleId) { $moduleRow = $m; break; }
+        }
+        if (!$moduleRow) redirect(base_url('index.php?page=admin'));
+
+        $exercises = Admin::statsExercisesByModule($moduleId);
+        require __DIR__ . '/../views/admin/module_stats.php';
+    }
+
+    private static function toggleAdmin(): void {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            redirect(base_url('index.php?page=admin&action=users'));
+        }
+        csrf_verify();
+
+        // Solo el superadmin puede cambiar roles
+        if (empty($_SESSION['is_superadmin'])) {
+            $_SESSION['admin_error'] = 'No tienes permisos para cambiar roles de usuario.';
+            redirect(base_url('index.php?page=admin&action=users'));
+        }
+
+        $userId = (int)($_POST['user_id'] ?? 0);
+
+        // No puede modificarse a sí mismo
+        if ($userId === (int)$_SESSION['user_id']) {
+            $_SESSION['admin_error'] = 'No puedes modificar tu propio rol.';
+            redirect(base_url('index.php?page=admin&action=users'));
+        }
+
+        if ($userId > 0) Admin::toggleAdmin($userId);
+        $_SESSION['admin_ok'] = 'Rol de usuario actualizado correctamente.';
+        redirect(base_url('index.php?page=admin&action=users'));
     }
 }

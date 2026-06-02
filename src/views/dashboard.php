@@ -33,9 +33,6 @@
       <p class="page-subtitle">Completa cada módulo en orden para desbloquear el siguiente</p>
     </div>
     <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
-      <?php if (!empty($_SESSION['is_admin'])): ?>
-        <a href="<?= base_url('index.php?page=admin') ?>" class="btn btn-outline btn-sm">⚙️ Panel Admin</a>
-      <?php endif; ?>
       <div class="progress-badge">
         <span class="progress-badge__icon">🏆</span>
         <span class="progress-badge__value"><?= $overallProgress ?>%</span>
@@ -100,13 +97,21 @@
           <?php if ($unlocked): ?>
           <div class="module-card__progress">
             <div class="progress-row">
-              <span>Ejercicios completados</span>
+              <span>Progreso actual</span>
               <strong><?= $pData['completed'] ?>/<?= $pData['total'] ?> (<?= $pData['percent'] ?>%)</strong>
             </div>
             <div class="progress-bar">
               <div class="progress-bar__fill progress-bar__fill--<?= $grad ?>"
                    style="width:<?= $pData['percent'] ?>%"></div>
             </div>
+            <?php if ($pData['attempts'] > 0): ?>
+            <div style="display:flex;gap:1rem;margin-top:.4rem;font-size:.78rem;color:var(--gray-500)">
+              <span>🔁 <?= $pData['attempts'] ?> intento<?= $pData['attempts'] !== 1 ? 's' : '' ?> totales</span>
+              <?php if ($pData['ever_completed'] > 0): ?>
+              <span>✅ <?= $pData['ever_completed'] ?>/<?= $pData['total'] ?> completados alguna vez</span>
+              <?php endif; ?>
+            </div>
+            <?php endif; ?>
           </div>
           <?php else: ?>
           <div class="module-card__locked-info">

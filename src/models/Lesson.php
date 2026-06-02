@@ -65,15 +65,18 @@ class Lesson {
      */
     public static function exercises(int $lessonId): array {
         $stmt = getDB()->prepare(
-            'SELECT e.id_ejercicio AS ex_id,
-                    e.pregunta     AS question,
+            'SELECT e.id_ejercicio      AS ex_id,
+                    e.pregunta          AS question,
                     e.retroalimentacion AS explanation,
-                    e.tipo         AS type,
-                    o.id_opcion    AS opt_id,
-                    o.texto        AS opt_text,
-                    o.es_correcta  AS opt_correct
+                    e.tipo              AS type,
+                    e.expected_output   AS expected_output,
+                    e.code_instructions AS code_instructions,
+                    e.code_hint         AS code_hint,
+                    o.id_opcion         AS opt_id,
+                    o.texto             AS opt_text,
+                    o.es_correcta       AS opt_correct
              FROM ejercicios e
-             JOIN opcion o ON o.id_ejercicio = e.id_ejercicio
+             LEFT JOIN opcion o ON o.id_ejercicio = e.id_ejercicio
              WHERE e.id_contenido = ?
              ORDER BY e.id_ejercicio ASC, o.id_opcion ASC'
         );
@@ -87,39 +90,53 @@ class Lesson {
             $exId = $row['ex_id'];
             if (!isset($exercisesMap[$exId])) {
                 $exercisesMap[$exId] = [
-                    'id'          => $exId,
-                    'question'    => $row['question'],
-                    'explanation' => $row['explanation'],
-                    'type'        => $row['type'],
-                    'options_raw' => [],
+                    'id'                => $exId,
+                    'question'          => $row['question'],
+                    'explanation'       => $row['explanation'],
+                    'tipo'              => $row['type'],
+                    'type'              => $row['type'],
+                    'expected_output'   => $row['expected_output'] ?? '',
+                    'code_instructions' => $row['code_instructions'] ?? '',
+                    'code_hint'         => $row['code_hint'] ?? '',
+                    'options_raw'       => [],
                 ];
             }
-            $exercisesMap[$exId]['options_raw'][] = [
-                'id'         => (int)$row['opt_id'],
-                'text'       => $row['opt_text'],
-                'is_correct' => (int)$row['opt_correct'],
-            ];
+            // Los ejercicios de código no tienen opciones
+            if (!empty($row['opt_id'])) {
+                $exercisesMap[$exId]['options_raw'][] = [
+                    'id'         => (int)$row['opt_id'],
+                    'text'       => $row['opt_text'],
+                    'is_correct' => (int)$row['opt_correct'],
+                ];
+            }
         }
 
         $exercises = [];
         foreach ($exercisesMap as &$ex) {
-            $options = $ex['options_raw'];
-            shuffle($options);
+            if ($ex['type'] === 'codigo') {
+                $ex['options']           = [];
+                $ex['option_ids']        = [];
+                $ex['correct_answer']    = 0;
+                $ex['correct_option_id'] = 0;
+            } else {
+                $options = $ex['options_raw'];
+                shuffle($options);
 
-            $ex['options']    = array_column($options, 'text');
-            $ex['option_ids'] = array_column($options, 'id');
+                $ex['options']    = array_column($options, 'text');
+                $ex['option_ids'] = array_column($options, 'id');
 
-            $correctOptionId = 0;
-            $correctIdx      = 0;
-            foreach ($options as $i => $opt) {
-                if ($opt['is_correct'] === 1) {
-                    $correctIdx      = $i;
-                    $correctOptionId = $opt['id'];
-                    break;
+                $correctOptionId = 0;
+                $correctIdx      = 0;
+                foreach ($options as $i => $opt) {
+                    if ($opt['is_correct'] === 1) {
+                        $correctIdx      = $i;
+                        $correctOptionId = $opt['id'];
+                        break;
+                    }
                 }
+                $ex['correct_answer']    = $correctIdx;
+                $ex['correct_option_id'] = $correctOptionId;
             }
-            $ex['correct_answer']    = $correctIdx;
-            $ex['correct_option_id'] = $correctOptionId;
             unset($ex['options_raw']);
             $exercises[] = $ex;
         }

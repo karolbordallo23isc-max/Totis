@@ -92,24 +92,33 @@ class Admin {
     }
 
     public static function findExercise(int $id): array|false {
-        $stmt = getDB()->prepare('SELECT * FROM ejercicios WHERE id_ejercicio = ? LIMIT 1');
+        $stmt = getDB()->prepare(
+            'SELECT id_ejercicio, id_modulo, id_contenido, pregunta, retroalimentacion,
+                    tipo, expected_output, code_instructions, code_hint
+             FROM ejercicios WHERE id_ejercicio = ? LIMIT 1'
+        );
         $stmt->execute([$id]);
         return $stmt->fetch();
     }
 
-    public static function createExercise(int $moduleId, int $lessonId, string $pregunta, string $retro, string $tipo): int {
+    public static function createExercise(int $moduleId, int $lessonId, string $pregunta, string $retro, string $tipo, string $expected = '', string $codeInst = '', string $codeHint = ''): int {
         $stmt = getDB()->prepare(
-            'INSERT INTO ejercicios (id_modulo, id_contenido, pregunta, retroalimentacion, tipo) VALUES (?, ?, ?, ?, ?)'
+            'INSERT INTO ejercicios (id_modulo, id_contenido, pregunta, retroalimentacion, tipo, expected_output, code_instructions, code_hint)
+             VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
         );
-        $stmt->execute([$moduleId, $lessonId, $pregunta, $retro, $tipo]);
+        $stmt->execute([$moduleId, $lessonId, $pregunta, $retro, $tipo,
+            $expected ?: null, $codeInst ?: null, $codeHint ?: null]);
         return (int)getDB()->lastInsertId();
     }
 
-    public static function updateExercise(int $id, string $pregunta, string $retro, string $tipo): void {
+    public static function updateExercise(int $id, string $pregunta, string $retro, string $tipo, string $expected = '', string $codeInst = '', string $codeHint = ''): void {
         $stmt = getDB()->prepare(
-            'UPDATE ejercicios SET pregunta = ?, retroalimentacion = ?, tipo = ? WHERE id_ejercicio = ?'
+            'UPDATE ejercicios SET pregunta = ?, retroalimentacion = ?, tipo = ?,
+             expected_output = ?, code_instructions = ?, code_hint = ?
+             WHERE id_ejercicio = ?'
         );
-        $stmt->execute([$pregunta, $retro, $tipo, $id]);
+        $stmt->execute([$pregunta, $retro, $tipo,
+            $expected ?: null, $codeInst ?: null, $codeHint ?: null, $id]);
     }
 
     public static function deleteExercise(int $id): void {
@@ -164,6 +173,94 @@ class Admin {
         }
     }
 
+    // ── USUARIOS ──────────────────────────────────────────────
+
+    public static function allUsers(): array {
+        $stmt = getDB()->query(
+            'SELECT u.id_usuario, u.nombre, u.correo, u.usuario, u.is_admin, u.is_superadmin,
+                    LEAST(
+                      COUNT(DISTINCT CASE WHEN p.alguna_vez_correcto=1 THEN p.id_ejercicio END),
+                      (SELECT COUNT(*) FROM ejercicios)
+                    ) AS ejercicios_completados
+             FROM usuario u
+             LEFT JOIN progreso p ON p.id_usuario = u.id_usuario
+             GROUP BY u.id_usuario
+             ORDER BY ejercicios_completados DESC'
+        );
+        return $stmt->fetchAll();
+    }
+
+    public static function userRanking(int $limit = 10): array {
+        $stmt = getDB()->prepare(
+            'SELECT u.id_usuario, u.nombre, u.correo,
+                    LEAST(
+                      COUNT(DISTINCT CASE WHEN p.alguna_vez_correcto=1 THEN p.id_ejercicio END),
+                      (SELECT COUNT(*) FROM ejercicios)
+                    ) AS ejercicios_completados
+             FROM usuario u
+             LEFT JOIN progreso p ON p.id_usuario = u.id_usuario
+             GROUP BY u.id_usuario
+             ORDER BY ejercicios_completados DESC
+             LIMIT ?'
+        );
+        $stmt->execute([$limit]);
+        return $stmt->fetchAll();
+    }
+
+    public static function userProgress(int $userId): array {
+        $stmt = getDB()->prepare(
+            'SELECT m.nombre AS modulo, m.orden AS modulo_orden,
+                    c.titulo AS leccion, c.orden AS leccion_orden,
+                    e.pregunta, e.tipo,
+                    p.completado, p.intentos, p.fecha_progreso AS fecha_completado
+             FROM progreso p
+             JOIN ejercicios e ON e.id_ejercicio = p.id_ejercicio
+             JOIN contenido c  ON c.id_contenido = e.id_contenido
+             JOIN modulos m    ON m.id_modulo    = e.id_modulo
+             WHERE p.id_usuario = ?
+             ORDER BY m.orden ASC, c.orden ASC'
+        );
+        $stmt->execute([$userId]);
+        return $stmt->fetchAll();
+    }
+
+    /** Estadísticas de ejercicios filtradas por módulo */
+    public static function statsExercisesByModule(int $moduleId): array {
+        $stmt = getDB()->prepare(
+            'SELECT e.id_ejercicio, e.pregunta, e.tipo,
+                    c.titulo AS leccion, c.orden AS leccion_orden,
+                    COUNT(p.id_progreso)                                              AS total_intentos,
+                    SUM(CASE WHEN p.alguna_vez_correcto=1 THEN 1 ELSE 0 END)         AS aciertos,
+                    ROUND(SUM(CASE WHEN p.alguna_vez_correcto=1 THEN 1 ELSE 0 END)
+                          / NULLIF(COUNT(p.id_progreso),0) * 100, 0)                 AS tasa_acierto
+             FROM ejercicios e
+             JOIN contenido c ON c.id_contenido = e.id_contenido
+             LEFT JOIN progreso p ON p.id_ejercicio = e.id_ejercicio
+             WHERE e.id_modulo = ?
+             GROUP BY e.id_ejercicio
+             ORDER BY c.orden ASC, e.id_ejercicio ASC'
+        );
+        $stmt->execute([$moduleId]);
+        return $stmt->fetchAll();
+    }
+
+    public static function findUser(int $id): array|false {
+        $stmt = getDB()->prepare('SELECT * FROM usuario WHERE id_usuario = ? LIMIT 1');
+        $stmt->execute([$id]);
+        return $stmt->fetch();
+    }
+
+    /**
+     * Alterna el rol admin de un usuario (0→1 o 1→0).
+     * No puede aplicarse al superadmin ni al propio usuario en sesión.
+     */
+    public static function toggleAdmin(int $userId): void {
+        $stmt = getDB()->prepare(
+            'UPDATE usuario SET is_admin = IF(is_admin = 1, 0, 1) WHERE id_usuario = ? AND is_superadmin = 0'
+        );
+        $stmt->execute([$userId]);
+    }
+
     // ── ESTADÍSTICAS GENERALES ─────────────────────────────────
 
     public static function stats(): array {
@@ -173,9 +270,53 @@ class Admin {
             'lecciones'  => (int)$db->query('SELECT COUNT(*) FROM contenido')->fetchColumn(),
             'ejercicios' => (int)$db->query('SELECT COUNT(*) FROM ejercicios')->fetchColumn(),
             'opciones'   => (int)$db->query('SELECT COUNT(*) FROM opcion')->fetchColumn(),
-            'usuarios'   => (int)$db->query('SELECT COUNT(*) FROM usuario')->fetchColumn(),
-            'progresos'  => (int)$db->query('SELECT COUNT(*) FROM progreso WHERE completado = 1')->fetchColumn(),
+            'usuarios'   => (int)$db->query('SELECT COUNT(*) FROM usuario WHERE is_admin=0')->fetchColumn(),
+            'progresos'  => (int)$db->query('SELECT COUNT(*) FROM progreso WHERE alguna_vez_correcto = 1')->fetchColumn(),
         ];
+    }
+
+    /** Progreso por módulo: cuántos usuarios completaron cada módulo */
+    public static function statsByModule(): array {
+        $stmt = getDB()->query(
+            'SELECT m.id_modulo, m.nombre, m.orden,
+                    COUNT(DISTINCT e.id_ejercicio)                    AS total_ejercicios,
+                    (SELECT COUNT(*) FROM usuario WHERE is_admin = 0) AS total_usuarios,
+                    COALESCE(comp.usuarios_completaron, 0)            AS usuarios_completaron
+             FROM modulos m
+             LEFT JOIN ejercicios e ON e.id_modulo = m.id_modulo
+             LEFT JOIN (
+               SELECT e2.id_modulo, COUNT(DISTINCT p.id_usuario) AS usuarios_completaron
+               FROM progreso p
+               JOIN ejercicios e2 ON e2.id_ejercicio = p.id_ejercicio
+               WHERE p.alguna_vez_correcto = 1
+               GROUP BY e2.id_modulo, p.id_usuario
+               HAVING COUNT(DISTINCT p.id_ejercicio) = (
+                 SELECT COUNT(*) FROM ejercicios ex WHERE ex.id_modulo = e2.id_modulo
+               )
+             ) comp ON comp.id_modulo = m.id_modulo
+             GROUP BY m.id_modulo
+             ORDER BY m.orden ASC'
+        );
+        return $stmt->fetchAll();
+    }
+
+    /** Estadísticas de ejercicios: intentos promedio y tasa de acierto */
+    public static function statsExercises(): array {
+        $stmt = getDB()->query(
+            'SELECT e.id_ejercicio, e.pregunta, e.tipo,
+                    c.titulo AS leccion, m.nombre AS modulo,
+                    COUNT(p.id_progreso)                                    AS total_intentos,
+                    SUM(CASE WHEN p.completado=1 THEN 1 ELSE 0 END)        AS aciertos,
+                    ROUND(SUM(CASE WHEN p.completado=1 THEN 1 ELSE 0 END)
+                          / NULLIF(COUNT(p.id_progreso),0) * 100, 0)       AS tasa_acierto
+             FROM ejercicios e
+             JOIN contenido c  ON c.id_contenido = e.id_contenido
+             JOIN modulos m    ON m.id_modulo    = e.id_modulo
+             LEFT JOIN progreso p ON p.id_ejercicio = e.id_ejercicio
+             GROUP BY e.id_ejercicio
+             ORDER BY m.orden ASC, c.orden ASC, e.id_ejercicio ASC'
+        );
+        return $stmt->fetchAll();
     }
 
     public static function allCourses(): array {

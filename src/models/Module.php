@@ -53,6 +53,11 @@ class Module {
      * @return bool true si el usuario puede acceder al módulo.
      */
     public static function isUnlocked(int $userId, int $moduleId): bool {
+        // Admins y superadmins tienen acceso a todos los módulos sin restricción
+        if (!empty($_SESSION['is_admin']) || !empty($_SESSION['is_superadmin'])) {
+            return true;
+        }
+
         $stmt = getDB()->prepare('SELECT orden FROM modulos WHERE id_modulo = ? LIMIT 1');
         $stmt->execute([$moduleId]);
         $row = $stmt->fetch();

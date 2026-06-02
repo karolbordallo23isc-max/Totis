@@ -83,9 +83,9 @@ class User {
      */
     public static function updateProfile(int $userId, string $username, string $avatar): bool {
         $stmt = getDB()->prepare(
-            'UPDATE usuario SET usuario = ?, avatar = ? WHERE id_usuario = ?'
+            'UPDATE usuario SET usuario = ?, nombre = ?, avatar = ? WHERE id_usuario = ?'
         );
-        $stmt->execute([$username, $avatar, $userId]);
+        $stmt->execute([$username, $username, $avatar, $userId]);
         return $stmt->rowCount() >= 0;
     }
 
