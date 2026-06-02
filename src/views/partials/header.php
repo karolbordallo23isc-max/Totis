@@ -18,6 +18,12 @@ $showHeader  = !in_array($currentPage, ['login', 'register', '']) && !empty($_SE
          class="header-nav__link <?= $currentPage === 'dashboard' ? 'header-nav__link--active' : '' ?>">
         🏠 Inicio
       </a>
+      <?php if (!empty($_SESSION['is_admin'])): ?>
+      <a href="<?= base_url('index.php?page=admin') ?>"
+         class="header-nav__link <?= $currentPage === 'admin' ? 'header-nav__link--active' : '' ?>">
+        ⚙️ Admin
+      </a>
+      <?php endif; ?>
       <a href="<?= base_url('index.php?page=profile') ?>"
          class="header-nav__link header-nav__link--profile <?= $currentPage === 'profile' ? 'header-nav__link--active' : '' ?>">
         <?= e($_SESSION['avatar'] ?? '👤') ?> <?= e($_SESSION['nombre'] ?? $_SESSION['username'] ?? '') ?>

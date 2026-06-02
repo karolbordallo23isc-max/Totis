@@ -10,8 +10,7 @@
  *  4. Pantalla de celebración — muestra un overlay al completar todos los ejercicios del módulo
  */
 
-/* Contador de respuestas correctas en la sesión actual de la lección */
-let correctCount = 0;
+/* Contador de respuestas correctas — se inicializa desde lesson.php con los ya completados */
 
 /* ══════════════════════════════════════════════════════════
    SONIDOS WEB AUDIO API
@@ -193,6 +192,7 @@ function checkAnswer(checkBtn, exerciseId) {
   /* Estado de carga */
   checkBtn.disabled = true;
   checkBtn.textContent = 'Verificando…';
+  checkBtn.classList.add('btn-loading');
 
   const formData = new FormData();
   formData.append('exercise_id',        exerciseId);
@@ -205,6 +205,7 @@ function checkAnswer(checkBtn, exerciseId) {
         /* Error del servidor — reactivar para reintentar */
         checkBtn.disabled = false;
         checkBtn.textContent = 'Verificar Respuesta';
+        checkBtn.classList.remove('btn-loading');
         return;
       }
 
@@ -271,6 +272,7 @@ function checkAnswer(checkBtn, exerciseId) {
         /* Reactivar botón para que el usuario pueda reintentar */
         checkBtn.disabled = false;
         checkBtn.textContent = 'Verificar Respuesta';
+        checkBtn.classList.remove('btn-loading');
         checkBtn.classList.remove('hidden');
       }
     })
@@ -278,6 +280,7 @@ function checkAnswer(checkBtn, exerciseId) {
       /* Error de red — reactivar y avisar */
       checkBtn.disabled = false;
       checkBtn.textContent = 'Verificar Respuesta';
+      checkBtn.classList.remove('btn-loading');
       alert('Error de conexión. Intenta de nuevo.');
     });
 }
@@ -300,7 +303,7 @@ function showCompletionScreen(moduleName) {
       <div class="completion-icon">🏆</div>
       <h2 class="completion-title">¡Módulo Completado!</h2>
       <p class="completion-module">${moduleName}</p>
-      <div class="completion-stars">⭐⭐⭐</div>
+      <div class="completion-stars"><span>⭐</span><span>⭐</span><span>⭐</span></div>
       <p class="completion-msg">Respondiste todos los ejercicios correctamente</p>
       <button class="btn btn-primary completion-btn" onclick="this.closest('.completion-overlay').remove()">
         ¡Continuar! →
@@ -309,8 +312,87 @@ function showCompletionScreen(moduleName) {
   document.body.appendChild(overlay);
 }
 
-/* Exponer para que pueda ser llamada desde lesson.php */
-window.showCompletionScreen = showCompletionScreen;
+/* ══════════════════════════════════════════════════════════
+   VERIFICAR EJERCICIO DE CÓDIGO
+   Ejecuta el código del usuario en un sandbox seguro (sin eval libre).
+   Captura console.log y compara la salida con expected_output.
+   ══════════════════════════════════════════════════════════ */
+function checkCodeAnswer(btn, exerciseId) {
+  const exercise = btn.closest('.exercise');
+  const textarea = exercise.querySelector('.exercise__code-editor');
+  const outputEl = exercise.querySelector('.exercise__code-output');
+  const expected = (exercise.dataset.expected || '').trim();
+  const code     = textarea.value;
+
+  if (!code.trim()) {
+    outputEl.style.display = 'block';
+    outputEl.className = 'exercise__code-output output--error';
+    outputEl.textContent = '⚠ Escribe algo de código primero.';
+    return;
+  }
+
+  // Capturar console.log de forma segura
+  let output = '';
+  const logs = [];
+  const fakeConsole = { log: (...args) => logs.push(args.map(String).join(' ')) };
+
+  try {
+    // Sandbox: Function constructor limita el scope global
+    const fn = new Function('console', code);
+    fn(fakeConsole);
+    output = logs.join('\n').trim();
+  } catch (err) {
+    outputEl.style.display = 'block';
+    outputEl.className = 'exercise__code-output output--error';
+    outputEl.textContent = '❌ Error: ' + err.message;
+    return;
+  }
+
+  outputEl.style.display = 'block';
+  outputEl.className = 'exercise__code-output';
+  outputEl.textContent = output || '(sin salida)';
+
+  const isCorrect = expected === '' || output === expected;
+
+  const feedback = exercise.querySelector('.exercise__feedback');
+  const explanation = exercise.querySelector('.exercise__explanation');
+
+  if (isCorrect) {
+    feedback.classList.remove('hidden', 'exercise__feedback--wrong');
+    feedback.classList.add('exercise__feedback--correct');
+    feedback.textContent = '¡Correcto! Tu código produce la salida esperada. 🎉';
+    if (explanation && explanation.textContent.trim()) {
+      explanation.classList.remove('hidden');
+    }
+    textarea.disabled = true;
+    btn.classList.add('hidden');
+    playCorrect();
+    correctCount++;
+
+    // Registrar progreso en el servidor
+    const formData = new FormData();
+    formData.append('exercise_id',        exerciseId);
+    formData.append('selected_option_id', 0);
+    formData.append('is_code_exercise',   1);
+    fetch(CHECK_ANSWER_URL, { method: 'POST', body: formData }).catch(() => {});
+
+    if (typeof IS_LAST_LESSON !== 'undefined' && IS_LAST_LESSON &&
+        typeof TOTAL_EXERCISES !== 'undefined' && correctCount >= TOTAL_EXERCISES) {
+      setTimeout(() => {
+        if (typeof MODULE_NAME !== 'undefined') showCompletionScreen(MODULE_NAME);
+      }, 800);
+    }
+  } else {
+    feedback.classList.remove('hidden', 'exercise__feedback--correct');
+    feedback.classList.add('exercise__feedback--wrong');
+    feedback.textContent = '❌ La salida no coincide. Esperado: "' + expected + '" — Obtenido: "' + output + '"';
+    playWrong();
+  }
+}
+
+window.checkCodeAnswer = checkCodeAnswer;
+
+
 
 /* ══════════════════════════════════════════════════════════
    INICIO — Punto de entrada al cargar el DOM
@@ -318,4 +400,42 @@ window.showCompletionScreen = showCompletionScreen;
 document.addEventListener('DOMContentLoaded', () => {
   initDarkMode();
   initTooltips();
+  initScrollReveal();
+  initButtonLoadingState();
 });
+
+/* ══════════════════════════════════════════════════════════
+   SCROLL REVEAL
+   Observa elementos con clase .reveal y les agrega .revealed
+   cuando entran en el viewport.
+   ══════════════════════════════════════════════════════════ */
+function initScrollReveal() {
+  const els = document.querySelectorAll('.reveal');
+  if (!els.length) return;
+  const obs = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('revealed');
+        obs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  els.forEach(el => obs.observe(el));
+}
+
+/* ══════════════════════════════════════════════════════════
+   BOTONES — Estado de carga
+   Agrega clase btn-loading al botón de submit de formularios
+   para mostrar el spinner mientras se procesa.
+   ══════════════════════════════════════════════════════════ */
+function initButtonLoadingState() {
+  document.querySelectorAll('form').forEach(form => {
+    form.addEventListener('submit', () => {
+      const btn = form.querySelector('button[type="submit"]');
+      if (btn && !btn.classList.contains('btn-danger')) {
+        btn.classList.add('btn-loading');
+        btn.disabled = true;
+      }
+    });
+  });
+}

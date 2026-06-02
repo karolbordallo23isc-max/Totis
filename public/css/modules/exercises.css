@@ -171,3 +171,120 @@
 .lesson-nav > a:last-child {
   justify-self: end;
 }
+
+/* ── Video Embebido ───────────────────────────────────────── */
+.lesson-video-wrap {
+  margin-top: 1.25rem;
+}
+
+.lesson-video-label {
+  font-size: .85rem;
+  font-weight: 700;
+  color: var(--gray-600);
+  margin-bottom: .5rem;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+
+.lesson-video-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%; /* 16:9 */
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: #000;
+  box-shadow: var(--shadow-lg);
+}
+
+.lesson-video-container iframe {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  border: none;
+}
+
+/* ── Imagen de Lección ────────────────────────────────────── */
+.lesson-image-wrap { margin-top: 1.25rem; }
+.lesson-image {
+  width: 100%;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  max-height: 400px;
+  object-fit: contain;
+}
+
+/* ── Ejercicio completado (locked) ───────────────────────── */
+.option-btn--locked {
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+.exercise--done .exercise__question {
+  color: var(--gray-600);
+}
+
+/* ── Ejercicio de Código ──────────────────────────────────── */
+.exercise--codigo .exercise__code-area {
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+  margin-bottom: .75rem;
+}
+
+.exercise__code-instructions {
+  font-size: .9rem;
+  color: var(--gray-600);
+  background: #f8fafc;
+  border-left: 3px solid var(--primary);
+  padding: .6rem .9rem;
+  border-radius: 0 8px 8px 0;
+  line-height: 1.6;
+}
+
+.exercise__code-editor {
+  width: 100%;
+  min-height: 110px;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: .92rem;
+  padding: .85rem 1rem;
+  border: 2px solid var(--gray-200);
+  border-radius: 8px;
+  background: #1e1e2e;
+  color: #cdd6f4;
+  resize: vertical;
+  outline: none;
+  transition: border-color .2s;
+  line-height: 1.6;
+  tab-size: 2;
+}
+
+.exercise__code-editor:focus {
+  border-color: var(--primary);
+}
+
+.exercise__code-editor:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+.exercise__code-output {
+  font-family: 'Courier New', Courier, monospace;
+  font-size: .88rem;
+  background: #0f0f1a;
+  color: #a6e3a1;
+  padding: .7rem 1rem;
+  border-radius: 8px;
+  min-height: 2.5rem;
+  white-space: pre-wrap;
+  border: 1px solid #2a2a3e;
+}
+
+.exercise__code-output.output--error {
+  color: #f38ba8;
+}
+
+.exercise__code-hint {
+  font-size: .82rem;
+  color: var(--gray-500);
+  font-style: italic;
+}

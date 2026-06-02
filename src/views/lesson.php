@@ -33,6 +33,30 @@
         <h3>Contenido de la Lección</h3>
       </div>
       <p class="lesson-content"><?= e($lesson['content']) ?></p>
+
+      <?php
+        // Mostrar video embebido si la lección tiene URL de video
+        $stmt = getDB()->prepare('SELECT tipo, url FROM contenido WHERE id_contenido = ? LIMIT 1');
+        $stmt->execute([$lesson['id']]);
+        $rawLesson = $stmt->fetch();
+      ?>
+      <?php if ($rawLesson && $rawLesson['tipo'] === 'video' && !empty($rawLesson['url'])): ?>
+      <div class="lesson-video-wrap mt-4">
+        <div class="lesson-video-label">🎬 Video de la lección</div>
+        <div class="lesson-video-container">
+          <iframe src="<?= e($rawLesson['url']) ?>"
+                  title="Video de la lección"
+                  frameborder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                  loading="lazy"></iframe>
+        </div>
+      </div>
+      <?php elseif ($rawLesson && $rawLesson['tipo'] === 'imagen' && !empty($rawLesson['url'])): ?>
+      <div class="lesson-image-wrap mt-4">
+        <img src="<?= e($rawLesson['url']) ?>" alt="Imagen de la lección" class="lesson-image">
+      </div>
+      <?php endif; ?>
     </div>
   </div>
 
@@ -52,11 +76,16 @@
         <?php foreach ($exercises as $exIdx => $exercise):
           $alreadyDone = $exerciseStatus[$exercise['id']] ?? false;
         ?>
-        <div class="exercise <?= $alreadyDone ? 'exercise--done' : '' ?>"
+        <?php $isCodigo = ($exercise['tipo'] ?? '') === 'codigo'; ?>
+        <div class="exercise <?= $alreadyDone ? 'exercise--done' : '' ?> <?= $isCodigo ? 'exercise--codigo' : '' ?>"
              id="exercise-<?= $exercise['id'] ?>"
              data-exercise-id="<?= $exercise['id'] ?>"
              data-correct="<?= (int)$exercise['correct_answer'] ?>"
-             data-correct-option-id="<?= (int)$exercise['correct_option_id'] ?>">
+             data-correct-option-id="<?= (int)$exercise['correct_option_id'] ?>"
+             <?php if ($isCodigo): ?>
+             data-expected="<?= e($exercise['expected_output'] ?? '') ?>"
+             data-hint="<?= e($exercise['code_hint'] ?? '') ?>"
+             <?php endif; ?>>
 
           <div class="exercise__question">
             <span class="exercise__num"><?= $exIdx + 1 ?></span>
@@ -66,6 +95,31 @@
             <?php endif; ?>
           </div>
 
+          <?php if ($isCodigo): ?>
+          <!-- Ejercicio de escritura de código -->
+          <div class="exercise__code-area">
+            <?php if (!empty($exercise['code_instructions'])): ?>
+            <div class="exercise__code-instructions"><?= nl2br(e($exercise['code_instructions'])) ?></div>
+            <?php endif; ?>
+            <textarea class="exercise__code-editor"
+                      placeholder="Escribe tu código aquí..."
+                      spellcheck="false"
+                      <?= $alreadyDone ? 'disabled' : '' ?>><?= $alreadyDone ? e($exercise['code_hint'] ?? '') : '' ?></textarea>
+            <div class="exercise__code-output" style="display:none"></div>
+            <?php if (!empty($exercise['code_hint'])): ?>
+            <p class="exercise__code-hint">💡 Pista: <?= e($exercise['code_hint']) ?></p>
+            <?php endif; ?>
+          </div>
+          <?php if (!$alreadyDone): ?>
+          <button type="button"
+                  class="btn btn-primary btn-full mt-2"
+                  onclick="checkCodeAnswer(this, <?= $exercise['id'] ?>)">
+            ▶ Ejecutar y Verificar
+          </button>
+          <?php endif; ?>
+
+          <?php else: ?>
+          <!-- Ejercicio de opción múltiple / verdadero-falso -->
           <div class="exercise__options">
             <?php foreach ($exercise['options'] as $optIdx => $option): ?>
             <button type="button"
@@ -85,6 +139,7 @@
                   onclick="checkAnswer(this, <?= $exercise['id'] ?>)">
             Verificar Respuesta
           </button>
+          <?php endif; ?>
           <?php endif; ?>
 
           <div class="exercise__feedback hidden"></div>
@@ -115,7 +170,7 @@
     <?php endif; ?>
   </div>
 
-  <?php if (!$nextLesson):
+  <?php if (!$nextLesson && $moduleCompleted):
     $titleText = '¡Has terminado este módulo!';
     require __DIR__ . '/partials/next_module_card.php';
   endif; ?>
@@ -125,7 +180,7 @@
     <button type="button"
             class="btn btn-outline"
             onclick="resetLesson()"
-            title="Borra tu progreso en esta lección y vuelve a intentarla">
+            title="Vuelve a intentar los ejercicios. Tu historial de intentos se conserva.">
       🔄 Intentar lección de nuevo
     </button>
   </div>
@@ -143,9 +198,11 @@
   const CURRENT_LESSON_ID  = <?= (int)$lesson['id'] ?>;
   const CURRENT_MODULE_ID  = <?= (int)$module['id_modulo'] ?>;
   const IS_LAST_LESSON     = <?= $nextLesson ? 'false' : 'true' ?>;
+  // Inicializar con ejercicios ya completados para no disparar celebración prematura
+  let correctCount = <?= count(array_filter($exerciseStatus, fn($v) => $v === true)) ?>;
 
   function resetLesson() {
-    if (!confirm('¿Seguro que quieres intentar esta lección de nuevo? Se borrará tu progreso en los ejercicios.')) return;
+    if (!confirm('¿Quieres volver a intentar esta lección?\n\nTus respuestas se reiniciarán pero tu historial de intentos se conserva.')) return;
     const formData = new FormData();
     formData.append('type',      'lesson');
     formData.append('lesson_id', CURRENT_LESSON_ID);

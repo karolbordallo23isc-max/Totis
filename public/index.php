@@ -19,10 +19,14 @@ require_once __DIR__ . '/../src/controllers/DashboardController.php';
 require_once __DIR__ . '/../src/controllers/ModuleController.php';
 require_once __DIR__ . '/../src/controllers/LessonController.php';
 require_once __DIR__ . '/../src/controllers/ProfileController.php';
+require_once __DIR__ . '/../src/models/Admin.php';
+require_once __DIR__ . '/../src/controllers/AdminController.php';
+require_once __DIR__ . '/../src/models/PasswordReset.php';
+require_once __DIR__ . '/../src/controllers/PasswordResetController.php';
 
 $page = $_GET['page'] ?? '';
 
-if (in_array($page, ['login', 'register', ''])) {
+if (in_array($page, ['login', 'register', 'forgot', 'reset', ''])) {
     if (!empty($_SESSION['user_id'])) {
         redirect(base_url('index.php?page=dashboard'));
     }
@@ -77,6 +81,26 @@ switch ($page) {
 
     case 'logout':
         AuthController::logout();
+        break;
+
+    case 'forgot':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            PasswordResetController::handleForgot();
+        } else {
+            PasswordResetController::showForgot();
+        }
+        break;
+
+    case 'reset':
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            PasswordResetController::handleReset();
+        } else {
+            PasswordResetController::showReset();
+        }
+        break;
+
+    case 'admin':
+        AdminController::dispatch();
         break;
 
     default:

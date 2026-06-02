@@ -58,6 +58,17 @@ function require_auth(): void {
 
     // Actualizar timestamp de última actividad
     $_SESSION['last_activity'] = time();
+
+    // Sincronizar is_superadmin desde BD si aún no está en sesión
+    if (!isset($_SESSION['is_superadmin'])) {
+        $stmt = getDB()->prepare('SELECT is_admin, is_superadmin FROM usuario WHERE id_usuario = ? LIMIT 1');
+        $stmt->execute([$_SESSION['user_id']]);
+        $row = $stmt->fetch();
+        if ($row) {
+            $_SESSION['is_admin']      = !empty($row['is_admin']);
+            $_SESSION['is_superadmin'] = !empty($row['is_superadmin']);
+        }
+    }
 }
 
 /**

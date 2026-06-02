@@ -12,7 +12,7 @@ LoopBook es una plataforma web de aprendizaje diseñada para estudiantes de nuev
 
 | Capa | Tecnología |
 |---|---|
-| Frontend | HTML5, CSS3 modular (16 archivos por componente, sin frameworks) |
+| Frontend | HTML5, CSS3 modular (17 archivos por componente, sin frameworks) |
 | Backend | PHP 8.x (sin framework, arquitectura MVC manual) |
 | Base de datos | MySQL — normalizada en 3FN |
 | Acceso a datos | PDO con prepared statements (prevención de SQL injection) |
@@ -21,7 +21,7 @@ LoopBook es una plataforma web de aprendizaje diseñada para estudiantes de nuev
 | Seguridad | Tokens CSRF + rate limiting en login (bloqueo 15 min tras 5 intentos) |
 | Tipografía | Plus Jakarta Sans (Google Fonts) |
 
-> No se utilizó ningún framework de PHP (Laravel, Symfony, Slim), ni librería de JavaScript (jQuery, React, Vue), ni framework de CSS (Bootstrap, Tailwind). Todo el código es escrito a mano.
+> No se utilizó ningún framework de PHP (Laravel, Symfony, Slim), ni librería de JavaScript (jQuery, React, Vue), ni framework de CSS (Bootstrap, Tailwind).
 
 ---
 
@@ -42,7 +42,7 @@ El archivo `app.js` maneja toda la interactividad del lado del cliente:
 
 ```
 loopbook/
-├── .env.example                # Variables de entorno de referencia (no subir .env real)
+├── .env.example                # Variables de entorno de referencia
 ├── .gitignore                  # Excluye .env, logs, vendor, etc.
 │
 ├── config/
@@ -74,6 +74,7 @@ loopbook/
 │   │       ├── dark-mode.css   # Modo oscuro
 │   │       ├── tooltips.css    # Tooltips del dashboard
 │   │       ├── mobile-menu.css # Menú móvil
+│   │       ├── admin.css       # Panel de administración
 │   │       └── responsive.css  # Media queries
 │   ├── img/
 │   │   └── loopbook_logo.png   # Logo del proyecto (PNG transparente)
@@ -84,12 +85,14 @@ loopbook/
 │   ├── helpers.php             # Funciones globales: redirect, base_url, require_auth,
 │   │                           # e(), csrf_token, csrf_verify, is_login_blocked, etc.
 │   ├── controllers/            # Lógica de negocio y orquestación
+│   │   ├── AdminController.php
 │   │   ├── AuthController.php
 │   │   ├── DashboardController.php
 │   │   ├── ModuleController.php
 │   │   ├── LessonController.php
 │   │   └── ProfileController.php
 │   ├── models/                 # Acceso a base de datos
+│   │   ├── Admin.php
 │   │   ├── User.php
 │   │   ├── Module.php
 │   │   ├── Lesson.php
@@ -106,12 +109,14 @@ loopbook/
 │           └── next_module_card.php
 │
 └── docs/
-    ├── README.md                        # Documentación principal del proyecto (Dev Líder)
-    ├── estructura_repositorio.md        # Estructura y decisiones de arquitectura (Dev Líder)
-    ├── mejoras_interfaz.md              # Documentación de mejoras visuales (Diseñador)
-    ├── validacion_requisitos.md         # Validación de requisitos funcionales (Analista)
-    ├── test_report.md                   # Reporte de pruebas y casos de QA (QA/Tester)
-    └── bitacora_sprint4.pdf             # Bitácora del sprint (Coordinador)
+    ├── README.md                       # Documentación principal del proyecto (Dev Líder)
+    ├── estructura_repositorio.md       # Estructura y decisiones de arquitectura (Dev Líder)
+    ├── mejoras_interfaz.md             # Documentación de mejoras visuales (Diseñador)
+    ├── Actualización de interfaz.pdf   # Reporte visual del diseño (Diseñador)
+    ├── evidencia_ejecucion.pdf         # Evidencia de ejecución del proyecto (Dev Líder)
+    ├── criterios_aceptacion.md         # Criterios de aceptación (Analista)
+    ├── test_report.md                  # Reporte de pruebas y casos de QA (QA/Tester)
+    └── bitacora_sprint4.pdf            # Bitácora del sprint (Coordinador)
 ```
 
 ---
@@ -232,6 +237,16 @@ Todas las rutas pasan por `public/index.php` usando el parámetro `?page=`.
 
 7. CIERRE DE SESIÓN (?page=logout)
    └── Destruye la sesión y redirige al login.
+
+8. PANEL DE ADMINISTRACIÓN (?page=admin)
+   └── Accesible solo para usuarios con is_admin = 1.
+       Dashboard con estadísticas globales (módulos, lecciones, ejercicios,
+       usuarios, progreso promedio) y acceso rápido a cada sección.
+       Gestión completa de módulos: crear, editar, eliminar.
+       Gestión de lecciones por módulo: crear, editar, eliminar.
+       Gestión de ejercicios por lección: crear, editar, eliminar,
+       con sus opciones de respuesta (texto, correcta, retroalimentación).
+       Todas las operaciones de escritura validan token CSRF.
 ```
 
 ---
@@ -251,7 +266,6 @@ Todas las rutas pasan por `public/index.php` usando el parámetro `?page=`.
 
 ## Limitaciones actuales del sistema
 
-- **Un solo curso disponible:** El sistema está construido con contenido fijo sobre "Lenguajes de Programación". No existe panel de administración para agregar cursos o módulos desde la interfaz.
 - **Progreso por ejercicio, no por lección:** El sistema rastrea ejercicios individuales. Una lección se considera completada solo cuando todos sus ejercicios están respondidos correctamente.
-- **Sin soporte para contenido multimedia:** Las lecciones solo muestran texto. El schema de BD contempla `tipo` (texto/video/imagen) pero la vista no renderiza video ni imagen aún.
-- **Entorno local únicamente:** No está configurado para despliegue en producción (credenciales en texto plano, sin variables de entorno).
+- **Sin soporte para contenido multimedia en vistas:** El schema de BD contempla `tipo` (texto/video/imagen) y el admin permite configurarlo, pero la vista de lección solo renderiza texto actualmente.
+- **Entorno local únicamente:** No está configurado para despliegue en producción (credenciales en `.env` local, sin configuración de servidor remoto).

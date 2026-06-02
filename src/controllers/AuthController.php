@@ -60,10 +60,12 @@ class AuthController {
         }
 
         reset_login_attempts();
-        $_SESSION['user_id']  = $user['id_usuario'];
-        $_SESSION['username'] = $user['usuario'];
-        $_SESSION['nombre']   = $user['nombre'];
-        $_SESSION['avatar']   = $user['avatar'] ?? '👤';
+        $_SESSION['user_id']      = $user['id_usuario'];
+        $_SESSION['username']     = $user['usuario'];
+        $_SESSION['nombre']       = $user['nombre'];
+        $_SESSION['avatar']       = $user['avatar'] ?? '👤';
+        $_SESSION['is_admin']     = !empty($user['is_admin'])      ? true : false;
+        $_SESSION['is_superadmin'] = !empty($user['is_superadmin']) ? true : false;
         redirect(base_url('index.php?page=dashboard'));
     }
 

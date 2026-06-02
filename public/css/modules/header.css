@@ -6,11 +6,24 @@
   background: rgba(245, 247, 255, 0.82);
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
-  border-bottom: 3px solid #1e3a8a;
+  border-bottom: 3px solid transparent;
+  background-clip: padding-box;
   box-shadow: 0 1px 0 rgba(255,255,255,.6) inset, 0 4px 20px rgba(30,58,138,.1);
   position: sticky;
   top: 0;
   z-index: 100;
+}
+
+/* Borde inferior con gradiente animado */
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg,
+    #1e3a8a, #2563eb, #7c3aed, #a855f7, #2563eb, #1e3a8a);
+  background-size: 300% 100%;
+  animation: gradientShift 6s linear infinite;
 }
 
 .header-inner {

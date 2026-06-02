@@ -23,7 +23,7 @@
       <div class="card-body">
         <div class="progress-row">
           <span>✨ <strong>Ejercicios completados</strong></span>
-          <span class="text-purple font-bold"><?= $completed ?> / <?= $totalLessons ?></span>
+          <span class="text-purple font-bold"><?= $completedEx ?> / <?= $totalEx ?></span>
         </div>
         <div class="progress-bar mt-2">
           <div class="progress-bar__fill progress-bar__fill--purple-pink"
@@ -69,10 +69,33 @@
     <?php endforeach; ?>
   </div>
 
-  <?php if ($progressPct === 100):
-    $titleText = '¡Módulo completado!';
-    require __DIR__ . '/partials/next_module_card.php';
-  endif; ?>
+  <?php if ($progressPct === 100 && $totalEx > 0): ?>
+  <div class="next-module-banner">
+    <div class="next-module-banner__confetti">🎉</div>
+    <div class="next-module-banner__body">
+      <div class="next-module-banner__check">✅</div>
+      <div class="next-module-banner__text">
+        <h3 class="next-module-banner__title">¡Módulo completado!</h3>
+        <?php if ($nextModule): ?>
+          <p class="next-module-banner__sub">Siguiente: <strong><?= e($nextModule['nombre']) ?></strong></p>
+        <?php else: ?>
+          <p class="next-module-banner__sub">🏆 ¡Has completado todos los módulos del curso!</p>
+        <?php endif; ?>
+      </div>
+    </div>
+    <?php if ($nextModule): ?>
+      <a href="<?= base_url('index.php?page=module&id=' . (int)$nextModule['id_modulo']) ?>"
+         class="btn next-module-banner__btn">
+        Ir al siguiente módulo →
+      </a>
+    <?php else: ?>
+      <a href="<?= base_url('index.php?page=dashboard') ?>"
+         class="btn next-module-banner__btn">
+        Ver todos los módulos →
+      </a>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
 
 </div>
 </main>

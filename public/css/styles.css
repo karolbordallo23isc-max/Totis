@@ -9,6 +9,7 @@
 /* ── Módulos en orden de dependencia ─────────────────────── */
 @import 'modules/variables.css';
 @import 'modules/base.css';
+@import 'modules/animations.css';
 @import 'modules/buttons.css';
 @import 'modules/forms.css';
 @import 'modules/layout.css';

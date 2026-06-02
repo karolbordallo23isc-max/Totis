@@ -16,12 +16,14 @@ loopbook/
 │   └── loopbook.sql
 │
 ├── docs/
-│   ├── README.md                  # Documentación principal del proyecto (Dev Líder)
-│   ├── estructura_repositorio.md  # Estructura y decisiones de arquitectura (Dev Líder)
-│   ├── mejoras_interfaz.md        # Documentación de mejoras visuales (Diseñador)
-│   ├── validacion_requisitos.md   # Validación de requisitos funcionales (Analista)
-│   ├── test_report.md             # Reporte de pruebas y casos de QA (QA/Tester)
-│   └── bitacora_sprint4.pdf       # Bitácora del sprint (Coordinador)
+│   ├── README.md                       # Documentación principal del proyecto (Dev Líder)
+│   ├── estructura_repositorio.md       # Estructura y decisiones de arquitectura (Dev Líder)
+│   ├── mejoras_interfaz.md             # Documentación de mejoras visuales (Diseñador)
+│   ├── Actualización de interfaz.pdf   # Reporte visual del diseño (Diseñador)
+│   ├── evidencia_ejecucion.pdf         # Evidencia de ejecución del proyecto (Dev Líder)
+│   ├── criterios_aceptacion.md         # Criterios de aceptación (Analista)
+│   ├── test_report.md                  # Reporte de pruebas y casos de QA (QA/Tester)
+│   └── bitacora_sprint4.pdf            # Bitácora del sprint (Coordinador)
 │
 ├── public/
 │   ├── .htaccess
@@ -35,6 +37,7 @@ loopbook/
 │   │   └── modules/
 │   │       ├── variables.css
 │   │       ├── base.css
+│   │       ├── animations.css
 │   │       ├── buttons.css
 │   │       ├── cards.css
 │   │       ├── forms.css
@@ -48,6 +51,7 @@ loopbook/
 │   │       ├── dark-mode.css
 │   │       ├── tooltips.css
 │   │       ├── mobile-menu.css
+│   │       ├── admin.css
 │   │       └── responsive.css
 │   ├── img/
 │   │   └── loopbook_logo.png
@@ -57,12 +61,14 @@ loopbook/
 └── src/
     ├── helpers.php
     ├── controllers/
+    │   ├── AdminController.php
     │   ├── AuthController.php
     │   ├── DashboardController.php
     │   ├── LessonController.php
     │   ├── ModuleController.php
     │   └── ProfileController.php
     ├── models/
+    │   ├── Admin.php
     │   ├── Lesson.php
     │   ├── Module.php
     │   ├── Progress.php
@@ -74,6 +80,14 @@ loopbook/
         ├── module.php
         ├── profile.php
         ├── register.php
+        ├── admin/
+        │   ├── dashboard.php
+        │   ├── exercises.php
+        │   ├── exercise_form.php
+        │   ├── lessons.php
+        │   ├── lesson_form.php
+        │   ├── modules.php
+        │   └── module_form.php
         └── partials/
             ├── header.php
             └── next_module_card.php
@@ -87,21 +101,24 @@ loopbook/
 |---|---|
 | `config/` | Configuración de la base de datos y schema SQL con datos de prueba. |
 | `config/database.php` | Función `getDB()` — conexión PDO singleton a MySQL. Único punto de acceso a la BD. |
-| `config/loopbook.sql` | Schema completo de la base de datos con tablas, relaciones y datos de prueba listos para importar. |
+| `config/loopbook.sql` | Schema completo de la base de datos con tablas, relaciones, vistas, procedimientos almacenados y datos de prueba listos para importar. |
 | `docs/` | Documentación del proyecto. Aquí van todos los entregables por rol: README, estructura del repositorio, mejoras de interfaz, validación de requisitos, reporte de QA y bitácora del sprint. No contiene código ejecutable. |
 | `public/` | Único directorio expuesto al navegador. Todo lo que el usuario puede acceder directamente está aquí. |
 | `public/index.php` | Front Controller — punto de entrada único. Recibe todas las peticiones y las enruta al controlador correspondiente según el parámetro `?page=`. |
 | `public/.htaccess` | Configuración de Apache: desactiva listado de directorios y redirige todo al Front Controller. |
 | `public/api/` | Endpoints AJAX. Reciben peticiones fetch desde el navegador y responden JSON. No generan HTML. |
 | `public/css/styles.css` | Hoja de estilos principal. Importa las variables globales y todos los módulos CSS. |
-| `public/css/modules/` | CSS dividido por componente. Cada archivo es responsable de un área visual específica del sistema. |
+| `public/css/modules/` | CSS dividido por componente (17 archivos). Cada archivo es responsable de un área visual específica del sistema. `admin.css` cubre exclusivamente el panel de administración. |
 | `public/img/` | Imágenes estáticas del proyecto (logo). |
 | `public/js/app.js` | Toda la interactividad del cliente: sonidos Web Audio API, modo oscuro, tooltips AJAX, verificación de ejercicios y confetti. |
 | `src/` | Todo el código PHP de la aplicación. No es accesible directamente por URL. |
 | `src/helpers.php` | Funciones globales reutilizables: `redirect()`, `base_url()`, `require_auth()`, `e()`, `csrf_token()`, `csrf_verify()`, rate limiting de login. |
-| `src/controllers/` | Lógica de negocio. Cada controlador maneja una sección del sistema: autenticación, dashboard, módulos, lecciones y perfil. |
+| `src/controllers/` | Lógica de negocio. Cada controlador maneja una sección del sistema: autenticación, dashboard, módulos, lecciones, perfil y panel de administración. |
+| `src/controllers/AdminController.php` | Maneja todas las rutas del panel admin (`?page=admin&action=...`). Protegido: solo usuarios con `is_admin = 1` pueden acceder. CRUD completo de módulos, lecciones y ejercicios. |
 | `src/models/` | Acceso a la base de datos. Cada modelo representa una entidad y contiene las queries PDO correspondientes. |
+| `src/models/Admin.php` | Operaciones CRUD del panel de administración: módulos, lecciones (contenido), ejercicios y opciones de respuesta. Incluye estadísticas globales. |
 | `src/views/` | Plantillas HTML+PHP. Se renderizan desde los controladores. No son accesibles por URL directa. |
+| `src/views/admin/` | Vistas del panel de administración: dashboard, listados y formularios de módulos, lecciones y ejercicios. |
 | `src/views/partials/` | Fragmentos reutilizables de HTML: header de navegación y tarjeta del siguiente módulo. |
 
 ---
