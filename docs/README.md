@@ -136,8 +136,9 @@ git clone https://github.com/karolbordallo23isc-max/Totis.git C:/xampp/htdocs/lo
 ### 2. Crear la base de datos
 
 1. Inicia XAMPP y activa los servicios **Apache** y **MySQL**
-2. Abre **phpMyAdmin** dando clic en el botón **Admin** de MySQL en el panel de XAMPP
-3. Ve a la pestaña **Importar** → selecciona el archivo `config/loopbook.sql` → clic en **Continuar**
+2. Asegurate que tu puerto en mysql sea 3306, en dado caso que te salga otro puerto diferente debes ir a "config" en mysql y abrir el "my.ini" despues tendras que cambiar todos los puertos a 3306 una vez que todos esten en 3306 guardas, cierras el block de notas y apagas mysql y lo vuelves a prender, deberias haber cambiado ya tu puerto
+3. Abre **phpMyAdmin** dando clic en el botón **Admin** de MySQL en el panel de XAMPP
+4. Ve a la pestaña **Importar** → selecciona el archivo `config/loopbook.sql` → clic en **Continuar**
 
 ### 3. Configurar las variables de entorno
 
