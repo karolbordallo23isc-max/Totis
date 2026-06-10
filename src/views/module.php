@@ -60,10 +60,17 @@
           <h3 class="lesson-card__title"><?= e($lesson['title']) ?></h3>
           <p class="lesson-card__excerpt"><?= e(mb_substr($lesson['content'], 0, 120)) ?>…</p>
         </div>
-        <a href="<?= base_url('index.php?page=lesson&module_id=' . $module['id_modulo'] . '&lesson_id=' . $lesson['id']) ?>"
-           class="btn btn-sm btn-gradient btn-gradient--red-orange">
-          <?= $lesson['completed'] ? 'Revisar' : 'Comenzar' ?> →
-        </a>
+        <?php if (!empty($_SESSION['is_admin'])): ?>
+          <a href="<?= base_url('index.php?page=admin&action=lesson_edit&id=' . $lesson['id']) ?>"
+             class="btn btn-sm btn-gradient btn-gradient--red-orange">
+            ✏️ Editar →
+          </a>
+        <?php else: ?>
+          <a href="<?= base_url('index.php?page=lesson&module_id=' . $module['id_modulo'] . '&lesson_id=' . $lesson['id']) ?>"
+             class="btn btn-sm btn-gradient btn-gradient--red-orange">
+            <?= $lesson['completed'] ? 'Revisar' : 'Comenzar' ?> →
+          </a>
+        <?php endif; ?>
       </div>
     </div>
     <?php endforeach; ?>

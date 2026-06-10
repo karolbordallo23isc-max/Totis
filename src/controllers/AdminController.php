@@ -280,17 +280,34 @@ class AdminController {
 
             // Guardar opciones (solo para tipos que las usan)
             if ($tipo !== 'codigo') {
-                $textos    = $_POST['opt_texto']    ?? [];
-                $correctas = $_POST['opt_correcta'] ?? [];
-                $retros    = $_POST['opt_retro']    ?? [];
-                $options   = [];
-                foreach ($textos as $i => $txt) {
-                    if (trim($txt) === '') continue;
-                    $options[] = [
-                        'texto'             => trim($txt),
-                        'es_correcta'       => isset($correctas[$i]),
-                        'retroalimentacion' => trim($retros[$i] ?? ''),
+                if ($tipo === 'verdadero_falso') {
+                    // V/F: siempre exactamente 2 opciones fijas
+                    $vfCorrecta = (int)($_POST['vf_correcta_val'] ?? $_POST['vf_correcta'] ?? 0); // 0=Verdadero, 1=Falso
+                    $options = [
+                        [
+                            'texto'             => trim($_POST['vf_texto_0'] ?? 'Verdadero') ?: 'Verdadero',
+                            'es_correcta'       => $vfCorrecta === 0,
+                            'retroalimentacion' => trim($_POST['vf_retro_0'] ?? ''),
+                        ],
+                        [
+                            'texto'             => trim($_POST['vf_texto_1'] ?? 'Falso') ?: 'Falso',
+                            'es_correcta'       => $vfCorrecta === 1,
+                            'retroalimentacion' => trim($_POST['vf_retro_1'] ?? ''),
+                        ],
                     ];
+                } else {
+                    $textos    = $_POST['opt_texto']    ?? [];
+                    $correctas = $_POST['opt_correcta'] ?? [];
+                    $retros    = $_POST['opt_retro']    ?? [];
+                    $options   = [];
+                    foreach ($textos as $i => $txt) {
+                        if (trim($txt) === '') continue;
+                        $options[] = [
+                            'texto'             => trim($txt),
+                            'es_correcta'       => isset($correctas[$i]),
+                            'retroalimentacion' => trim($retros[$i] ?? ''),
+                        ];
+                    }
                 }
                 if (!empty($options)) Admin::replaceOptions($exId, $options);
             }
@@ -333,17 +350,33 @@ class AdminController {
             Admin::updateExercise($id, $pregunta, $retro, $tipo, $expected, $codeInst, $codeHint);
 
             if ($tipo !== 'codigo') {
-                $textos    = $_POST['opt_texto']    ?? [];
-                $correctas = $_POST['opt_correcta'] ?? [];
-                $retros    = $_POST['opt_retro']    ?? [];
-                $options   = [];
-                foreach ($textos as $i => $txt) {
-                    if (trim($txt) === '') continue;
-                    $options[] = [
-                        'texto'             => trim($txt),
-                        'es_correcta'       => isset($correctas[$i]),
-                        'retroalimentacion' => trim($retros[$i] ?? ''),
+                if ($tipo === 'verdadero_falso') {
+                    $vfCorrecta = (int)($_POST['vf_correcta_val'] ?? $_POST['vf_correcta'] ?? 0);
+                    $options = [
+                        [
+                            'texto'             => trim($_POST['vf_texto_0'] ?? 'Verdadero') ?: 'Verdadero',
+                            'es_correcta'       => $vfCorrecta === 0,
+                            'retroalimentacion' => trim($_POST['vf_retro_0'] ?? ''),
+                        ],
+                        [
+                            'texto'             => trim($_POST['vf_texto_1'] ?? 'Falso') ?: 'Falso',
+                            'es_correcta'       => $vfCorrecta === 1,
+                            'retroalimentacion' => trim($_POST['vf_retro_1'] ?? ''),
+                        ],
                     ];
+                } else {
+                    $textos    = $_POST['opt_texto']    ?? [];
+                    $correctas = $_POST['opt_correcta'] ?? [];
+                    $retros    = $_POST['opt_retro']    ?? [];
+                    $options   = [];
+                    foreach ($textos as $i => $txt) {
+                        if (trim($txt) === '') continue;
+                        $options[] = [
+                            'texto'             => trim($txt),
+                            'es_correcta'       => isset($correctas[$i]),
+                            'retroalimentacion' => trim($retros[$i] ?? ''),
+                        ];
+                    }
                 }
                 Admin::replaceOptions($id, $options);
             }

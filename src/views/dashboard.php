@@ -125,14 +125,21 @@
             </span>
 
             <?php if ($unlocked): ?>
-              <a href="<?= base_url('index.php?page=module&id=' . $mid) ?>"
-                 class="btn btn-sm btn-gradient btn-gradient--<?= $grad ?>">
-                <?php
-                  if ($isDone)          echo '🔁 Repasar →';
-                  elseif ($pData['percent'] > 0) echo '▶️ Continuar →';
-                  else                  echo '🚀 Comenzar →';
-                ?>
-              </a>
+              <?php if (!empty($_SESSION['is_admin'])): ?>
+                <a href="<?= base_url('index.php?page=admin&action=module_edit&id=' . $mid) ?>"
+                   class="btn btn-sm btn-gradient btn-gradient--<?= $grad ?>">
+                  ✏️ Editar →
+                </a>
+              <?php else: ?>
+                <a href="<?= base_url('index.php?page=module&id=' . $mid) ?>"
+                   class="btn btn-sm btn-gradient btn-gradient--<?= $grad ?>">
+                  <?php
+                    if ($isDone)                    echo '🔁 Repasar →';
+                    elseif ($pData['percent'] > 0)  echo '▶️ Continuar →';
+                    else                            echo '🚀 Comenzar →';
+                  ?>
+                </a>
+              <?php endif; ?>
             <?php else: ?>
               <button class="btn btn-sm btn-locked" disabled title="Completa el módulo anterior para desbloquear">
                 🔒 Bloqueado
