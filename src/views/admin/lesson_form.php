@@ -96,6 +96,10 @@ $title  = $isEdit ? 'Editar Lección' : 'Nueva Lección';
 function toggleUrlField(tipo) {
   document.getElementById('url-field').style.display = tipo === 'texto' ? 'none' : '';
 }
+// Bloquear < y > en el título de la lección
+document.getElementById('titulo').addEventListener('keypress', function(e) {
+  if (e.key === '<' || e.key === '>') e.preventDefault();
+});
 </script>
 </body>
 </html>

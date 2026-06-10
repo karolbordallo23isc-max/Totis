@@ -87,5 +87,11 @@ $title  = $isEdit ? 'Editar Módulo' : 'Nuevo Módulo';
 </div>
 </main>
 <script src="<?= base_url('js/app.js') ?>"></script>
+<script>
+// Bloquear < y > en campos de nombre (no tienen sentido y pueden causar problemas)
+document.getElementById('nombre').addEventListener('keypress', function(e) {
+  if (e.key === '<' || e.key === '>') e.preventDefault();
+});
+</script>
 </body>
 </html>

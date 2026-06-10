@@ -36,7 +36,7 @@
 
     <div class="auth-logo">
       <div class="auth-logo__icon-wrap">
-        <img src="/loopbook/public/img/loopbook_logo.png" class="auth-logo__icon" alt="Loopbook logo" style="border-radius:14px;">
+        <img src="<?= base_url('img/loopbook_logo.png') ?>" class="auth-logo__icon" alt="Loopbook logo" style="border-radius:14px;">
         <div class="auth-logo__ring"></div>
       </div>
       <span class="auth-logo__name">Loopbook</span>

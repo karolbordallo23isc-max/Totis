@@ -24,8 +24,15 @@ function redirect(string $path): void {
  */
 function base_url(string $path = ''): string {
     $script = str_replace('\\', '/', $_SERVER['SCRIPT_NAME']);
-    $parts  = explode('/public/', $script);
-    $base   = rtrim($parts[0], '/') . '/public';
+    // Si el script está dentro de una subcarpeta/.../public/, usamos esa base.
+    // Si está directo en la raíz (ej: /index.php), la base es solo '/'.
+    if (str_contains($script, '/public/')) {
+        $parts = explode('/public/', $script);
+        $base  = rtrim($parts[0], '/') . '/public';
+    } else {
+        // El DocumentRoot ya apunta a /public, así que la base es la raíz
+        $base = '';
+    }
     return $base . '/' . ltrim($path, '/');
 }
 

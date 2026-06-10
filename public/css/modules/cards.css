@@ -568,3 +568,35 @@ html.dark .next-module-banner {
 }
 html.dark .next-module-banner__title { color: #6ee7b7; }
 html.dark .next-module-banner__sub   { color: #9ca3af; }
+
+/* ── Ilustración decorativa del módulo ───────────────────── */
+.module-card__illustration {
+  position: absolute;
+  top: .7rem;
+  right: .7rem;
+  width: 36px;
+  height: 36px;
+  z-index: 1;
+  pointer-events: none;
+  opacity: .9;
+}
+
+.module-card__illustration svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* Color del SVG (currentColor) según gradiente del módulo */
+.module-card__illustration--red-orange    { color: #3b82f6; }
+.module-card__illustration--blue-cyan     { color: #06b6d4; }
+.module-card__illustration--green-emerald { color: #00c853; }
+.module-card__illustration--violet-blue   { color: #7c3aed; }
+.module-card__illustration--amber-yellow  { color: #a855f7; }
+
+/* Modo oscuro: bajar un poco la opacidad */
+.dark .module-card__illustration { opacity: .65; }
+
+/* No solapar con el badge de completado */
+.module-card--done .module-card__illustration {
+  top: 2.8rem;
+}

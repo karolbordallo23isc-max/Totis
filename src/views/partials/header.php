@@ -7,7 +7,7 @@ $showHeader  = !in_array($currentPage, ['login', 'register', '']) && !empty($_SE
   <div class="header-inner">
 
     <a href="<?= base_url('index.php?page=dashboard') ?>" class="logo-link">
-      <img src="/loopbook/public/img/loopbook_logo.png" class="logo-icon-img" alt="Loopbook logo">
+      <img src="<?= base_url('img/loopbook_logo.png') ?>" class="logo-icon-img" alt="Loopbook logo">
       <div class="logo-wordmark">
         <span class="logo-wordmark__name">Loopbook</span>
       </div>

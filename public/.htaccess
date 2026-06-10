@@ -1,7 +1,7 @@
 Options -Indexes
 
 # Redirige errores 404 al front controller
-ErrorDocument 404 /loopbook/public/index.php
+ErrorDocument 404 /index.php
 
 RewriteEngine On
 

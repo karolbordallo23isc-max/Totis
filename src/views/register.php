@@ -36,7 +36,7 @@
 
     <div class="auth-logo">
       <div class="auth-logo__icon-wrap">
-        <img src="/loopbook/public/img/loopbook_logo.png" class="auth-logo__icon" alt="Loopbook logo" style="border-radius:14px;">
+        <img src="<?= base_url('img/loopbook_logo.png') ?>" class="auth-logo__icon" alt="Loopbook logo" style="border-radius:14px;">
         <div class="auth-logo__ring"></div>
       </div>
       <span class="auth-logo__name" id="authLogoName"></span>
@@ -129,6 +129,26 @@
         }
       });
     }
+  });
+
+  // Bloquear caracteres especiales en usuario (solo letras, números y _)
+  const usernameField = document.getElementById('username');
+  usernameField.addEventListener('keypress', function(e) {
+    if (!/[a-zA-Z0-9_]/.test(e.key)) e.preventDefault();
+  });
+  usernameField.addEventListener('paste', function(e) {
+    e.preventDefault();
+    const clean = (e.clipboardData || window.clipboardData).getData('text').replace(/[^a-zA-Z0-9_]/g, '');
+    document.execCommand('insertText', false, clean);
+  });
+
+  // Bloquear espacios en contraseña y confirmación
+  ['password', 'confirm_password'].forEach(function(id) {
+    const f = document.getElementById(id);
+    if (!f) return;
+    f.addEventListener('keypress', function(e) {
+      if (e.key === ' ') e.preventDefault();
+    });
   });
 })();
 </script>
