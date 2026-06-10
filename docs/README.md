@@ -130,7 +130,7 @@ loopbook/
 Descarga o clona este repositorio dentro de la carpeta `htdocs` de XAMPP:
 
 ```bash
-git clone <url-del-repositorio> C:/xampp/htdocs/loopbook
+git clone https://github.com/karolbordallo23isc-max/Totis.git C:/xampp/htdocs/loopbook
 ```
 
 ### 2. Crear la base de datos
