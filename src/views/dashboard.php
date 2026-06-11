@@ -265,7 +265,7 @@
 
           <?php if ($unlocked): ?>
             <?php if (!empty($_SESSION['is_admin'])): ?>
-              <a href="<?= base_url('index.php?page=admin&action=modules') ?>"
+              <a href="<?= base_url('index.php?page=admin&action=modules&highlight=' . $mid) ?>"
                  class="mod-card__btn mod-card__btn--<?= $ci ?>">
                 Editar
               </a>
