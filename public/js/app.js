@@ -241,8 +241,12 @@ function checkAnswer(checkBtn, exerciseId) {
 
         correctCount++;
 
-        /* Mostrar celebración si se completaron todos los ejercicios
-           de la última lección del módulo */
+        /* Notificar al módulo de navegación que un ejercicio fue completado */
+        if (typeof onExerciseCompleted === 'function') {
+          onExerciseCompleted();
+        }
+
+        /* Mostrar celebración si se completaron todos los ejercicios de la última lección */
         if (typeof IS_LAST_LESSON !== 'undefined' && IS_LAST_LESSON &&
             typeof TOTAL_EXERCISES !== 'undefined' && correctCount >= TOTAL_EXERCISES) {
           setTimeout(() => {

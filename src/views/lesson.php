@@ -151,7 +151,21 @@
   </div>
   <?php endif; ?>
 
+  <?php
+    // Calcular si todos los ejercicios están completados al cargar
+    $totalEx    = count($exercises);
+    $doneAtLoad = count(array_filter($exerciseStatus, fn($v) => $v === true));
+    $allDone    = $totalEx === 0 || $doneAtLoad >= $totalEx;
+
+    // URL y label del botón de avance
+    $nextUrl   = $nextLesson
+      ? base_url('index.php?page=lesson&module_id=' . $module['id_modulo'] . '&lesson_id=' . $nextLesson['id'])
+      : base_url('index.php?page=module&id=' . $module['id_modulo']);
+    $nextLabel = $nextLesson ? 'Siguiente' : 'Finalizar';
+  ?>
+
   <div class="lesson-nav">
+    <!-- Botón anterior: siempre visible -->
     <?php if ($prevLesson): ?>
       <a href="<?= base_url('index.php?page=lesson&module_id=' . $module['id_modulo'] . '&lesson_id=' . $prevLesson['id']) ?>"
          class="btn btn-outline">← Anterior</a>
@@ -161,27 +175,53 @@
 
     <span class="lesson-nav__counter">Lección <?= $lessonNum ?> de <?= $totalCount ?></span>
 
-    <?php if ($nextLesson): ?>
-      <a href="<?= base_url('index.php?page=lesson&module_id=' . $module['id_modulo'] . '&lesson_id=' . $nextLesson['id']) ?>"
-         class="btn btn-gradient btn-gradient--purple-pink">Siguiente →</a>
+    <?php if ($allDone): ?>
+      <!-- Todos completados al cargar — botón activo -->
+      <a id="btn-next" href="<?= e($nextUrl) ?>"
+         class="btn btn-gradient btn-gradient--purple-pink">
+        <?= $nextLabel ?> →
+      </a>
     <?php else: ?>
-      <a href="<?= base_url('index.php?page=module&id=' . $module['id_modulo']) ?>"
-         class="btn btn-gradient btn-gradient--purple-pink">Finalizar →</a>
+      <!-- Pendiente — bloqueado, JS lo activa al completar todos -->
+      <button id="btn-next" class="btn btn-nav-locked" disabled
+              title="Responde todos los ejercicios para continuar">
+        Completa los ejercicios
+      </button>
     <?php endif; ?>
   </div>
 
-  <?php if (!$nextLesson && $moduleCompleted):
-    $titleText = '¡Has terminado este módulo!';
-    require __DIR__ . '/partials/next_module_card.php';
-  endif; ?>
+  <!-- Banner módulo completado (solo última lección) -->
+  <?php if (!$nextLesson): ?>
+  <div id="module-complete-banner" class="module-complete-banner"
+       style="<?= $moduleCompleted ? '' : 'display:none' ?>">
+    <div class="module-complete-banner__stars">&#11088;&#11088;&#11088;</div>
+    <div class="module-complete-banner__trophy">&#127942;</div>
+    <h2 class="module-complete-banner__title">Módulo Completado</h2>
+    <p class="module-complete-banner__sub">
+      Terminaste <strong><?= e($module['nombre']) ?></strong>
+    </p>
+    <?php if ($nextModule): ?>
+      <p class="module-complete-banner__next-label">Siguiente módulo desbloqueado:</p>
+      <p class="module-complete-banner__next-name"><?= e($nextModule['nombre']) ?></p>
+      <a href="<?= base_url('index.php?page=module&id=' . (int)$nextModule['id_modulo']) ?>"
+         class="module-complete-banner__btn">
+        Ir al siguiente módulo →
+      </a>
+    <?php else: ?>
+      <p class="module-complete-banner__next-label">Has completado todo el curso</p>
+      <a href="<?= base_url('index.php?page=dashboard') ?>"
+         class="module-complete-banner__btn">
+        Ver mis logros →
+      </a>
+    <?php endif; ?>
+  </div>
+  <?php endif; ?>
 
   <?php if (!empty($exercises)): ?>
-  <div class="lesson-retry" style="text-align:center; margin-top:1rem;">
-    <button type="button"
-            class="btn btn-outline"
-            onclick="resetLesson()"
-            title="Vuelve a intentar los ejercicios. Tu historial de intentos se conserva.">
-      🔄 Intentar lección de nuevo
+  <div style="text-align:center; margin-top:1rem;">
+    <button type="button" class="btn btn-outline btn-sm"
+            onclick="resetLesson()">
+      Intentar lección de nuevo
     </button>
   </div>
   <?php endif; ?>
@@ -190,29 +230,61 @@
 </main>
 
 <script>
-  const TOTAL_EXERCISES    = <?= count($exercises) ?>;
+  const TOTAL_EXERCISES    = <?= $totalEx ?>;
+  const DONE_AT_LOAD       = <?= $doneAtLoad ?>;
+  const IS_LAST_LESSON     = <?= $nextLesson ? 'false' : 'true' ?>;
+  const NEXT_URL           = '<?= e($nextUrl) ?>';
+  const NEXT_LABEL         = '<?= $nextLabel ?>';
   const CHECK_ANSWER_URL   = '<?= base_url('api/check_answer.php') ?>';
   const RESET_PROGRESS_URL = '<?= base_url('api/reset_progress.php') ?>';
   const MODULE_URL         = '<?= base_url('index.php?page=module&id=' . $module['id_modulo']) ?>';
   const MODULE_NAME        = '<?= e($module['nombre']) ?>';
   const CURRENT_LESSON_ID  = <?= (int)$lesson['id'] ?>;
   const CURRENT_MODULE_ID  = <?= (int)$module['id_modulo'] ?>;
-  const IS_LAST_LESSON     = <?= $nextLesson ? 'false' : 'true' ?>;
-  // Inicializar con ejercicios ya completados para no disparar celebración prematura
-  let correctCount = <?= count(array_filter($exerciseStatus, fn($v) => $v === true)) ?>;
+
+  // Contador de respuestas correctas en esta sesión
+  let correctCount = DONE_AT_LOAD;
+
+  /**
+   * Llamado desde app.js cada vez que se responde correctamente un ejercicio.
+   * Desbloquea el botón cuando todos están completos.
+   */
+  function onExerciseCompleted() {
+    correctCount++;
+    if (correctCount >= TOTAL_EXERCISES) {
+      unlockNav();
+    }
+  }
+
+  function unlockNav() {
+    const btn = document.getElementById('btn-next');
+    if (!btn || btn.tagName === 'A') return; // ya es enlace activo
+    const link = document.createElement('a');
+    link.id        = 'btn-next';
+    link.href      = NEXT_URL;
+    link.className = 'btn btn-gradient btn-gradient--purple-pink btn-next-unlock';
+    link.textContent = NEXT_LABEL + ' →';
+    btn.replaceWith(link);
+
+    // Mostrar banner si es la última lección
+    if (IS_LAST_LESSON) {
+      const banner = document.getElementById('module-complete-banner');
+      if (banner) {
+        banner.style.display = '';
+        setTimeout(() => banner.scrollIntoView({ behavior: 'smooth', block: 'center' }), 400);
+      }
+    }
+  }
 
   function resetLesson() {
-    if (!confirm('¿Quieres volver a intentar esta lección?\n\nTus respuestas se reiniciarán pero tu historial de intentos se conserva.')) return;
-    const formData = new FormData();
-    formData.append('type',      'lesson');
-    formData.append('lesson_id', CURRENT_LESSON_ID);
-    formData.append('module_id', CURRENT_MODULE_ID);
-    fetch(RESET_PROGRESS_URL, { method: 'POST', body: formData })
+    if (!confirm('¿Quieres volver a intentar esta lección?')) return;
+    const fd = new FormData();
+    fd.append('type',      'lesson');
+    fd.append('lesson_id', CURRENT_LESSON_ID);
+    fd.append('module_id', CURRENT_MODULE_ID);
+    fetch(RESET_PROGRESS_URL, { method: 'POST', body: fd })
       .then(r => r.json())
-      .then(data => {
-        if (data.success) location.reload();
-        else alert('No se pudo reiniciar. Intenta de nuevo.');
-      })
+      .then(d => { if (d.success) location.reload(); else alert('No se pudo reiniciar.'); })
       .catch(() => alert('Error de conexión.'));
   }
 </script>

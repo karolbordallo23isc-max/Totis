@@ -44,32 +44,44 @@
   </div>
 
   <div class="lessons-list">
-    <?php foreach ($lessons as $i => $lesson): ?>
-    <div class="lesson-card <?= $lesson['completed'] ? 'lesson-card--done' : '' ?>">
+    <?php foreach ($lessons as $i => $lesson):
+      // Bloqueo secuencial: solo la primera lección y las completadas desbloquean la siguiente
+      $lessonUnlocked = $i === 0 || $lessons[$i - 1]['completed'];
+    ?>
+    <div class="lesson-card <?= $lesson['completed'] ? 'lesson-card--done' : '' ?>"
+         style="<?= !$lessonUnlocked ? 'opacity:.65;filter:grayscale(.3)' : '' ?>">
       <div class="lesson-card__stripe <?= $lesson['completed'] ? 'lesson-card__stripe--green' : 'lesson-card__stripe--purple' ?>"></div>
       <div class="lesson-card__body">
         <div class="lesson-card__icon">
           <?php if ($lesson['completed']): ?>
-            <div class="icon-circle icon-circle--green">✅</div>
+            <div class="icon-circle icon-circle--green" style="font-size:1rem;font-weight:900;color:#fff;background:linear-gradient(135deg,#059669,#10b981);display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px">&#10003;</div>
+          <?php elseif (!$lessonUnlocked): ?>
+            <div class="icon-circle" style="font-size:.85rem;font-weight:900;color:#9ca3af;background:#f3f4f6;display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px">&#128274;</div>
           <?php else: ?>
-            <div class="icon-circle icon-circle--purple">📄</div>
+            <div class="icon-circle icon-circle--purple" style="display:flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:12px">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
           <?php endif; ?>
         </div>
         <div class="lesson-card__info">
-          <span class="lesson-card__num">📖 Lección <?= $i + 1 ?></span>
+          <span class="lesson-card__num">LECCION <?= $i + 1 ?></span>
           <h3 class="lesson-card__title"><?= e($lesson['title']) ?></h3>
-          <p class="lesson-card__excerpt"><?= e(mb_substr($lesson['content'], 0, 120)) ?>…</p>
+          <p class="lesson-card__excerpt"><?= e(mb_substr($lesson['content'], 0, 120)) ?>...</p>
         </div>
         <?php if (!empty($_SESSION['is_admin'])): ?>
           <a href="<?= base_url('index.php?page=admin&action=lesson_edit&id=' . $lesson['id']) ?>"
              class="btn btn-sm btn-gradient btn-gradient--red-orange">
-            ✏️ Editar →
+            Editar
           </a>
-        <?php else: ?>
+        <?php elseif ($lessonUnlocked): ?>
           <a href="<?= base_url('index.php?page=lesson&module_id=' . $module['id_modulo'] . '&lesson_id=' . $lesson['id']) ?>"
              class="btn btn-sm btn-gradient btn-gradient--red-orange">
-            <?= $lesson['completed'] ? 'Revisar' : 'Comenzar' ?> →
+            <?= $lesson['completed'] ? 'Revisar' : 'Comenzar' ?>
           </a>
+        <?php else: ?>
+          <span style="font-size:.78rem;color:#9ca3af;font-style:italic;white-space:nowrap">
+            Completa la leccion <?= $i ?> primero
+          </span>
         <?php endif; ?>
       </div>
     </div>

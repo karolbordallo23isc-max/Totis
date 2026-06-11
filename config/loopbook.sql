@@ -1,4 +1,4 @@
-﻿-- ============================================================
+﻿-- ========================================================
 -- Loopbook v5 — Consolidado final
 -- Incluye: tablas, módulos, lecciones, ejercicios, opciones
 -- Videos corregidos · Ejercicios para todas las lecciones
